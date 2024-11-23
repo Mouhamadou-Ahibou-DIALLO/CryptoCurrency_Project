@@ -1,0 +1,52 @@
+# Étape 1 : Définir les relations
+
+** Voici les relations envisagées :
+- 1 Cryptocurrency ↔ n MarketData : Une crypto-monnaie peut avoir plusieurs enregistrements de données de marché (historique).
+- 1 User ↔ n Alerts : Un utilisateur peut configurer plusieurs alertes.
+- 1 Cryptocurrency ↔ n Alerts : Une alerte concerne une crypto-monnaie spécifique.
+
+# Étape 2 : Établir les attributs
+
+** Cryptocurrency
+- id (clé primaire, unique)
+- name (nom de la crypto)
+- symbol (symbole, ex. BTC, ETH)
+- market_cap_rank (rang sur le marché)
+
+** MarketData
+- id (clé primaire, unique)
+- crypto_id (clé étrangère vers Cryptocurrency)
+- timestamp (date et heure des données)
+- price_usd (prix en USD)
+- volume_usd (volume d’échanges en USD)
+- market_cap_usd (capitalisation)
+
+** User
+- id (clé primaire, unique)
+- username (nom d'utilisateur)
+- email
+- token_hash
+- password_hash
+
+** Alerts
+- id (clé primaire, unique)
+- user_id (clé étrangère vers User)
+- crypto_id (clé étrangère vers Cryptocurrency)
+- price_threshold (seuil de prix pour l'alerte)
+- variation_threshold (seuil de variation)
+
+
+# Étape 3 : Concevoir le schéma ERD
+
++------------------+         +-------------------+         +----------------+
+|  Cryptocurrency  |         |     MarketData    |         |     Alerts     |
++------------------+         +-------------------+         +----------------+
+| id (PK)          | 1    n | id (PK)           | 1    n  | id (PK)        |
+| name             |---------| crypto_id (FK)   |---------| user_id (FK)   |
+| symbol           |         | timestamp        |         | crypto_id (FK) |
+| market_cap_rank  |         | price_usd        |         | price_threshold|
++------------------+         | volume_usd       |         | variation_thrsh|
+                              | market_cap_usd   |         +----------------+
+                              +-------------------+
+
+Une représentation visuelle du shéma est disponible dans le fichier diagramme visuel.pdf, générée avec le site https://dbdiagram.io/
