@@ -9,6 +9,7 @@ public class CryptoCurrencyProjectApplication {
     public static void main(String[] args) {
         SpringApplication.run(CryptoCurrencyProjectApplication.class, args);
         System.out.println("First step done");
+        System.out.println("Second step done");
     }
 
 }

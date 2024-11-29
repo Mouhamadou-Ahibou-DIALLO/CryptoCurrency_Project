@@ -90,30 +90,30 @@ kubectl apply -f k8s/
 # Structure du Projet
 
 CryptoCurrency_Project/
-- **├── backend/                           # Spring Boot backend**
-- **│   ├── src/**
-- **│   │   ├── main/**
-- **│   │   │   ├── java/**
-- **│   │   │   │   ├── com/cryptomarket/**
-- **│   │   │   │   │   ├── controller/     # Contrôleurs pour l'application web**
-- **│   │   │   │   │   ├── model/          # Modèles de données**
-- **│   │   │   │   │   ├── service/        # Logique métier pour la collecte, analyse et prévisions**
-- **│   │   │   │   │   ├── repository/     # Accès à la base de données**
-- **│   │   │   │   │   ├── scheduler/      # Tâches périodiques de collecte des données**
-- **│   │   │   │   │   └── security/       # Gestion de la sécurité**
-- **│   │   │   ├── resources/**
-- **│   │   │   │   ├── application.properties  # Configuration de l'application**
-- **│   ├── Dockerfile                       # Dockerfile pour créer une image du backend**
-- **│**
-- **├── frontend/                           # Frontend avec visualisation des données**
-- **│   ├── public/**
-- **│   ├── src/**
-- **│   │   ├── components/                  # Composants React (si utilisé)**
-- **│   │   ├── services/                    # Services pour récupérer des données**
-- **│   │   └── App.js                       # Composant principal**
-- **│   └── package.json                     # Dépendances frontend**
-- **│**
-- **└── docker-compose.yml                   # Fichier pour orchestrer les services Docker**
+**├── backend/                           # Spring Boot backend**
+**│   ├── src/**
+**│   │   ├── main/**
+**│   │   │   ├── java/**
+**│   │   │   │   ├── com/cryptomarket/**
+**│   │   │   │   │   ├── controller/     # Contrôleurs pour l'application web**
+**│   │   │   │   │   ├── model/          # Modèles de données**
+**│   │   │   │   │   ├── service/        # Logique métier pour la collecte, analyse et prévisions**
+**│   │   │   │   │   ├── repository/     # Accès à la base de données**
+**│   │   │   │   │   ├── scheduler/      # Tâches périodiques de collecte des données**
+**│   │   │   │   │   └── security/       # Gestion de la sécurité**
+**│   │   │   ├── resources/**
+**│   │   │   │   ├── application.properties  # Configuration de l'application**
+**│   ├── Dockerfile                       # Dockerfile pour créer une image du backend**
+**│**
+**├── frontend/                           # Frontend avec visualisation des données**
+**│   ├── public/**
+**│   ├── src/**
+**│   │   ├── components/                  # Composants React (si utilisé)**
+**│   │   ├── services/                    # Services pour récupérer des données**
+**│   │   └── App.js                       # Composant principal**
+**│   └── package.json                     # Dépendances frontend**
+**│**
+**└── docker-compose.yml                   # Fichier pour orchestrer les services Docker**
 
 # Auteur
 - **DIALLO Mouhamadou Ahibou**
