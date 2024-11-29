@@ -21,3 +21,4 @@ jobs:
           jira-api-token: ${{ secrets.JIRA_API_TOKEN }}
           issue-keys: ${{ github.event.head_commit.message }}
           transition: "In Progress"
+
