@@ -20,6 +20,7 @@
 - price_usd (prix en USD)
 - volume_usd (volume d’échanges en USD)
 - market_cap_usd (capitalisation)
+
 ** User
 - id (clé primaire, unique)
 - username (nom d'utilisateur)
