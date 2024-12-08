@@ -1,3 +1,7 @@
+package com.cryptocurrency.data.service;
+
+import com.cryptocurrency.data.model.User;
+import com.cryptocurrency.data.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,16 +29,16 @@ public class UserService {
         return result.orElse(null);
     }
 
-    public List<User> findByToken_hash(String token_hash) {
-        return userRepository.findByToken_hash(token_hash);
+    public List<User> findByTokenHash(String tokenHash) {
+        return userRepository.findByTokenHash(tokenHash);
     }
 
-    public List<User> findByPassword_hash(String password_hash) {
-        return userRepository.findByPassword_hash(password_hash);
+    public List<User> findByPasswordHash(String passwordHash) {
+        return userRepository.findByPasswordHash(passwordHash);
     }
 
-    public User findByUsernameAndPassword_hash(String username, String password_hash) {
-        return userRepository.findByUsernameAndPassword_hash(username, password_hash);
+    public User findByUsernameAndPasswordHash(String username, String passwordHash) {
+        return userRepository.findByUsernameAndPasswordHash(username, passwordHash);
     }
 
 }

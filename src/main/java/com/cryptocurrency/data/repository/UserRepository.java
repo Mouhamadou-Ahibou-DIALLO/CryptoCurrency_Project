@@ -1,3 +1,6 @@
+package com.cryptocurrency.data.repository;
+
+import com.cryptocurrency.data.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -15,10 +18,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     /**
      * Find a user by its token hash.
      *
-     * @param token_hash the token hash to find the user for
+     * @param tokenHash the token hash to find the user for
      * @return a list of users with the given token hash
      */
-    List<User> findByToken_hash(String token_hash);
+    List<User> findByTokenHash(String tokenHash);
 
     /**
      * Find a user by its email address.
@@ -31,10 +34,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     /**
      * Find a user by its password hash.
      *
-     * @param password_hash the password hash to find the user for
+     * @param passwordHash the password hash to find the user for
      * @return a list of users with the given password hash
      */
-    List<User> findByPassword_hash(String password_hash);
+    List<User> findByPasswordHash(String passwordHash);
 
     /**
      * Find a user by its username and password hash.
@@ -43,5 +46,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param passwordHash the password hash to find the user for
      * @return the user with the given username and password hash
      */
-    User findByUsernameAndPassword_hash(String username, String passwordHash);
+    User findByUsernameAndPasswordHash(String username, String passwordHash);
 }

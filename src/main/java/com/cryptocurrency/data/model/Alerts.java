@@ -1,3 +1,5 @@
+package com.cryptocurrency.data.model;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -17,8 +19,8 @@ public class Alerts {
     @JoinColumn(name = "crypto_id", nullable = false)
     private CryptoCurrency cryptoCurrency;
 
-    private Double price_threshold;
-    private Double variation_thrsh;
+    private Double priceThreshold;
+    private Double variationThreshold;
 
     public User getUser() {
         return user;
@@ -44,15 +46,19 @@ public class Alerts {
         this.cryptoCurrency = cryptoCurrency;
     }
 
-    public Double getPrice_threshold() {
-        return price_threshold;
+    public Double getPriceThreshold() {
+        return priceThreshold;
     }
 
-    public void setPrice_threshold(Double price_threshold) {
-        this.price_threshold = price_threshold;
+    public void setPriceThreshold(Double priceThreshold) {
+        this.priceThreshold = priceThreshold;
     }
 
-    public Double getVariation_thrsh() {
-        return variation_thrsh;
+    public Double getVariationThreshold() {
+        return variationThreshold;
+    }
+
+    public void setVariationThreshold(Double variationThreshold) {
+        this.variationThreshold = variationThreshold;
     }
 }

@@ -1,3 +1,8 @@
+package com.cryptocurrency.data.repository;
+
+import com.cryptocurrency.data.model.Alerts;
+import com.cryptocurrency.data.model.CryptoCurrency;
+import com.cryptocurrency.data.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -31,8 +36,8 @@ public interface AlertsRepository extends JpaRepository<Alerts, Long> {
     /**
      * Find all alerts for a given variation threshold.
      *
-     * @param variationThrsh the variation threshold to find alerts for
+     * @param variationThreshold the variation threshold to find alerts for
      * @return a list of alerts for the given variation threshold
      */
-    List<Alerts> findByVariationThrsh(Double variationThrsh);
+    List<Alerts> findByVariationThreshold(Double variationThreshold);
 }

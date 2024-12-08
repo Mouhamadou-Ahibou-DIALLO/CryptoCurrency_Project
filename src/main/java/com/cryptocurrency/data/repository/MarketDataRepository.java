@@ -1,5 +1,12 @@
-import org.springframework.data.jpa.repository.JpaRepository;
+package com.cryptocurrency.data.repository;
 
+import com.cryptocurrency.data.model.CryptoCurrency;
+import com.cryptocurrency.data.model.MarketData;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -16,10 +23,10 @@ public interface MarketDataRepository extends JpaRepository<MarketData, Long> {
     /**
      * Find all market data entries for a given timestamp.
      *
-     * @param timestamp the timestamp to find market data for
+     * @param timeStamp the timestamp to find market data for
      * @return a list of market data entries for the given timestamp
      */
-    List<MarketData> findByTimestamp(Date timestamp);
+    List<MarketData> findByTimeStamp(LocalDateTime timeStamp);
 
     /**
      * Find all market data entries for a given price in USD.
@@ -43,5 +50,16 @@ public interface MarketDataRepository extends JpaRepository<MarketData, Long> {
      * @param marketCapUsd the market capitalization in USD to find market data for
      * @return a list of market data entries for the given market capitalization
      */
-    List<MarketData> findByMarket_cap_usd(Double marketCapUsd);
+    List<MarketData> findByMarketCapUsd(Double marketCapUsd);
+
+    /**
+     * Deletes the oldest entries from the MarketData table.
+     * The number of entries to keep is specified by the parameter.
+     *
+     * @param keepCount the number of entries to keep
+     */
+    @Query(value = "DELETE FROM market_data WHERE id IN (SELECT id FROM market_data ORDER BY id ASC LIMIT ?1)", nativeQuery = true)
+    @Modifying
+    void deleteOldestEntries(int keepCount);
+
 }

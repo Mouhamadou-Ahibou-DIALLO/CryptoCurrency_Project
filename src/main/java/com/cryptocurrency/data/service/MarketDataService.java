@@ -1,6 +1,11 @@
+package com.cryptocurrency.data.service;
+
+import com.cryptocurrency.data.model.CryptoCurrency;
+import com.cryptocurrency.data.model.MarketData;
+import com.cryptocurrency.data.repository.MarketDataRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,8 +18,8 @@ public class MarketDataService {
         return marketDataRepository.findByCryptoCurrency(cryptoCurrency);
     }
 
-    public List<MarketData> findByTimestamp(Date timestamp) {
-        return marketDataRepository.findByTimestamp(timestamp);
+    public List<MarketData> findByTimeStamp(LocalDateTime timeStamp) {
+        return marketDataRepository.findByTimeStamp(timeStamp);
     }
 
     public List<MarketData> findByPriceUsd(Double priceUsd) {
@@ -26,7 +31,7 @@ public class MarketDataService {
     }
 
     public List<MarketData> findByMarketCapUsd(Double marketCapUsd) {
-        return marketDataRepository.findByMarket_cap_usd(marketCapUsd);
+        return marketDataRepository.findByMarketCapUsd(marketCapUsd);
     }
 
     public List<MarketData> findAll() {

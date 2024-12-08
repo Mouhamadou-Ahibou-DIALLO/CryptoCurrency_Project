@@ -1,3 +1,9 @@
+package com.cryptocurrency.data.service;
+
+import com.cryptocurrency.data.model.Alerts;
+import com.cryptocurrency.data.model.CryptoCurrency;
+import com.cryptocurrency.data.model.User;
+import com.cryptocurrency.data.repository.AlertsRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +26,8 @@ public class AlertsService {
         return alertsRepository.findByPriceThreshold(priceThreshold);
     }
 
-    public List<Alerts> findByVariationThrsh(Double variationThrsh) {
-        return alertsRepository.findByVariationThrsh(variationThrsh);
+    public List<Alerts> findByVariationThreshold(Double variationThreshold) {
+        return alertsRepository.findByVariationThreshold(variationThreshold);
     }
 
     public List<Alerts> findAll() {

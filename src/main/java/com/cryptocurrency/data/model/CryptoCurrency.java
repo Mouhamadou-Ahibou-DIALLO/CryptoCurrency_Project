@@ -1,3 +1,5 @@
+package com.cryptocurrency.data.model;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -8,7 +10,7 @@ public class CryptoCurrency {
     private Long id;
     private String name;
     private String symbol;
-    private int market_cap_rank;
+    private int marketCapRank;
 
     public void setId(Long id) {
         this.id = id;
@@ -34,11 +36,11 @@ public class CryptoCurrency {
         this.symbol = symbol;
     }
 
-    public int getMarket_cap_rank() {
-        return market_cap_rank;
+    public int getMarketCapRank() {
+        return marketCapRank;
     }
 
-    public void setMarket_cap_rank(int market_cap_rank) {
-        this.market_cap_rank = market_cap_rank;
+    public void setMarketCapRank(int marketCapRank) {
+        this.marketCapRank = marketCapRank;
     }
 }

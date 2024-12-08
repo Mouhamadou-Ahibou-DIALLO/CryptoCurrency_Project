@@ -1,3 +1,7 @@
+package com.cryptocurrency.data.service;
+
+import com.cryptocurrency.data.model.CryptoCurrency;
+import com.cryptocurrency.data.repository.CryptoCurrencyRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -7,8 +11,8 @@ public class CryptoCurrencyService {
 
     private CryptoCurrencyRepository cryptoCurrencyRepository;
 
-    public List<CryptoCurrency> getCryptoCurrencyByMarket_cap_rank(int market_cap_rank) {
-        return cryptoCurrencyRepository.findByMarket_cap_rank(market_cap_rank);
+    public List<CryptoCurrency> getCryptoCurrencyByMarket_cap_rank(int marketCapRank) {
+        return cryptoCurrencyRepository.findByMarketCapRank(marketCapRank);
     }
 
     public List<CryptoCurrency> getCryptoCurrencyBySymbol(String symbol) {

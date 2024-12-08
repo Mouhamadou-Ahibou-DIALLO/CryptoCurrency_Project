@@ -1,3 +1,5 @@
+package com.cryptocurrency.data.model;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,8 +14,8 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String email;
-    private String token_hash;
-    private String password_hash;
+    private String tokenHash;
+    private String passwordHash;
 
     public void setId(Long id) {
         this.id = id;
@@ -39,19 +41,19 @@ public class User {
         this.email = email;
     }
 
-    public String getToken_hash() {
-        return token_hash;
+    public String getTokenHash() {
+        return tokenHash;
     }
 
-    public void setToken_hash(String token_hash) {
-        this.token_hash = token_hash;
+    public void setTokenHash(String tokenHash) {
+        this.tokenHash = tokenHash;
     }
 
-    public String getPassword_hash() {
-        return password_hash;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPassword_hash(String password_hash) {
-        this.password_hash = password_hash;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 }
