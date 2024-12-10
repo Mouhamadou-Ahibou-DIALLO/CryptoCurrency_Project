@@ -12,6 +12,15 @@ public class CryptoCurrency {
     private String symbol;
     private int marketCapRank;
 
+    public CryptoCurrency(Long id, String name, String symbol, int marketCapRank) {
+        this.id = id;
+        this.name = name;
+        this.symbol = symbol;
+        this.marketCapRank = marketCapRank;
+    }
+
+    public CryptoCurrency() {}
+
     public void setId(Long id) {
         this.id = id;
     }

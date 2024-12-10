@@ -38,4 +38,16 @@ public class AlertsService {
         Optional<Alerts> result = alertsRepository.findById(id);
         return result.orElse(null);
     }
+
+    public Alerts save(Alerts alerts) {
+        return alertsRepository.save(alerts);
+    }
+
+    public void deleteById(Long id) {
+        alertsRepository.deleteById(id);
+    }
+
+    public List<Alerts> findByCryptoCurrencyAndUser(CryptoCurrency cryptoCurrency, User user) {
+        return alertsRepository.findByCryptoCurrencyAndUser(cryptoCurrency, user);
+    }
 }

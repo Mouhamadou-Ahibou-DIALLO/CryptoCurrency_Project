@@ -22,6 +22,16 @@ public class Alerts {
     private Double priceThreshold;
     private Double variationThreshold;
 
+    public Alerts() {}
+
+    public Alerts(Long id, User user, CryptoCurrency cryptoCurrency, Double priceThreshold, Double variationThreshold) {
+        this.id = id;
+        this.user = user;
+        this.cryptoCurrency = cryptoCurrency;
+        this.priceThreshold = priceThreshold;
+        this.variationThreshold = variationThreshold;
+    }
+
     public User getUser() {
         return user;
     }

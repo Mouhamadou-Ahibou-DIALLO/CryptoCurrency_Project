@@ -21,16 +21,23 @@ public class MarketData {
     private Double volumeUsd;
     private Double marketCapUsd;
 
+    public MarketData(Long id, CryptoCurrency cryptoCurrency, LocalDateTime timeStamp, Double priceUsd, Double volumeUsd, Double marketCapUsd) {
+        this.id = id;
+        this.cryptoCurrency = cryptoCurrency;
+        this.timeStamp = timeStamp;
+        this.priceUsd = priceUsd;
+        this.volumeUsd = volumeUsd;
+        this.marketCapUsd = marketCapUsd;
+    }
+
+    public MarketData() {}
+
     public void setId(Long id) {
         this.id = id;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public LocalDateTime getTimeStamp() {
-        return timeStamp;
     }
 
     public CryptoCurrency getCryptoCurrency() {
@@ -45,7 +52,7 @@ public class MarketData {
         this.timeStamp = timeStamp;
     }
 
-    public Double getPrice_usd() {
+    public Double getPriceUsd() {
         return priceUsd;
     }
 

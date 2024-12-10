@@ -40,4 +40,13 @@ public interface AlertsRepository extends JpaRepository<Alerts, Long> {
      * @return a list of alerts for the given variation threshold
      */
     List<Alerts> findByVariationThreshold(Double variationThreshold);
+
+    /**
+     * Find all alerts for a given cryptocurrency and user.
+     *
+     * @param cryptoCurrency the ID of the cryptocurrency to find alerts for
+     * @param user the ID of the user to find alerts for
+     * @return a list of alerts for the given cryptocurrency and user
+     */
+    List<Alerts> findByCryptoCurrencyAndUser(CryptoCurrency cryptoCurrency, User user);
 }

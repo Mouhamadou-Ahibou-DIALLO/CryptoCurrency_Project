@@ -17,6 +17,16 @@ public class User {
     private String tokenHash;
     private String passwordHash;
 
+    public User() {}
+
+    public User(Long id, String username, String email, String tokenHash, String passwordHash) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.tokenHash = tokenHash;
+        this.passwordHash = passwordHash;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
