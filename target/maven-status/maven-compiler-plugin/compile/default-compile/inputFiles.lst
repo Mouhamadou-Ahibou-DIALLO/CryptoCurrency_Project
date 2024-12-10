@@ -1,0 +1,14 @@
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/CryptoCurrencyService.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/UserService.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/DataCollectionService.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/repository/UserRepository.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/repository/CryptoCurrencyRepository.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/model/MarketData.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/repository/AlertsRepository.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/AlertsService.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/MarketDataService.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/model/CryptoCurrency.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/model/User.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/CryptoCurrencyProjectApplication.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/repository/MarketDataRepository.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/model/Alerts.java

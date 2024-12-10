@@ -1,0 +1,14 @@
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/service/MarketDataServiceTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/repository/MarketDataRepositoryTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/service/UserServiceTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/repository/CryptoCurrencyRepositoryTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/AlertsTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/service/DataCollectionServiceTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/service/AlertsServiceTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/service/CryptoCurrencyServiceTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/MarketDataTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/CryptoCurrencyProjectApplicationTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/UserTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/repository/UserRepositoryTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/CryptoCurrencyTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/repository/AlertsRepositoryTest.java
