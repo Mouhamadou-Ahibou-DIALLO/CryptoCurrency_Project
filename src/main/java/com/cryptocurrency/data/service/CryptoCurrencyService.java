@@ -11,7 +11,7 @@ public class CryptoCurrencyService {
 
     private CryptoCurrencyRepository cryptoCurrencyRepository;
 
-    public List<CryptoCurrency> getCryptoCurrencyByMarket_cap_rank(int marketCapRank) {
+    public List<CryptoCurrency> getCryptoCurrencyByMarketCapRank(int marketCapRank) {
         return cryptoCurrencyRepository.findByMarketCapRank(marketCapRank);
     }
 

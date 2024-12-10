@@ -49,4 +49,11 @@ public interface AlertsRepository extends JpaRepository<Alerts, Long> {
      * @return a list of alerts for the given cryptocurrency and user
      */
     List<Alerts> findByCryptoCurrencyAndUser(CryptoCurrency cryptoCurrency, User user);
+
+    /**
+     * Delete all alerts for a given user.
+     *
+     * @param user the user to delete alerts for
+     */
+    void deleteByUser(User user);
 }

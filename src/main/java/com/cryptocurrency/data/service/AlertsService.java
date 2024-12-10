@@ -50,4 +50,8 @@ public class AlertsService {
     public List<Alerts> findByCryptoCurrencyAndUser(CryptoCurrency cryptoCurrency, User user) {
         return alertsRepository.findByCryptoCurrencyAndUser(cryptoCurrency, user);
     }
+
+    public void deleteByUser(User user) {
+        alertsRepository.deleteByUser(user);
+    }
 }
