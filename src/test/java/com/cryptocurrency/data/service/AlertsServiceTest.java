@@ -28,7 +28,7 @@ public class AlertsServiceTest {
     @InjectMocks
     private AlertsService alertsService;
 
-    private CryptoCurrency cryptoCurrency;
+    private MarketData marketData;
     private User user;
 
     private Alerts alerts1;
@@ -37,10 +37,11 @@ public class AlertsServiceTest {
 
     @BeforeEach
     public void setUp() {
-        cryptoCurrency = new CryptoCurrency(1L, "Bitcoin", "BTC", 1);
+        CryptoCurrency cryptoCurrency = new CryptoCurrency(1L, "Bitcoin", "BTC", 1);
+        marketData = new MarketData(1L, cryptoCurrency, LocalDateTime.now(), 1.0, 1.0, 1.0);
         user = new User(1L, "user1",  "email1", "tokenHash1", "passwordHash1");
-        alerts1 = new Alerts(1L, user, cryptoCurrency, 1.0, 2.0);
-        alerts2 = new Alerts(2L, user, cryptoCurrency, 1.0, 2.0);
+        alerts1 = new Alerts(1L, user, marketData, 1.0, 2.0);
+        alerts2 = new Alerts(2L, user, marketData, 1.0, 2.0);
     }
 
     @Test
@@ -54,11 +55,11 @@ public class AlertsServiceTest {
 
     @Test
     public void testFindByCryptoCurrency() {
-        when(alertsRepository.findByCryptoCurrency(cryptoCurrency)).thenReturn(List.of(alerts1, alerts2));
-        List<Alerts> result = alertsService.findByCryptoCurrency(cryptoCurrency);
+        when(alertsRepository.findByMarketData(marketData)).thenReturn(List.of(alerts1, alerts2));
+        List<Alerts> result = alertsService.findByMarketData(marketData);
         assertEquals(2, result.size());
         assertEquals(1L, result.get(0).getId());
-        verify(alertsRepository, times(1)).findByCryptoCurrency(cryptoCurrency);
+        verify(alertsRepository, times(1)).findByMarketData(marketData);
     }
 
     @Test
@@ -118,10 +119,10 @@ public class AlertsServiceTest {
 
     @Test
     public void testFindByCryptoCurrencyAndUser() {
-        when(alertsRepository.findByCryptoCurrencyAndUser(cryptoCurrency, user)).thenReturn(List.of(alerts1, alerts2));
-        List<Alerts> result = alertsService.findByCryptoCurrencyAndUser(cryptoCurrency, user);
+        when(alertsRepository.findByMarketDataAndUser(marketData, user)).thenReturn(List.of(alerts1, alerts2));
+        List<Alerts> result = alertsService.findByMarketDataAndUser(marketData, user);
         assertEquals(2, result.size());
         assertEquals(1L, result.get(0).getId());
-        verify(alertsRepository, times(1)).findByCryptoCurrencyAndUser(cryptoCurrency, user);
+        verify(alertsRepository, times(1)).findByMarketDataAndUser(marketData, user);
     }
 }

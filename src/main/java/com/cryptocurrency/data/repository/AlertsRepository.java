@@ -2,11 +2,15 @@ package com.cryptocurrency.data.repository;
 
 import com.cryptocurrency.data.model.Alerts;
 import com.cryptocurrency.data.model.CryptoCurrency;
+import com.cryptocurrency.data.model.MarketData;
 import com.cryptocurrency.data.model.User;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface AlertsRepository extends JpaRepository<Alerts, Long> {
 
     /**
@@ -18,12 +22,12 @@ public interface AlertsRepository extends JpaRepository<Alerts, Long> {
     List<Alerts> findByUser(User user);
 
     /**
-     * Find all alerts for a given cryptocurrency.
+     * Find all alerts for a given market data entry.
      *
-     * @param cryptoCurrency the ID of the cryptocurrency to find alerts for
-     * @return a list of alerts for the given cryptocurrency
+     * @param marketData the market data entry to find alerts for
+     * @return a list of alerts for the given market data entry
      */
-    List<Alerts> findByCryptoCurrency(CryptoCurrency cryptoCurrency);
+    List<Alerts> findByMarketData(MarketData marketData);
 
     /**
      * Find all alerts for a given price threshold.
@@ -42,13 +46,13 @@ public interface AlertsRepository extends JpaRepository<Alerts, Long> {
     List<Alerts> findByVariationThreshold(Double variationThreshold);
 
     /**
-     * Find all alerts for a given cryptocurrency and user.
+     * Find all alerts for a given market data entry and user.
      *
-     * @param cryptoCurrency the ID of the cryptocurrency to find alerts for
-     * @param user the ID of the user to find alerts for
-     * @return a list of alerts for the given cryptocurrency and user
+     * @param marketData the market data entry to find alerts for
+     * @param user the user to find alerts for
+     * @return a list of alerts for the given market data and user
      */
-    List<Alerts> findByCryptoCurrencyAndUser(CryptoCurrency cryptoCurrency, User user);
+    List<Alerts> findByMarketDataAndUser(MarketData marketData, User user);
 
     /**
      * Delete all alerts for a given user.

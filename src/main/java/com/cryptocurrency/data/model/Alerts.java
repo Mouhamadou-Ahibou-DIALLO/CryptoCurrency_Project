@@ -16,18 +16,18 @@ public class Alerts {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "crypto_id", nullable = false)
-    private CryptoCurrency cryptoCurrency;
+    @JoinColumn(name = "market_id", nullable = false)
+    private MarketData marketData;
 
     private Double priceThreshold;
     private Double variationThreshold;
 
     public Alerts() {}
 
-    public Alerts(Long id, User user, CryptoCurrency cryptoCurrency, Double priceThreshold, Double variationThreshold) {
+    public Alerts(Long id, User user, MarketData marketData, Double priceThreshold, Double variationThreshold) {
         this.id = id;
         this.user = user;
-        this.cryptoCurrency = cryptoCurrency;
+        this.marketData = marketData;
         this.priceThreshold = priceThreshold;
         this.variationThreshold = variationThreshold;
     }
@@ -48,12 +48,12 @@ public class Alerts {
         return id;
     }
 
-    public CryptoCurrency getCryptoCurrency() {
-        return cryptoCurrency;
+    public MarketData getMarketData() {
+        return marketData;
     }
 
-    public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
-        this.cryptoCurrency = cryptoCurrency;
+    public void setMarketData(MarketData marketData) {
+        this.marketData = marketData;
     }
 
     public Double getPriceThreshold() {

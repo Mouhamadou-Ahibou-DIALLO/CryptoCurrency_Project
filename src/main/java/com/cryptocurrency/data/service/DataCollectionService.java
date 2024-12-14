@@ -120,8 +120,6 @@ public class DataCollectionService {
     private void enforceTableLimit() {
         logger.info("Suppression des données dans MarketData...");
         marketDataRepository.deleteAll();
-        logger.info("Suppression des données dans CryptoCurrency...");
-        cryptoCurrencyRepository.deleteAll();
 
         logger.info("Toutes les données des tables MarketData et CryptoCurrency ont été supprimées.");
     }

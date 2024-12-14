@@ -3,6 +3,8 @@ package com.cryptocurrency.data.service;
 import com.cryptocurrency.data.model.CryptoCurrency;
 import com.cryptocurrency.data.model.MarketData;
 import com.cryptocurrency.data.repository.MarketDataRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,6 +14,7 @@ import java.util.Optional;
 @Service
 public class MarketDataService {
 
+    @Autowired
     private MarketDataRepository marketDataRepository;
 
     public List<MarketData> findByCryptoCurrency(CryptoCurrency cryptoCurrency) {

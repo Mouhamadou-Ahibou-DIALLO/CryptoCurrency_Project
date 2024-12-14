@@ -6,8 +6,12 @@ com/cryptocurrency/data/model/User.class
 com/cryptocurrency/data/CryptoCurrencyProjectApplication.class
 com/cryptocurrency/data/repository/MarketDataRepository.class
 com/cryptocurrency/data/service/CryptoCurrencyService.class
+com/cryptocurrency/data/controller/CryptoCurrencyController.class
 com/cryptocurrency/data/service/UserService.class
+com/cryptocurrency/data/controller/MarketDataController.class
+com/cryptocurrency/data/controller/AlertsController.class
 com/cryptocurrency/data/repository/AlertsRepository.class
+com/cryptocurrency/data/scheduler/AlertChecker.class
 com/cryptocurrency/data/service/MarketDataService.class
 com/cryptocurrency/data/service/AlertsService.class
 com/cryptocurrency/data/repository/CryptoCurrencyRepository.class

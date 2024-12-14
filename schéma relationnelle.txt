@@ -31,7 +31,7 @@
 ** Alerts
 - id (clé primaire, unique)
 - user_id (clé étrangère vers User)
-- crypto_id (clé étrangère vers Cryptocurrency)
+- market_id (clé étrangère vers MarketData)
 - price_threshold (seuil de prix pour l'alerte)
 - variation_threshold (seuil de variation)
 
@@ -43,10 +43,10 @@
 +------------------+         +-------------------+         +----------------+
 | id (PK)          | 1    n | id (PK)           | 1    n  | id (PK)        |
 | name             |---------| crypto_id (FK)   |---------| user_id (FK)   |
-| symbol           |         | timestamp        |         | crypto_id (FK) |
+| symbol           |         | timestamp        |         | market_id (FK) |
 | market_cap_rank  |         | price_usd        |         | price_threshold|
 +------------------+         | volume_usd       |         | variation_thrsh|
                               | market_cap_usd   |         +----------------+
                               +-------------------+
 
-Une représentation visuelle du shéma est disponible dans le fichier diagramme visuel.pdf, générée avec le site https://dbdiagram.io/
+Une représentation visuelle du schéma est disponible dans le fichier diagramme visuel.pdf, générée avec le site https://dbdiagram.io/
