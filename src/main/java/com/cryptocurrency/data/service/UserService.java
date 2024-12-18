@@ -4,10 +4,12 @@ import com.cryptocurrency.data.model.User;
 import com.cryptocurrency.data.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -15,15 +17,17 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    public List<User> findByUsername(String username) {
+    public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    public List<User> findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -50,5 +54,43 @@ public class UserService {
 
     public void deleteById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public User createUser(User user) {
+        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        String token = UUID.randomUUID().toString();
+        user.setTokenHash(passwordEncoder.encode(token));
+        return userRepository.save(user);
+    }
+
+    public User updateUser(Long id, User userDetails) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        user.setUsername(userDetails.getUsername());
+        user.setEmail(userDetails.getEmail());
+        user.setPasswordHash(passwordEncoder.encode(userDetails.getPasswordHash()));
+        return userRepository.save(user);
+    }
+
+    public String authenticateUser(String email, String password) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+
+        if (passwordEncoder.matches(password, user.getPasswordHash())) {
+            return user.getTokenHash();
+        } else {
+            throw new RuntimeException("Invalid email or password");
+        }
+    }
+
+    public boolean verifyToken(String email, String token) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return passwordEncoder.matches(token, user.getTokenHash());
+    }
+
+
+    public void logoutUser() {
+        // Exemple : Invalider le token ou gérer la session
     }
 }

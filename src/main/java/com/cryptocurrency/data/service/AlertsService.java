@@ -75,4 +75,32 @@ public class AlertsService {
     private double getCurrentPrice(MarketData marketData) {
         return marketData.getPriceUsd();
     }
+
+    public Alerts createAlert(User user, Alerts alert) {
+        alert.setUser(user);
+        return alertsRepository.save(alert);
+    }
 }
+
+/*
+if (alert.getVariationThreshold() != null) {
+            Double previousPrice = marketDataService.getPreviousPrice(alert.getMarketData());
+            Double priceChange = ((currentPrice - previousPrice) / previousPrice) * 100;
+
+            if (Math.abs(priceChange) >= alert.getVariationThreshold()) {
+                sendEmailNotification(alert.getUser(), alert);
+            }
+
+    public void checkTechnicalIndicators() {
+    List<Alert> alerts = alertRepository.findAll();
+
+    for (Alert alert : alerts) {
+        // Vérifier l'indicateur technique
+        Double rsi = marketDataService.getRSI(alert.getMarketData());
+
+        if (rsi > alert.getTechnicalThreshold()) {
+            sendEmailNotification(alert.getUser(), alert);
+        }
+    }
+}
+ */

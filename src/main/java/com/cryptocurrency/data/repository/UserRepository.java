@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -16,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param username the username to find the user for
      * @return a list of users with the given username
      */
-    List<User> findByUsername(String username);
+    User findByUsername(String username);
 
     /**
      * Find a user by its token hash.
@@ -32,7 +33,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param email the email address to find the user for
      * @return a list of users with the given email address
      */
-    List<User> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     /**
      * Find a user by its password hash.

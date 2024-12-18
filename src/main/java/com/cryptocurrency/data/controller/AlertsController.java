@@ -5,6 +5,7 @@ import com.cryptocurrency.data.model.User;
 import com.cryptocurrency.data.service.AlertsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +24,12 @@ public class AlertsController {
         return ResponseEntity.ok(alerts);
     }
 
-    @PostMapping
-    public ResponseEntity<Alerts> createAlert(@RequestBody Alerts alert) {
-        Alerts savedAlert = alertsService.save(alert);
-        return ResponseEntity.ok(savedAlert);
+    @PostMapping("/users/{user}/alerts")
+    public ResponseEntity<Alerts> createAlert(
+            @PathVariable("user") User user,
+            @RequestBody Alerts alert) {
+        Alerts createdAlert = alertsService.createAlert(user, alert);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdAlert);
     }
 
     @PutMapping("/{id}")
