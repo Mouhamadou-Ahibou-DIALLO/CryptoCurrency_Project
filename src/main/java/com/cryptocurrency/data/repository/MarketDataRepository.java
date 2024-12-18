@@ -8,17 +8,24 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
+/**
+ * The MarketDataRepository interface is a Spring Data JPA repository for managing market data.
+ * MarketDataRepository interface.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
 @Repository
 public interface MarketDataRepository extends JpaRepository<MarketData, Long> {
 
+
     /**
-     * Find all market data entries for a given cryptocurrency.
+     * Find a market data entry for a given cryptocurrency.
      *
-     * @param cryptoCurrency the ID of the cryptocurrency to find market data for
-     * @return a list of market data entries for the given cryptocurrency
+     * @param cryptoCurrency the cryptocurrency to find the market data for
+     * @return an Optional containing the market data entry if found, or an empty Optional if not
      */
-    List<MarketData> findByCryptoCurrency(CryptoCurrency cryptoCurrency);
+    Optional<MarketData> findByCryptoCurrency(CryptoCurrency cryptoCurrency);
 
     /**
      * Find all market data entries for a given timestamp.

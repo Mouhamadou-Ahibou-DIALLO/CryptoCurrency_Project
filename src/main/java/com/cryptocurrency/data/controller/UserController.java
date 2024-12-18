@@ -13,25 +13,51 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * The UserController class is a Spring REST controller for managing users.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
+    /**
+     * The UserService class is a Spring service for managing users.
+     */
     @Autowired
     private UserService userService;
 
+    /**
+     * Creates a new user in the database.
+     *
+     * @param user The user to be created.
+     * @return The created user.
+     */
     @PostMapping("/create")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
+    /**
+     * Updates a user with the given details.
+     *
+     * @param id          The id of the user to be updated.
+     * @param user        The user object containing the updated details.
+     * @return The updated user object.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
         User updatedUser = userService.updateUser(id, user);
         return ResponseEntity.ok(updatedUser);
     }
 
+    /**
+     * Logs in a user using their email and password.
+     *
+     * @param loginRequest The user to be logged in.
+     * @return The login token for the user.
+     */
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody LoginRequestService loginRequest) {
         try {
@@ -42,18 +68,35 @@ public class UserController {
         }
     }
 
+    /**
+     * Deletes a user with the given id.
+     *
+     * @param id the id of the user to be deleted
+     * @return a success message if the user is deleted successfully
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
         return ResponseEntity.ok("User deleted successfully");
     }
 
+    /**
+     * Returns a list of all users in the database.
+     *
+     * @return a list of all users in the database
+     */
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.findAll();
         return ResponseEntity.ok(users);
     }
 
+    /**
+     * Verifies if the provided token for a user is valid.
+     *
+     * @param tokenRequest The request containing the user's email and token.
+     * @return A response indicating whether the token is valid.
+     */
     @PostMapping("/verify-token")
     public ResponseEntity<String> verifyToken(@RequestBody TokenRequestService tokenRequest) {
         boolean isValid = userService.verifyToken(tokenRequest.getEmail(), tokenRequest.getToken());
@@ -62,6 +105,18 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token.");
         }
+    }
+
+    /**
+     * Logs out a user using their email.
+     *
+     * @param email the email of the user to be logged out
+     * @return a success message if the user is logged out successfully
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestParam String email) {
+        userService.logoutUser(email);
+        return ResponseEntity.ok("User logged out successfully");
     }
 }
 

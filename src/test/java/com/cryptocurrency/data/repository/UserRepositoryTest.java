@@ -7,6 +7,7 @@ import org.mockito.Mock;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -16,15 +17,31 @@ import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+/**
+ * The UserRepositoryTest class is a JUnit test class for the UserRepository class.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
 @ExtendWith(MockitoExtension.class)
 public class UserRepositoryTest {
 
+    /**
+     * The userRepository field is a mock of the UserRepository class.
+     */
     @Mock
     private UserRepository userRepository;
+
+    /**
+     * The user1, user2, and user3 fields are instances of the User class.
+     */
     private User user1;
     private User user2;
     private User user3;
 
+    /**
+     * The setUp method is a JUnit @BeforeEach annotated method that is run
+     * before each test. It sets up the user1, user2, and user3 fields with
+     * instances of the User class.
+     */
     @BeforeEach
     public void setUp() {
         user1 = new User(1L, "user1",  "email1", "tokenHash1", "passwordHash1");
@@ -32,6 +49,10 @@ public class UserRepositoryTest {
         user3 = new User(3L, "user3", "email3", "tokenHash3", "passwordHash3");
     }
 
+    /**
+     * Tests the findAll method of the UserRepository class.
+     * Ensures that all User objects are returned correctly.
+     */
     @Test
     public void testFindAll() {
         List<User> mockUserList = List.of(user1, user2, user3);
@@ -40,35 +61,42 @@ public class UserRepositoryTest {
         List<User> result = userRepository.findAll();
 
         assertEquals(3, result.size());
+
         assertEquals("user1", result.get(0).getUsername());
         assertEquals("email2", result.get(1).getEmail());
         assertEquals("tokenHash3", result.get(2).getTokenHash());
         assertEquals("passwordHash1", result.get(0).getPasswordHash());
     }
 
+    /**
+     * Tests the findByUsername method of the UserRepository class.
+     * Ensures that a User object is returned when a valid username is provided.
+     */
     @Test
     public void testFindByUsername() {
         String username = "user2";
-        List<User> mockUserList = List.of(user2);
 
-        when(userRepository.findByUsername(username)).thenReturn(mockUserList);
-        List<User> result = userRepository.findByUsername(username);
+        when(userRepository.findByUsername(username)).thenReturn(java.util.Optional.of(user2));
+        User result = userRepository.findByUsername(username).orElse(null);
 
-        assertEquals(1, result.size());
-        assertEquals("user2", result.get(0).getUsername());
-        assertEquals("email2", result.get(0).getEmail());
-        assertEquals("tokenHash2", result.get(0).getTokenHash());
-        assertEquals("passwordHash2", result.get(0).getPasswordHash());
-
-        verify(userRepository, times(1)).findByUsername(username);
+        assert result != null;
+        assertEquals("user2", result.getUsername());
+        assertEquals("email2", result.getEmail());
+        assertEquals("tokenHash2", result.getTokenHash());
+        assertEquals("passwordHash2", result.getPasswordHash());
     }
 
+    /**
+     * Tests the findById method of the UserRepository class.
+     * Ensures that a User object is returned when a valid id is provided.
+     */
     @Test
     public void testFindById() {
         Long id = 1L;
         when(userRepository.findById(id)).thenReturn(java.util.Optional.of(user1));
-        User result = userRepository.findById(id).get();
+        User result = userRepository.findById(id).orElse(null);
 
+        assert result != null;
         assertEquals("user1", result.getUsername());
         assertEquals("email1", result.getEmail());
         assertEquals("tokenHash1", result.getTokenHash());
@@ -77,59 +105,79 @@ public class UserRepositoryTest {
         verify(userRepository, times(1)).findById(id);
     }
 
+    /**
+     * Tests the findByEmail method of the UserRepository class.
+     * Ensures that a User object is returned when a valid email is provided.
+     */
     @Test
     public void testFindByEmail() {
         String email = "email2";
-        List<User> mockUserList = List.of(user2);
 
-        when(userRepository.findByEmail(email)).thenReturn(mockUserList);
-        List<User> result = userRepository.findByEmail(email);
+        when(userRepository.findByEmail(email)).thenReturn(java.util.Optional.of(user2));
+        User result = userRepository.findByEmail(email).orElse(null);
 
-        assertEquals(1, result.size());
-        assertEquals("user2", result.get(0).getUsername());
-        assertEquals("email2", result.get(0).getEmail());
-        assertEquals("tokenHash2", result.get(0).getTokenHash());
-        assertEquals("passwordHash2", result.get(0).getPasswordHash());
+        assert result != null;
+        assertEquals("user2", result.getUsername());
+        assertEquals("email2", result.getEmail());
+        assertEquals("tokenHash2", result.getTokenHash());
+        assertEquals("passwordHash2", result.getPasswordHash());
 
         verify(userRepository, times(1)).findByEmail(email);
     }
 
+    /**
+     * Tests the save method of the UserRepository class.
+     * Ensures that a User object is saved correctly and the save method is called once.
+     */
     @Test
     public void testSave() {
         when(userRepository.save(user1)).thenReturn(user1);
         User result = userRepository.save(user1);
 
-        assertEquals("user1", result.getUsername());
-        assertEquals("email1", result.getEmail());
-        assertEquals("tokenHash1", result.getTokenHash());
-        assertEquals("passwordHash1", result.getPasswordHash());
+        assertEquals("user1", result.getUsername(), "The username should be 'user1'");
+        assertEquals("email1", result.getEmail(), "The email should be 'email1'");
+        assertEquals("tokenHash1", result.getTokenHash(), "The token hash should be 'tokenHash1'");
+        assertEquals("passwordHash1", result.getPasswordHash(), "The password hash should be 'passwordHash1'");
 
         verify(userRepository, times(1)).save(user1);
     }
 
+    /**
+     * Tests the delete method of the UserRepository class.
+     * Ensures that the delete method is called once with the correct User object.
+     */
     @Test
     public void testDelete() {
         userRepository.delete(user1);
         verify(userRepository, times(1)).delete(user1);
     }
 
+    /**
+     * Tests the findByTokenHash method of the UserRepository class.
+     * Ensures that a User object is returned when a valid token hash is provided.
+     * Verifies that findByTokenHash is called once.
+     */
     @Test
     public void testFindByTokenHash() {
         String tokenHash = "tokenHash1";
-        List<User> mockUserList = List.of(user1);
 
-        when(userRepository.findByTokenHash(tokenHash)).thenReturn(mockUserList);
-        List<User> result = userRepository.findByTokenHash(tokenHash);
+        when(userRepository.findByTokenHash(tokenHash)).thenReturn(java.util.Optional.of(user1));
+        User result = userRepository.findByTokenHash(tokenHash).orElse(null);
 
-        assertEquals(1, result.size());
-        assertEquals("user1", result.get(0).getUsername());
-        assertEquals("email1", result.get(0).getEmail());
-        assertEquals("tokenHash1", result.get(0).getTokenHash());
-        assertEquals("passwordHash1", result.get(0).getPasswordHash());
+        assert result != null;
+        assertEquals("user1", result.getUsername(), "The username should be 'user1'");
+        assertEquals("email1", result.getEmail(), "The email should be 'email1'");
+        assertEquals("tokenHash1", result.getTokenHash(), "The token hash should be 'tokenHash1'");
+        assertEquals("passwordHash1", result.getPasswordHash(), "The password hash should be 'passwordHash1'");
 
         verify(userRepository, times(1)).findByTokenHash(tokenHash);
     }
 
+    /**
+     * Tests the findByPasswordHash method of the UserRepository class.
+     * Ensures that a List of User objects is returned when a valid password hash is provided.
+     * Verifies that findByPasswordHash is called once.
+     */
     @Test
     public void testFindByPasswordHash() {
         String passwordHash = "passwordHash1";
@@ -138,21 +186,31 @@ public class UserRepositoryTest {
         when(userRepository.findByPasswordHash(passwordHash)).thenReturn(mockUserList);
         List<User> result = userRepository.findByPasswordHash(passwordHash);
 
+        assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("user1", result.get(0).getUsername());
-        assertEquals("email1", result.get(0).getEmail());
-        assertEquals("tokenHash1", result.get(0).getTokenHash());
-        assertEquals("passwordHash1", result.get(0).getPasswordHash());
+
+        User user = result.get(0);
+        assertEquals("user1", user.getUsername());
+        assertEquals("email1", user.getEmail());
+        assertEquals("tokenHash1", user.getTokenHash());
+        assertEquals("passwordHash1", user.getPasswordHash());
 
         verify(userRepository, times(1)).findByPasswordHash(passwordHash);
     }
 
+    /**
+     * Tests the findByUsernameAndPasswordHash method of the UserRepository class.
+     * Ensures that a User object is returned when a valid username and password hash are provided.
+     * Verifies that findByUsernameAndPasswordHash is called once.
+     */
     @Test
     public void findByUsernameAndPasswordHash() {
         String username = "user1";
         String passwordHash = "passwordHash1";
+
         when(userRepository.findByUsernameAndPasswordHash(username, passwordHash)).thenReturn(user1);
         User result = userRepository.findByUsernameAndPasswordHash(username, passwordHash);
-        assertEquals(user1, result);
+
+        assertEquals(user1, result, "The returned User object should be the same as the one provided");
     }
 }

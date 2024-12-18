@@ -7,12 +7,37 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+/**
+ * The EmailService class is a Spring service for sending email notifications.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
 @Service
 public class EmailService {
 
+    /**
+     * The JavaMailSender object used to send emails.
+     */
     @Autowired
     private JavaMailSender mailSender;
 
+    /**
+     * Constructor for the EmailService class.
+     * @param mailSender The JavaMailSender object used to send emails.
+     */
+    public EmailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
+    /**
+     * Default constructor for the EmailService class.
+     */
+    public EmailService() {}
+
+    /**
+     * Send an email notification to the user associated with the alert.
+     * @param alert The alert object containing the user and price threshold.
+     * @param currentPrice The current price of the cryptocurrency.
+     */
     public void sendNotification(Alerts alert, double currentPrice) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(alert.getUser().getEmail());

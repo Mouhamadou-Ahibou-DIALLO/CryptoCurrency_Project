@@ -1,7 +1,6 @@
 package com.cryptocurrency.data.repository;
 
 import com.cryptocurrency.data.model.Alerts;
-import com.cryptocurrency.data.model.CryptoCurrency;
 import com.cryptocurrency.data.model.MarketData;
 import com.cryptocurrency.data.model.User;
 
@@ -10,6 +9,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * The AlertsRepository interface is a Spring Data JPA repository for managing alerts.
+ * AlertsRepository interface.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
 @Repository
 public interface AlertsRepository extends JpaRepository<Alerts, Long> {
 

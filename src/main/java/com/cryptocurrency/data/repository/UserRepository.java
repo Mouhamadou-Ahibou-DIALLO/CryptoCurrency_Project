@@ -8,30 +8,37 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The UserRepository interface is a Spring Data JPA repository for managing user data.
+ * UserRepository interface.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+
 
     /**
      * Find a user by its username.
      *
      * @param username the username to find the user for
-     * @return a list of users with the given username
+     * @return a user with the given username, or an empty optional if none is found
      */
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     /**
      * Find a user by its token hash.
      *
      * @param tokenHash the token hash to find the user for
-     * @return a list of users with the given token hash
+     * @return a user with the given token hash, or an empty optional if none is found
      */
-    List<User> findByTokenHash(String tokenHash);
+    Optional<User> findByTokenHash(String tokenHash);
+
 
     /**
-     * Find a user by its email address.
+     * Find a user by its email.
      *
-     * @param email the email address to find the user for
-     * @return a list of users with the given email address
+     * @param email the email to find the user for
+     * @return a user with the given email, or an empty optional if none is found
      */
     Optional<User> findByEmail(String email);
 

@@ -5,32 +5,39 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
+/**
+ * The CryptoCurrencyRepository interface is a Spring Data JPA repository for managing cryptocurrency data.
+ * CryptoCurrencyRepository interface.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
 @Repository
 public interface CryptoCurrencyRepository extends JpaRepository<CryptoCurrency, Long> {
 
-    /**
-     * Finds a list of CryptoCurrency entities by their symbol.
-     *
-     * @param symbol the symbol of the cryptocurrency to search for
-     * @return a list of CryptoCurrency entities with the given symbol
-     */
-    List<CryptoCurrency> findBySymbol(String symbol);
 
     /**
-     * Finds a list of CryptoCurrency entities by their name.
+     * Find a cryptocurrency by its symbol.
      *
-     * @param name the name of the cryptocurrency to search for
-     * @return a list of CryptoCurrency entities with the given name
+     * @param symbol the symbol of the cryptocurrency to find
+     * @return an Optional containing the cryptocurrency if found, or an empty Optional if not
      */
-    List<CryptoCurrency> findByName(String name);
+    Optional<CryptoCurrency> findBySymbol(String symbol);
+
 
     /**
-     * Finds a list of CryptoCurrency entities by their market capitalization rank.
+     * Find a cryptocurrency by its name.
      *
-     * @param marketCapRank the market capitalization rank of the cryptocurrency to search for
-     * @return a list of CryptoCurrency entities with the given market capitalization rank
+     * @param name the name of the cryptocurrency to find
+     * @return an Optional containing the cryptocurrency if found, or an empty Optional if not
      */
-    List<CryptoCurrency> findByMarketCapRank(int marketCapRank);
+    Optional<CryptoCurrency> findByName(String name);
+
+    /**
+     * Find a cryptocurrency by its market capitalization rank.
+     *
+     * @param marketCapRank the market capitalization rank of the cryptocurrency to find
+     * @return an Optional containing the cryptocurrency if found, or an empty Optional if not
+     */
+    Optional<CryptoCurrency> findByMarketCapRank(int marketCapRank);
 }

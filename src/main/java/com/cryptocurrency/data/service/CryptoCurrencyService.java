@@ -8,28 +8,70 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * The service for CryptoCurrency objects.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
 @Service
 public class CryptoCurrencyService {
 
+    /**
+     * The repository for CryptoCurrency objects.
+     */
     @Autowired
     private CryptoCurrencyRepository cryptoCurrencyRepository;
 
-    public List<CryptoCurrency> getCryptoCurrencyByMarketCapRank(int marketCapRank) {
-        return cryptoCurrencyRepository.findByMarketCapRank(marketCapRank);
+    /**
+     * Returns a CryptoCurrency object by its market capitalization rank.
+     *
+     * @param marketCapRank the rank to search for
+     * @return a CryptoCurrency object
+     * @throws RuntimeException if the CryptoCurrency is not found
+     */
+    public CryptoCurrency getCryptoCurrencyByMarketCapRank(int marketCapRank) {
+        return cryptoCurrencyRepository.findByMarketCapRank(marketCapRank).
+                orElseThrow(() -> new RuntimeException("CryptoCurrency not found"));
     }
 
-    public List<CryptoCurrency> getCryptoCurrencyBySymbol(String symbol) {
-        return cryptoCurrencyRepository.findBySymbol(symbol);
+    /**
+     * Returns a CryptoCurrency object by its symbol.
+     *
+     * @param symbol the symbol to search for
+     * @return a CryptoCurrency object
+     * @throws RuntimeException if the CryptoCurrency is not found
+     */
+    public CryptoCurrency getCryptoCurrencyBySymbol(String symbol) {
+        return cryptoCurrencyRepository.findBySymbol(symbol).
+                orElseThrow(() -> new RuntimeException("CryptoCurrency not found"));
     }
 
-    public List<CryptoCurrency> getCryptoCurrencyByName(String name) {
-        return cryptoCurrencyRepository.findByName(name);
+    /**
+     * Returns a CryptoCurrency object by its name.
+     *
+     * @param name the name to search for
+     * @return a CryptoCurrency object
+     * @throws RuntimeException if the CryptoCurrency is not found
+     */
+    public CryptoCurrency getCryptoCurrencyByName(String name) {
+        return cryptoCurrencyRepository.findByName(name).
+                orElseThrow(() -> new RuntimeException("CryptoCurrency not found"));
     }
 
+    /**
+     * Returns a list of all the CryptoCurrency objects in the database.
+     *
+     * @return a list of CryptoCurrency objects
+     */
     public List<CryptoCurrency> getAllCryptoCurrency() {
         return cryptoCurrencyRepository.findAll();
     }
 
+    /**
+     * Returns a CryptoCurrency object by its ID.
+     *
+     * @param id the ID of the CryptoCurrency to retrieve
+     * @return a CryptoCurrency object
+     */
     public CryptoCurrency getCryptoCurrencyById(Long id) {
         return cryptoCurrencyRepository.findById(id).orElse(null);
     }
