@@ -19,9 +19,9 @@ public class AlertsTest {
     private Alerts alerts;
 
     /**
-     * The marketData object is used to test the Alerts class.
+     * The CryptoCurrency object is used to test the Alerts class.
      */
-    private MarketData marketData;
+    private CryptoCurrency currency;
 
     /**
      * The user object is used to test the Alerts class.
@@ -34,10 +34,9 @@ public class AlertsTest {
      */
     @BeforeEach
     public void setUp() {
-        CryptoCurrency cryptoCurrency = new CryptoCurrency(1L, "Bitcoin", "BTC", 1);
-        marketData = new MarketData(1L, cryptoCurrency, LocalDateTime.now(), 1.0, 1.0, 1.0);
+        currency = new CryptoCurrency(1L, "Bitcoin", "BTC", 1);
         user = new User(1L, "user1",  "email1", "tokenHash1", "passwordHash1");
-        alerts = new Alerts(1L, user, marketData, 1.0, 1.0);
+        alerts = new Alerts(1L, user, currency, 1.0, 1.0);
     }
 
     /**
@@ -47,7 +46,7 @@ public class AlertsTest {
     public void testConstructor() {
         assertEquals(1L, alerts.getId(), "The id of the alerts should be 1L");
         assertEquals(user, alerts.getUser(), "The user of the alerts should be the user object");
-        assertEquals(marketData, alerts.getMarketData(), "The market data of the alerts should be the marketData object");
+        assertEquals(currency, alerts.getCryptoCurrency(), "The market data of the alerts should be the marketData object");
         assertEquals(1.0, alerts.getPriceThreshold(), "The price threshold of the alerts should be 1.0");
         assertEquals(1.0, alerts.getVariationThreshold(), "The variation threshold of the alerts should be 1.0");
     }
@@ -59,7 +58,7 @@ public class AlertsTest {
     public void testGetters() {
         assertEquals(1L, alerts.getId(), "The id of the alerts should be 1L");
         assertEquals(user, alerts.getUser(), "The user of the alerts should be the user object");
-        assertEquals(marketData, alerts.getMarketData(), "The market data of the alerts should be the marketData object");
+        assertEquals(currency, alerts.getCryptoCurrency(), "The market data of the alerts should be the marketData object");
         assertEquals(1.0, alerts.getPriceThreshold(), "The price threshold of the alerts should be 1.0");
         assertEquals(1.0, alerts.getVariationThreshold(), "The variation threshold of the alerts should be 1.0");
     }
@@ -71,13 +70,13 @@ public class AlertsTest {
     public void testSetters() {
         alerts.setId(2L);
         alerts.setUser(user);
-        alerts.setMarketData(marketData);
+        alerts.setCryptoCurrency(currency);
         alerts.setPriceThreshold(2.0);
         alerts.setVariationThreshold(2.0);
 
         assertEquals(2L, alerts.getId(), "The id of the alerts should be 2L");
         assertEquals(user, alerts.getUser(), "The user of the alerts should be the user object");
-        assertEquals(marketData, alerts.getMarketData(), "The market data of the alerts should be the marketData object");
+        assertEquals(currency, alerts.getCryptoCurrency(), "The market data of the alerts should be the marketData object");
         assertEquals(2.0, alerts.getPriceThreshold(), "The price threshold of the alerts should be 2.0");
         assertEquals(2.0, alerts.getVariationThreshold(), "The variation threshold of the alerts should be 2.0");
     }

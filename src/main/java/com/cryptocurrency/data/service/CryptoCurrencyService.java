@@ -29,7 +29,7 @@ public class CryptoCurrencyService {
      * @throws RuntimeException if the CryptoCurrency is not found
      */
     public CryptoCurrency getCryptoCurrencyByMarketCapRank(int marketCapRank) {
-        return cryptoCurrencyRepository.findByMarketCapRank(marketCapRank).
+        return cryptoCurrencyRepository.findByRank(marketCapRank).
                 orElseThrow(() -> new RuntimeException("CryptoCurrency not found"));
     }
 
@@ -74,5 +74,15 @@ public class CryptoCurrencyService {
      */
     public CryptoCurrency getCryptoCurrencyById(Long id) {
         return cryptoCurrencyRepository.findById(id).orElse(null);
+    }
+
+    /**
+     * Returns a list of all the CryptoCurrency objects with a given price.
+     *
+     * @param price the price to search for
+     * @return a list of CryptoCurrency objects
+     */
+    public List<CryptoCurrency> findByPrice(Double price) {
+        return cryptoCurrencyRepository.findByPrice(price);
     }
 }

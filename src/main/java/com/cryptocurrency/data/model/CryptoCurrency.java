@@ -2,6 +2,8 @@ package com.cryptocurrency.data.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 /**
  * This class represents a CryptoCurrency object.
  * Author: Mouhamadou Ahibou DIALLO
@@ -20,6 +22,7 @@ public class CryptoCurrency {
     /**
      * The name of the CryptoCurrency.
      */
+    @Column(nullable = false, unique = true)
     private String name;
 
     /**
@@ -30,7 +33,46 @@ public class CryptoCurrency {
     /**
      * The market cap rank of the CryptoCurrency.
      */
-    private int marketCapRank;
+    @Column(nullable = false, unique = true)
+    private int rank;
+
+    /**
+     * The supply of the CryptoCurrency.
+     */
+    private Double supply;
+
+    /**
+     * The maximum supply of the CryptoCurrency.
+     */
+    private Double maxSupply;
+
+    /**
+     * The market capitalization of the CryptoCurrency in USD.
+     */
+    private Double market;
+
+    /**
+     * The 24-hour trading volume of the CryptoCurrency in USD.
+     */
+    private Double volume;
+
+    /**
+     * The price of the CryptoCurrency in USD.
+     */
+    private Double price;
+
+    /**
+     * The change in price of the CryptoCurrency in USD over the last 24 hours.
+     */
+    private Double change;
+
+    /**
+     * The volume-weighted average price of the CryptoCurrency in USD over the last 24 hours.
+     */
+    private Double vwap;
+
+    @Column(nullable = false)
+    private LocalDateTime timestamp;
 
     /**
      * Constructor for the CryptoCurrency class.
@@ -38,13 +80,46 @@ public class CryptoCurrency {
      * @param id The ID of the CryptoCurrency.
      * @param name The name of the CryptoCurrency.
      * @param symbol The symbol of the CryptoCurrency.
-     * @param marketCapRank The market cap rank of the CryptoCurrency.
+     * @param rank The market cap rank of the CryptoCurrency.
      */
-    public CryptoCurrency(Long id, String name, String symbol, int marketCapRank) {
+    public CryptoCurrency(Long id, String name, String symbol, int rank) {
         this.id = id;
         this.name = name;
         this.symbol = symbol;
-        this.marketCapRank = marketCapRank;
+        this.rank = rank;
+    }
+
+    /**
+     * Constructor for the CryptoCurrency class.
+     *
+     * @param id The ID of the CryptoCurrency.
+     * @param name The name of the CryptoCurrency.
+     * @param symbol The symbol of the CryptoCurrency.
+     * @param rank The market cap rank of the CryptoCurrency.
+     * @param supply The supply of the CryptoCurrency.
+     * @param maxSupply The maximum supply of the CryptoCurrency.
+     * @param market The market capitalization of the CryptoCurrency in USD.
+     * @param volume The 24-hour trading volume of the CryptoCurrency in USD.
+     * @param price The price of the CryptoCurrency in USD.
+     * @param change The change in price of the CryptoCurrency in USD over the last 24 hours.
+     * @param vwap The volume-weighted average price of the CryptoCurrency in USD over the last 24 hours.
+     * @param timestamp The timestamp of the CryptoCurrency.
+     */
+    public CryptoCurrency(Long id, String name, String symbol, int rank, Double supply,
+                          Double maxSupply, Double market, Double volume, Double price,
+                          Double change, Double vwap, LocalDateTime timestamp) {
+        this.id = id;
+        this.name = name;
+        this.symbol = symbol;
+        this.rank = rank;
+        this.supply = supply;
+        this.maxSupply = maxSupply;
+        this.market = market;
+        this.volume = volume;
+        this.price = price;
+        this.change = change;
+        this.vwap = vwap;
+        this.timestamp = timestamp;
     }
 
     /**
@@ -111,8 +186,8 @@ public class CryptoCurrency {
      *
      * @return The market capitalization rank of the CryptoCurrency.
      */
-    public int getMarketCapRank() {
-        return marketCapRank;
+    public int getRank() {
+        return rank;
     }
 
     /**
@@ -120,7 +195,159 @@ public class CryptoCurrency {
      *
      * @param marketCapRank The market capitalization rank to set.
      */
-    public void setMarketCapRank(int marketCapRank) {
-        this.marketCapRank = marketCapRank;
+    public void setRank(int marketCapRank) {
+        this.rank = marketCapRank;
+    }
+
+    /**
+     * Returns the total supply of the CryptoCurrency.
+     *
+     * @return The total supply of the CryptoCurrency.
+     */
+    public Double getSupply() {
+        return supply;
+    }
+
+    /**
+     * Sets the total supply of the CryptoCurrency.
+     *
+     * @param supply The total supply to set.
+     */
+    public void setSupply(Double supply) {
+        this.supply = supply;
+    }
+
+    /**
+     * Returns the maximum supply of the CryptoCurrency.
+     *
+     * @return The maximum supply of the CryptoCurrency.
+     */
+    public Double getMaxSupply() {
+        return maxSupply;
+    }
+
+    /**
+     * Sets the maximum supply of the CryptoCurrency.
+     *
+     * @param maxSupply The maximum supply to set.
+     */
+    public void setMaxSupply(Double maxSupply) {
+        this.maxSupply = maxSupply;
+    }
+
+    /**
+     * Returns the market capitalization of the CryptoCurrency in USD.
+     *
+     * @return The market capitalization of the CryptoCurrency in USD.
+     */
+    public Double getMarket() {
+        return market;
+    }
+
+    /**
+     * Sets the market capitalization of the CryptoCurrency in USD.
+     *
+     * @param marketCapUsd The market capitalization value to set in USD.
+     */
+    public void setMarket(Double marketCapUsd) {
+        this.market = marketCapUsd;
+    }
+
+    /**
+     * Returns the 24-hour trading volume of the CryptoCurrency in USD.
+     *
+     * @return The 24-hour trading volume in USD.
+     */
+    public Double getVolume() {
+        return volume;
+    }
+
+    /**
+     * Sets the 24-hour trading volume of the CryptoCurrency in USD.
+     *
+     * @param volumeUsd24Hr The 24-hour trading volume to set in USD.
+     */
+    public void setVolume(Double volumeUsd24Hr) {
+        this.volume = volumeUsd24Hr;
+    }
+
+    /**
+     * Returns the current price of the CryptoCurrency in USD.
+     *
+     * @return The current price in USD.
+     */
+    public Double getPrice() {
+        return price;
+    }
+
+    /**
+     * Sets the current price of the CryptoCurrency in USD.
+     *
+     * @param priceUsd The current price to set in USD.
+     */
+    public void setPrice(Double priceUsd) {
+        this.price = priceUsd;
+    }
+
+    /**
+     * Returns the percentage change in the CryptoCurrency's price over the
+     * last 24 hours.
+     *
+     * @return The percentage change in the CryptoCurrency's price over the
+     * last 24 hours.
+     */
+    public Double getChange() {
+        return change;
+    }
+
+    /**
+     * Sets the percentage change in the CryptoCurrency's price over the
+     * last 24 hours.
+     *
+     * @param changePercent24Hr The percentage change in the CryptoCurrency's
+     * price over the last 24 hours.
+     */
+    public void setChange(Double changePercent24Hr) {
+        this.change = changePercent24Hr;
+    }
+
+    /**
+     * Returns the volume weighted average price of the CryptoCurrency over the
+     * last 24 hours.
+     *
+     * @return The volume weighted average price of the CryptoCurrency over the
+     * last 24 hours.
+     */
+    public Double getVwap() {
+        return vwap;
+    }
+
+    /**
+     * Sets the volume weighted average price of the CryptoCurrency over the
+     * last 24 hours.
+     *
+     * @param vwap24Hr The volume weighted average price of the CryptoCurrency
+     * over the last 24 hours.
+     */
+    public void setVwap(Double vwap24Hr) {
+        this.vwap = vwap24Hr;
+    }
+
+    /**
+     * Returns the timestamp of the CryptoCurrency object.
+     *
+     * @return The timestamp of the CryptoCurrency object.
+     */
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    /**
+     * Sets the timestamp of the CryptoCurrency object.
+     *
+     * @param timestamp The timestamp to set for the CryptoCurrency object.
+     */
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 }

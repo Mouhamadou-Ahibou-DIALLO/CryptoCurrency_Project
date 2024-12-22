@@ -60,7 +60,7 @@ class CryptoCurrencyRepositoryTest {
 
         assertEquals("Bitcoin", cryptoCurrency.getName());
         assertEquals("BTC", cryptoCurrency.getSymbol());
-        assertEquals(1, cryptoCurrency.getMarketCapRank());
+        assertEquals(1, cryptoCurrency.getRank());
 
         verify(cryptoCurrencyRepository, times(1)).findBySymbol(symbol);
     }
@@ -82,7 +82,7 @@ class CryptoCurrencyRepositoryTest {
         CryptoCurrency cryptoCurrency = result.orElseThrow(() -> new RuntimeException("CryptoCurrency not found"));
         assertEquals("Bitcoin Cash", cryptoCurrency.getName());
         assertEquals("BTC2", cryptoCurrency.getSymbol());
-        assertEquals(10, cryptoCurrency.getMarketCapRank());
+        assertEquals(10, cryptoCurrency.getRank());
     }
 
     /**
@@ -94,15 +94,15 @@ class CryptoCurrencyRepositoryTest {
     void testFindByMarketCapRank() {
         int marketCapRank = 1;
 
-        when(cryptoCurrencyRepository.findByMarketCapRank(marketCapRank)).thenReturn(java.util.Optional.of(cryptoCurrency1));
-        Optional<CryptoCurrency> result = cryptoCurrencyRepository.findByMarketCapRank(marketCapRank);
+        when(cryptoCurrencyRepository.findByRank(marketCapRank)).thenReturn(java.util.Optional.of(cryptoCurrency1));
+        Optional<CryptoCurrency> result = cryptoCurrencyRepository.findByRank(marketCapRank);
 
         CryptoCurrency cryptoCurrency = result.orElseThrow(() -> new RuntimeException("CryptoCurrency not found"));
         assertEquals("Bitcoin", cryptoCurrency.getName());
         assertEquals("BTC", cryptoCurrency.getSymbol());
-        assertEquals(1, cryptoCurrency.getMarketCapRank());
+        assertEquals(1, cryptoCurrency.getRank());
 
-        verify(cryptoCurrencyRepository, times(1)).findByMarketCapRank(marketCapRank);
+        verify(cryptoCurrencyRepository, times(1)).findByRank(marketCapRank);
     }
 
     /**
@@ -119,7 +119,7 @@ class CryptoCurrencyRepositoryTest {
         assertEquals(2, result.size(), "The size of the result should be 2");
         assertEquals("Bitcoin", result.get(0).getName(), "The name of the first crypto should be 'Bitcoin'");
         assertEquals("BTC2", result.get(1).getSymbol(), "The symbol of the second crypto should be 'BTC2'");
-        assertEquals(1, result.get(0).getMarketCapRank(), "The market cap rank of the first crypto should be 1");
+        assertEquals(1, result.get(0).getRank(), "The market cap rank of the first crypto should be 1");
     }
 
     /**
@@ -135,6 +135,23 @@ class CryptoCurrencyRepositoryTest {
         assert result != null;
         assertEquals("Bitcoin", result.getName());
         assertEquals("BTC", result.getSymbol());
-        assertEquals(1, result.getMarketCapRank());
+        assertEquals(1, result.getRank());
+    }
+
+    /**
+     * Tests the findByPrice method of the CryptoCurrencyRepository class.
+     * Ensures that a list of CryptoCurrency objects is returned when a valid price is provided.
+     * Verifies that findByPrice is called once.
+     */
+    @Test
+    void testFindByPrice() {
+        double price = 1000.0;
+        List<CryptoCurrency> mockCryptoList = List.of(cryptoCurrency1, cryptoCurrency2);
+        when(cryptoCurrencyRepository.findByPrice(price)).thenReturn(mockCryptoList);
+        List<CryptoCurrency> result = cryptoCurrencyRepository.findByPrice(price);
+        assertEquals(2, result.size());
+        assertEquals("Bitcoin", result.get(0).getName());
+        assertEquals("BTC2", result.get(1).getSymbol());
+        assertEquals(1, result.get(0).getRank());
     }
 }

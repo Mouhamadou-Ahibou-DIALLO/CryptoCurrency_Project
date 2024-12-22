@@ -2,8 +2,8 @@ package com.cryptocurrency.data.service;
 
 import com.cryptocurrency.data.model.Alerts;
 import com.cryptocurrency.data.model.CryptoCurrency;
-import com.cryptocurrency.data.model.MarketData;
 import com.cryptocurrency.data.model.User;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -56,12 +56,11 @@ class EmailServiceTest {
         user.setEmail("test@example.com");
         user.setUsername("JohnDoe");
 
-        MarketData marketData = new MarketData();
-        marketData.setCryptoCurrency(new CryptoCurrency(1L,"Bitcoin", "BTC", 1));
+        CryptoCurrency currency = new CryptoCurrency(1L,"Bitcoin", "BTC", 1);
 
         Alerts alert = new Alerts();
         alert.setUser(user);
-        alert.setMarketData(marketData);
+        alert.setCryptoCurrency(currency);
         alert.setPriceThreshold(30000.0);
 
         double currentPrice = 35000.0;

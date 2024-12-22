@@ -1,25 +1,25 @@
-# Étape 1 : Définir les relations
-
-** Voici les relations envisagées :
-- 1 Cryptocurrency ↔ n MarketData : Une crypto-monnaie peut avoir plusieurs enregistrements de données de marché (historique).
-- 1 User ↔ n Alerts : Un utilisateur peut configurer plusieurs alertes.
-- 1 Cryptocurrency ↔ n Alerts : Une alerte concerne une crypto-monnaie spécifique.
-
-# Étape 2 : Établir les attributs
+# Étape  : Établir les attributs
 
 ** Cryptocurrency
 - id (clé primaire, unique)
 - name (nom de la crypto)
 - symbol (symbole, ex. BTC, ETH)
-- market_cap_rank (rang sur le marché)
-
-** MarketData
-- id (clé primaire, unique)
-- crypto_id (clé étrangère vers Cryptocurrency)
+- rank (rang sur le marché)
 - timestamp (date et heure des données)
-- price_usd (prix en USD)
-- volume_usd (volume d’échanges en USD)
-- market_cap_usd (capitalisation)
+- price (prix en USD)
+- volume (volume d’échanges en USD)
+- market (capitalisation)
+- supply (quantité de monnaie en circulation)
+- max_supply (quantité maximale de monnaie en circulation)
+- vwap (prix moyen ponderé)
+- change (variation en pourcentage)
+
+** Alerts
+- id (clé primaire, unique)
+- user_id (clé étrangère vers User)
+- crypto_id (clé étrangère vers Cryptocurrency)
+- price_threshold (seuil de prix pour l'alerte)
+- variation_threshold (seuil de variation)
 
 ** User
 - id (clé primaire, unique)
@@ -28,25 +28,25 @@
 - token_hash
 - password_hash
 
-** Alerts
-- id (clé primaire, unique)
-- user_id (clé étrangère vers User)
-- market_id (clé étrangère vers MarketData)
-- price_threshold (seuil de prix pour l'alerte)
-- variation_threshold (seuil de variation)
 
+# Étape  : Concevoir le schéma ERD
 
-# Étape 3 : Concevoir le schéma ERD
++-------------------+          +-------------------+          +-------------------+
+|      User         |          |   Cryptocurrency  |          |       Alerts      |
++-------------------+          +-------------------+          +-------------------+
+| id (PK)           |<-------->| id (PK)           |<-------->| id (PK)           |
+| username          |          | name              |          | user_id (FK)      |
+| email             |          | symbol            |          | crypto_id (FK)    |
+| token_hash        |          | rank              |          | price_threshold   |
+| password_hash     |          | timestamp         |          | variation_threshold|
++-------------------+          | price             |          +-------------------+
+                               | volume            |
+                               | market            |
+                               | supply            |
+                               | max_supply        |
+                               | vwap              |
+                               | change            |
+                               +-------------------+
 
-+------------------+         +-------------------+         +----------------+
-|  Cryptocurrency  |         |     MarketData    |         |     Alerts     |
-+------------------+         +-------------------+         +----------------+
-| id (PK)          | 1    n | id (PK)           | 1    n  | id (PK)        |
-| name             |---------| crypto_id (FK)   |---------| user_id (FK)   |
-| symbol           |         | timestamp        |         | market_id (FK) |
-| market_cap_rank  |         | price_usd        |         | price_threshold|
-+------------------+         | volume_usd       |         | variation_thrsh|
-                              | market_cap_usd   |         +----------------+
-                              +-------------------+
 
 Une représentation visuelle du schéma est disponible dans le fichier diagramme visuel.pdf, générée avec le site https://dbdiagram.io/

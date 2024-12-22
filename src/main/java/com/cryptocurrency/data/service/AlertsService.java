@@ -1,7 +1,7 @@
 package com.cryptocurrency.data.service;
 
 import com.cryptocurrency.data.model.Alerts;
-import com.cryptocurrency.data.model.MarketData;
+import com.cryptocurrency.data.model.CryptoCurrency;
 import com.cryptocurrency.data.model.User;
 import com.cryptocurrency.data.repository.AlertsRepository;
 
@@ -38,17 +38,6 @@ public class AlertsService {
      */
     public List<Alerts> findByUser(User user) {
         return alertsRepository.findByUser(user);
-    }
-
-    /**
-     * Find all alerts for a given market data entry.
-     *
-     * @param marketData the market data entry to find alerts for
-     * @return a list of alerts for the given market data entry
-     */
-    public List<Alerts> findByMarketData(MarketData marketData) {
-        // Find all alerts for a given market data entry.
-        return alertsRepository.findByMarketData(marketData);
     }
 
     /**
@@ -111,17 +100,6 @@ public class AlertsService {
     }
 
     /**
-     * Find all alerts for a given market data entry and user.
-     *
-     * @param marketData the market data entry to find alerts for
-     * @param user the user to find alerts for
-     * @return a list of alerts for the given market data and user
-     */
-    public List<Alerts> findByMarketDataAndUser(MarketData marketData, User user) {
-        return alertsRepository.findByMarketDataAndUser(marketData, user);
-    }
-
-    /**
      * Deletes all alerts associated with the specified user.
      *
      * @param user the user whose alerts are to be deleted
@@ -137,7 +115,7 @@ public class AlertsService {
         List<Alerts> alerts = alertsRepository.findAll();
 
         for (Alerts alert : alerts) {
-            double currentPrice = getCurrentPrice(alert.getMarketData());
+            double currentPrice = getCurrentPrice(alert.getCryptoCurrency());
 
             if (currentPrice >= alert.getPriceThreshold()) {
                 emailService.sendNotification(alert, currentPrice);
@@ -148,11 +126,11 @@ public class AlertsService {
     /**
      * Gets the current price for a given market data entry.
      *
-     * @param marketData the market data entry to get the current price for
+     * @param currency the cryptocurrency entry to get the current price for
      * @return the current price for the given market data entry
      */
-    private double getCurrentPrice(MarketData marketData) {
-        return marketData.getPriceUsd();
+    private double getCurrentPrice(CryptoCurrency currency) {
+        return currency.getPrice();
     }
 
     /**

@@ -78,12 +78,18 @@ public class CryptoCurrencyController {
     /**
      * Returns a CryptoCurrency object by its market capitalization rank.
      *
-     * @param marketCapRank The market capitalization rank of the CryptoCurrency to retrieve.
+     * @param rank The market capitalization rank of the CryptoCurrency to retrieve.
      * @return A CryptoCurrency object.
      */
-    @GetMapping("/search/{marketCapRank}")
-    public ResponseEntity<CryptoCurrency> getCryptoCurrencyByMarketCapRank(@PathVariable int marketCapRank) {
-        CryptoCurrency cryptocurrency = cryptoCurrencyService.getCryptoCurrencyByMarketCapRank(marketCapRank);
+    @GetMapping("/search/{rank}")
+    public ResponseEntity<CryptoCurrency> getCryptoCurrencyByMarketCapRank(@PathVariable int rank) {
+        CryptoCurrency cryptocurrency = cryptoCurrencyService.getCryptoCurrencyByMarketCapRank(rank);
+        return ResponseEntity.ok(cryptocurrency);
+    }
+
+    @GetMapping("/search/{price}")
+    public ResponseEntity<List<CryptoCurrency>> getCryptoCurrencyByPrice(@PathVariable double price) {
+        List<CryptoCurrency> cryptocurrency = cryptoCurrencyService.findByPrice(price);
         return ResponseEntity.ok(cryptocurrency);
     }
 }

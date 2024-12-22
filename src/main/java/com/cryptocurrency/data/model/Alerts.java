@@ -28,8 +28,8 @@ public class Alerts {
      * The market data associated with the Alerts object.
      */
     @ManyToOne
-    @JoinColumn(name = "market_id", nullable = false)
-    private MarketData marketData;
+    @JoinColumn(name = "crypto_id", nullable = false)
+    private CryptoCurrency cryptoCurrency;
 
     /**
      * The price threshold associated with the Alerts object.
@@ -52,14 +52,14 @@ public class Alerts {
      *
      * @param id The ID of the Alerts object.
      * @param user The user associated with the Alerts object.
-     * @param marketData The market data associated with the Alerts object.
+     * @param cryptoCurrency The cryptocurrency associated with the Alerts object.
      * @param priceThreshold The price threshold associated with the Alerts object.
      * @param variationThreshold The variation threshold associated with the Alerts object.
      */
-    public Alerts(Long id, User user, MarketData marketData, Double priceThreshold, Double variationThreshold) {
+    public Alerts(Long id, User user, CryptoCurrency cryptoCurrency, Double priceThreshold, Double variationThreshold) {
         this.id = id;
         this.user = user;
-        this.marketData = marketData;
+        this.cryptoCurrency = cryptoCurrency;
         this.priceThreshold = priceThreshold;
         this.variationThreshold = variationThreshold;
     }
@@ -101,21 +101,21 @@ public class Alerts {
     }
 
     /**
-     * Returns the MarketData associated with the Alerts object.
+     * Returns the CryptoCurrency object associated with the Alerts object.
      *
-     * @return The MarketData associated with the Alerts object.
+     * @return The CryptoCurrency object associated with the Alerts object.
      */
-    public MarketData getMarketData() {
-        return marketData;
+    public CryptoCurrency getCryptoCurrency() {
+        return cryptoCurrency;
     }
 
     /**
-     * Sets the MarketData associated with the Alerts object.
+     * Sets the CryptoCurrency object associated with the Alerts object.
      *
-     * @param marketData The MarketData associated with the Alerts object.
+     * @param cryptoCurrency The CryptoCurrency object to associate with the Alerts object.
      */
-    public void setMarketData(MarketData marketData) {
-        this.marketData = marketData;
+    public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     /**

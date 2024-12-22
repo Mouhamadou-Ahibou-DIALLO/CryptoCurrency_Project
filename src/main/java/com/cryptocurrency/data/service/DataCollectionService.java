@@ -2,11 +2,8 @@ package com.cryptocurrency.data.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.cryptocurrency.data.model.CryptoCurrency;
-import com.cryptocurrency.data.model.MarketData;
 import com.cryptocurrency.data.repository.CryptoCurrencyRepository;
-import com.cryptocurrency.data.repository.MarketDataRepository;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,7 +12,6 @@ import org.springframework.stereotype.Service;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,11 +30,6 @@ public class DataCollectionService {
      * The repository for CryptoCurrency objects.
      * */
     private final CryptoCurrencyRepository cryptoCurrencyRepository;
-
-    /**
-     * The repository for MarketData objects.
-     * */
-    private final MarketDataRepository marketDataRepository;
 
     /**
      * The logger for the service.
@@ -60,12 +51,9 @@ public class DataCollectionService {
      * Constructs a new instance of the DataCollectionService class.
      *
      * @param cryptoCurrencyRepository The repository for CryptoCurrency objects.
-     * @param marketDataRepository The repository for MarketData objects.
      */
-    public DataCollectionService(CryptoCurrencyRepository cryptoCurrencyRepository,
-                                 MarketDataRepository marketDataRepository) {
+    public DataCollectionService(CryptoCurrencyRepository cryptoCurrencyRepository) {
         this.cryptoCurrencyRepository = cryptoCurrencyRepository;
-        this.marketDataRepository = marketDataRepository;
     }
 
     /**
@@ -90,31 +78,30 @@ public class DataCollectionService {
             if (response.isSuccessful()) {
                 assert response.body() != null;
                 String responseBody = response.body().string();
-                List<MarketData> marketDataList = parseMarketData(responseBody);
+                List<CryptoCurrency> cryptoCurrencyList = parseMarketData(responseBody);
 
-                enforceTableLimit();
+                enforceTableLimitBeforeInsert();
 
-                List<MarketData> limitedMarketData = marketDataList.subList(0, Math.min(marketDataList.size(), LIMIT_LINE));
-                marketDataRepository.saveAll(limitedMarketData);
+                cryptoCurrencyRepository.saveAll(cryptoCurrencyList);
 
-                logger.info("20 new lines inserted into MarketData and CryptoCurrency.");
+                logger.info("20 new lines inserée dans la table CryptoCurrency ...........");
             }
 
         } catch (Exception e) {
             logger.error("An error occurred during data collection: ", e);
         }
 
-        logger.info("Finished data collection");
+        logger.info("Fin de la collection de donnée");
     }
 
     /**
      * Parses the market data from the CoinCap API response.
      *
      * @param jsonResponse The JSON response from the CoinCap API.
-     * @return A list of MarketData objects parsed from the API response.
+     * @return A list of CryptoCurrency objects parsed from the API response.
      */
-    private List<MarketData> parseMarketData(String jsonResponse) {
-        List<MarketData> marketDataList = new ArrayList<>();
+    private List<CryptoCurrency> parseMarketData(String jsonResponse) {
+        List<CryptoCurrency> cryptoCurrencyList = new ArrayList<>();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(jsonResponse);
@@ -127,46 +114,49 @@ public class DataCollectionService {
 
                     String name = node.path("name").asText();
                     String symbol = node.path("symbol").asText();
-                    int marketCapRank = node.path("rank").asInt();
+                    int rank = node.path("rank").asInt();
+                    double supply = node.path("supply").asDouble();
+                    double maxSupply = node.path("maxSupply").asDouble();
+                    double market = node.path("marketCapUsd").asDouble();
+                    double volume = node.path("volumeUsd24Hr").asDouble();
+                    double price = node.path("priceUsd").asDouble();
+                    double change = node.path("changePercent24Hr").asDouble();
+                    double vwap = node.path("vwap24Hr").asDouble();
 
-                    CryptoCurrency cryptocurrency = cryptoCurrencyRepository.findByName(name)
-                            .stream()
-                            .findFirst()
-                            .orElseGet(() -> {
-                                logger.info("CryptoCurrency {} not found, creating a new one: ", name);
-                                CryptoCurrency newCrypto = new CryptoCurrency();
-                                newCrypto.setName(name);
-                                newCrypto.setSymbol(symbol);
-                                newCrypto.setMarketCapRank(marketCapRank);
-                                return cryptoCurrencyRepository.save(newCrypto);
-                            });
+                    CryptoCurrency cryptocurrency = new CryptoCurrency();
+                    cryptocurrency.setName(name);
+                    cryptocurrency.setSymbol(symbol);
+                    cryptocurrency.setRank(rank);
+                    cryptocurrency.setSupply(supply);
+                    cryptocurrency.setMaxSupply(maxSupply);
+                    cryptocurrency.setMarket(market);
+                    cryptocurrency.setVolume(volume);
+                    cryptocurrency.setPrice(price);
+                    cryptocurrency.setChange(change);
+                    cryptocurrency.setVwap(vwap);
+                    cryptocurrency.setTimestamp(LocalDateTime.now());
 
-                    MarketData marketData = new MarketData();
-                    marketData.setCryptoCurrency(cryptocurrency);
-                    marketData.setTimeStamp(LocalDateTime.now());
-                    marketData.setPriceUsd(node.path("priceUsd").asDouble());
-                    marketData.setVolumeUsd(node.path("volumeUsd24Hr").asDouble());
-                    marketData.setMarketCapUsd(node.path("marketCapUsd").asDouble());
-
-                    marketDataList.add(marketData);
+                    cryptoCurrencyList.add(cryptocurrency);
                     count++;
                 }
             }
         } catch (Exception e) {
-            logger.error("Erreur lors du parsing des donn es: ", e);
+            logger.error("Erreur lors du parsing des données: ", e);
         }
-        return marketDataList;
+        return cryptoCurrencyList;
     }
 
     /**
-     * Enforces the limit on the number of rows in the MarketData table by deleting all rows before inserting new data.
+     * Enforces the limit on the number of rows in the CryptoCurrency table.
+     * Deletes the oldest rows if the total exceeds the limit BEFORE inserting new data.
      */
-    private void enforceTableLimit() {
-        logger.info("Deleting all data in MarketData...");
-        marketDataRepository.deleteAll();
-
-        logger.info("All data in MarketData and CryptoCurrency tables have been deleted.");
+    private void enforceTableLimitBeforeInsert() {
+        logger.info("supprimer les anciennes 20 lignes");
+        List<CryptoCurrency> cryptoCurrencyList = cryptoCurrencyRepository.findAll();
+        if (cryptoCurrencyList.size() == LIMIT_LINE) {
+            System.out.println(cryptoCurrencyList.size() + " taille");
+            logger.info("{} taille ", cryptoCurrencyList.size());
+            cryptoCurrencyRepository.deleteAll();
+        }
     }
-
 }
-

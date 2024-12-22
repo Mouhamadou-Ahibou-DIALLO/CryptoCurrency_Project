@@ -1,11 +1,11 @@
 package com.cryptocurrency.data.scheduler;
 
-import com.cryptocurrency.data.repository.AlertsRepository;
 import com.cryptocurrency.data.service.AlertsService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+
 import org.mockito.Mockito;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -17,12 +17,6 @@ import static org.mockito.Mockito.verify;
  * Author: Mouhamadou Ahibou DIALLO
  */
 public class AlertCheckerTest {
-
-    /**
-     * The alertsRepository.
-     */
-    @Mock
-    private AlertsRepository alertsRepository;
 
     /**
      * The alertsService.

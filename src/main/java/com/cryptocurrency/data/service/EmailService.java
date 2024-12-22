@@ -44,7 +44,7 @@ public class EmailService {
         message.setSubject("Alerte CryptoCurrency");
 
         message.setText("Bonjour " + alert.getUser().getUsername() + ",\n\n"
-                + "Le prix de la cryptomonnaie " + alert.getMarketData().getCryptoCurrency().getName()
+                + "Le prix de la cryptomonnaie " + alert.getCryptoCurrency().getName()
                 + " a atteint ou dépassé le seuil que vous avez défini !\n\n"
                 + "Prix actuel : " + currentPrice + " $\n"
                 + "Seuil défini : " + alert.getPriceThreshold() + " $\n\n"

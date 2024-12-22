@@ -2,18 +2,17 @@ package com.cryptocurrency.data.service;
 
 import com.cryptocurrency.data.model.Alerts;
 import com.cryptocurrency.data.model.CryptoCurrency;
-import com.cryptocurrency.data.model.MarketData;
 import com.cryptocurrency.data.model.User;
 import com.cryptocurrency.data.repository.AlertsRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,11 +38,6 @@ public class AlertsServiceTest {
     private AlertsService alertsService;
 
     /**
-     * The marketData field is an instance of the MarketData class.
-     */
-    private MarketData marketData;
-
-    /**
      * The user field is an instance of the User class.
      */
     private User user;
@@ -61,16 +55,15 @@ public class AlertsServiceTest {
 
     /**
      * Sets up the test environment before each test.
-     * Creates a MarketData object, a User object and two Alerts objects.
+     * Creates a cryptoCurrency object, a User object and two Alerts objects.
      */
     @BeforeEach
     public void setUp() {
         CryptoCurrency cryptoCurrency = new CryptoCurrency(1L, "Bitcoin", "BTC", 1);
-        marketData = new MarketData(1L, cryptoCurrency, LocalDateTime.now(), 1.0, 1.0, 1.0);
         user = new User(1L, "user1",  "email1", "tokenHash1", "passwordHash1");
 
-        alerts1 = new Alerts(1L, user, marketData, 1.0, 2.0);
-        alerts2 = new Alerts(2L, user, marketData, 1.0, 2.0);
+        alerts1 = new Alerts(1L, user, cryptoCurrency, 1.0, 2.0);
+        alerts2 = new Alerts(2L, user, cryptoCurrency, 1.0, 2.0);
     }
 
     /**
@@ -86,21 +79,6 @@ public class AlertsServiceTest {
         assertEquals(2, result.size());
         assertEquals(1L, result.get(0).getId());
         verify(alertsRepository, times(1)).findByUser(user);
-    }
-
-    /**
-     * Test the findByMarketData() method of the AlertsService class.
-     * This test verifies that the findByMarketData() method returns the correct list of alerts
-     * when given a valid MarketData object.
-     */
-    @Test
-    public void testFindByMarketData() {
-        when(alertsRepository.findByMarketData(marketData)).thenReturn(List.of(alerts1, alerts2));
-        List<Alerts> result = alertsService.findByMarketData(marketData);
-        assertEquals(2, result.size());
-        assertEquals(1L, result.get(0).getId());
-
-        verify(alertsRepository, times(1)).findByMarketData(marketData);
     }
 
     /**
@@ -197,20 +175,5 @@ public class AlertsServiceTest {
     public void testDeleteByUser() {
         alertsService.deleteByUser(user);
         verify(alertsRepository, times(1)).deleteByUser(user);
-    }
-
-    /**
-     * Test the findByMarketDataAndUser() method of the AlertsService class.
-     * This test verifies that the findByMarketDataAndUser() method returns the correct list of alerts
-     * when given a valid MarketData object and a valid User object.
-     */
-    @Test
-    public void testFindByCryptoCurrencyAndUser() {
-        when(alertsRepository.findByMarketDataAndUser(marketData, user)).thenReturn(List.of(alerts1, alerts2));
-        List<Alerts> result = alertsService.findByMarketDataAndUser(marketData, user);
-
-        assertEquals(2, result.size());
-        assertEquals(1L, result.get(0).getId());
-        verify(alertsRepository, times(1)).findByMarketDataAndUser(marketData, user);
     }
 }

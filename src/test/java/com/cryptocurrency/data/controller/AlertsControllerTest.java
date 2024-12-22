@@ -125,7 +125,7 @@ class CryptoCurrencyControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Bitcoin", Objects.requireNonNull(response.getBody()).getName());
-        assertEquals(1, response.getBody().getMarketCapRank());
+        assertEquals(1, response.getBody().getRank());
     }
 
     /**

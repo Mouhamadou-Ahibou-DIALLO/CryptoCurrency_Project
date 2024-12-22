@@ -78,7 +78,7 @@ public class CryptoCurrencyServiceTest {
 
         assertEquals("Bitcoin", result.getName());
         assertEquals("BTC", result.getSymbol());
-        assertEquals(1, result.getMarketCapRank());
+        assertEquals(1, result.getRank());
 
         verify(cryptoCurrencyRepository, times(1)).findById(id);
     }
@@ -98,7 +98,7 @@ public class CryptoCurrencyServiceTest {
 
         assertEquals("Bitcoin", result.getName(), "The name should be 'Bitcoin'");
         assertEquals("BTC", result.getSymbol(), "The symbol should be 'BTC'");
-        assertEquals(1, result.getMarketCapRank(), "The market cap rank should be 1");
+        assertEquals(1, result.getRank(), "The market cap rank should be 1");
 
         verify(cryptoCurrencyRepository, times(1)).findBySymbol(symbol);
     }
@@ -117,7 +117,7 @@ public class CryptoCurrencyServiceTest {
 
         assertEquals("Bitcoin Cash", result.getName(), "The name should be 'Bitcoin Cash'");
         assertEquals("BTC", result.getSymbol(), "The symbol should be 'BTC'");
-        assertEquals(10, result.getMarketCapRank(), "The market cap rank should be 10");
+        assertEquals(10, result.getRank(), "The market cap rank should be 10");
 
         verify(cryptoCurrencyRepository, times(1)).findByName(name);
     }
@@ -131,13 +131,22 @@ public class CryptoCurrencyServiceTest {
         int marketCapRank = 20;
         CryptoCurrency currency = new CryptoCurrency(4L, "Bitcoin Cash", "ETH", 20);
 
-        when(cryptoCurrencyRepository.findByMarketCapRank(marketCapRank)).thenReturn(java.util.Optional.of(currency));
+        when(cryptoCurrencyRepository.findByRank(marketCapRank)).thenReturn(java.util.Optional.of(currency));
         CryptoCurrency result = cryptoCurrencyService.getCryptoCurrencyByMarketCapRank(marketCapRank);
 
         assertEquals("Bitcoin Cash", result.getName(), "The name should be 'Bitcoin Cash'");
         assertEquals("ETH", result.getSymbol(), "The symbol should be 'ETH'");
-        assertEquals(20, result.getMarketCapRank(), "The market cap rank should be 20");
+        assertEquals(20, result.getRank(), "The market cap rank should be 20");
 
-        verify(cryptoCurrencyRepository, times(1)).findByMarketCapRank(marketCapRank);
+        verify(cryptoCurrencyRepository, times(1)).findByRank(marketCapRank);
+    }
+
+    @Test
+    public void testFindByPrice() {
+        Double price = 1000.0;
+        when(cryptoCurrencyRepository.findByPrice(price)).thenReturn(List.of(cryptoCurrency1));
+
+        List<CryptoCurrency> result = cryptoCurrencyService.findByPrice(price);
+        assertEquals(1, result.size());
     }
 }
