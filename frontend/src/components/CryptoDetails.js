@@ -1,86 +1,72 @@
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import { Line } from "react-chartjs-2";
-// import api from "./api";
-//
-// const CryptoDetails = () => {
-//     const { id } = useParams();
-//     const [crypto, setCrypto] = useState(null);
-//
-//     useEffect(() => {
-//         api.get(`/cryptocurrencies/${id}`)
-//             .then((response) => setCrypto(response.data))
-//             .catch((error) => console.error(error));
-//     }, [id]);
-//
-//     if (!crypto) return <div>Chargement...</div>;
-//
-//     const data = {
-//         labels: crypto.timestamps,
-//         datasets: [
-//             {
-//                 label: "Prix",
-//                 data: crypto.price,
-//                 borderColor: "blue",
-//                 fill: false,
-//             },
-//         ],
-//     };
-//
-//     return (
-//         <div className="crypto-details">
-//             <h2>{crypto.name} ({crypto.symbol})</h2>
-//             <p>Rang: {crypto.rank}</p>
-//             <Line data={data} />
-//         </div>
-//     );
-// };
-//
-// export default CryptoDetails;
-
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import HeaderDetails from "./HeaderDetails";
 import "../static/css/detailsCrypto.css";
 
-function CryptoDetails() {
+const CryptoDetails = () => {
     const { id } = useParams();
     const [crypto, setCrypto] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    console.log("redirect successful");
+    console.log("ID de la crypto:", id);
 
     useEffect(() => {
-        setloading(true);
-
         const username = "momo";
         const password = "Diallo1957@";
-        const credentials = btoa(`${username}:${password}`)
+        const credentials = btoa(`${username}:${password}`);
 
-        fetch(`api/cryptocurrencies/${id}`, {
+        fetch(`/api/cryptocurrencies/${id}`, {
             headers: {
                 Authorization: `Basic ${credentials}`,
             },
         })
-            .then((response) => response.json())
-            .then((data) => setCrypto(data))
-            .catch((error) => console.error("Erreur lors du chargement des détails :", error));
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP : ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log("Données récupérées de l'API : ", data);
+                setCrypto(data);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Erreur lors de la récupération des données : ", error);
+                setError(error.message);
+                setLoading(false);
+            });
     }, [id]);
 
+    if (loading) {
+        return <div>Chargement des données...</div>;
+    }
+
+    if (error) {
+        return <div>Erreur : {error}</div>;
+    }
+
     if (!crypto) {
-        return <p className="crypto-details p">Chargement des détails...</p>;
+        return <div>Aucune donnée trouvée pour cette cryptomonnaie.</div>;
     }
 
     return (
         <div className="crypto-details">
+            <HeaderDetails />
             <Link to="/">Retour à la liste</Link>
             <h1>Détails de {crypto.name}</h1>
             <ul>
                 <li><strong>Nom:</strong> {crypto.name}</li>
                 <li><strong>Symbole:</strong> {crypto.symbol}</li>
                 <li><strong>Rang:</strong> {crypto.rank}</li>
-                <li><strong>Prix ($):</strong> {crypto.price.toFixed(2)}</li>
-                <li><strong>Volume d'échange en ($):</strong> {crypto.volume.toFixed(2)}</li>
-                <li><strong>Market Cap ($):</strong> {crypto.market.toFixed(2)}</li>
-                <li><strong>Pourcentage de changement en 24h:</strong> {crypto.change.toFixed(2)}%</li>
-                <li><strong>VWAP en 24H:</strong> {crypto.vwap.toFixed(2)}</li>
-                <li><strong>Timestamp:</strong> {new Date(crypto.timestamp).toLocaleString()}</li>
+                <li><strong>Prix ($):</strong> {crypto.price ? crypto.price.toFixed(2) : 'N/A'}</li>
+                <li><strong>Volume d'échange ($):</strong> {crypto.volume ? crypto.volume.toFixed(2) : 'N/A'}</li>
+                <li><strong>Market Cap ($):</strong> {crypto.market ? crypto.market.toFixed(2) : 'N/A'}</li>
+                <li><strong>Pourcentage de changement en 24h:</strong> {crypto.change ? crypto.change.toFixed(2) : 'N/A'}</li>
+                <li><strong>VWAP en 24H:</strong> {crypto.vwap ? crypto.vwap.toFixed(2) : 'N/A'}</li>
+                <li><strong>Timestamp:</strong> {crypto.timestamp ? new Date(crypto.timestamp).toLocaleString() : 'N/A'}</li>
             </ul>
         </div>
     );

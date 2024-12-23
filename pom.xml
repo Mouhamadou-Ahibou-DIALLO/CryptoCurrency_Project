@@ -53,14 +53,6 @@
             <version>3.47.1.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>6.6.3.Final</version>
-            <type>pom</type>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-community-dialects -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>
@@ -94,7 +86,6 @@
             <version>3.0.3</version>
             <scope>test</scope>
         </dependency>
-
 
         <dependency>
             <groupId>org.springframework.security</groupId>
