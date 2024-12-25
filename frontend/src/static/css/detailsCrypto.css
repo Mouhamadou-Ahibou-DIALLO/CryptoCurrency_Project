@@ -1,14 +1,87 @@
 .crypto-details {
-    padding: 20px;
+    width: 80%;
     max-width: 800px;
     margin: 20px auto;
-    background: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    padding: 20px;
+    background: #f9f9f9;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+    overflow-x: auto;
+    max-height: 80vh;
 }
 
-.crypto-details p {
+.crypto-details h1 {
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color: #007bff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.crypto-details ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.crypto-details ul li {
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eaeaea;
+    padding: 10px 0;
+}
+
+.crypto-details ul li strong {
+    color: #007bff;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 10px;
+}
+
+.crypto-details a {
+    display: inline-block;
     margin-bottom: 20px;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.crypto-details a:hover {
+    color: #0056b3;
+}
+
+.crypto-details li span {
+    color: #555;
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    .crypto-details {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .crypto-details h1 {
+        font-size: 1.5rem;
+    }
+
+    .crypto-details ul li {
+        font-size: 0.9rem;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .crypto-details ul li strong {
+        width: 100%;
+        margin-bottom: 5px;
+    }
 }

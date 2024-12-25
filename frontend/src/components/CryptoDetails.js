@@ -14,7 +14,7 @@ const CryptoDetails = () => {
 
     useEffect(() => {
         const username = "momo";
-        const password = "Diallo1957@";
+        const password = "Avignon2024@?";
         const credentials = btoa(`${username}:${password}`);
 
         fetch(`/api/cryptocurrencies/${id}`, {

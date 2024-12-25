@@ -10,7 +10,7 @@ const CryptoList = () => {
     useEffect(() => {
 
         const username = "momo";
-        const password = "Diallo1957@";
+        const password = "Avignon2024@?";
         const credentials = btoa(`${username}:${password}`);
 
         fetch("/api/cryptocurrencies", {
@@ -39,10 +39,10 @@ const CryptoList = () => {
     }
 
     return (
-        <div className="crypto-list">
+        <div>
             <Header />
-            <h1>Liste des Cryptomonnaies</h1>
-            <table>
+            <h1 className="title">Liste des Cryptomonnaies</h1>
+            <table className="crypto-table">
                 <thead>
                 <tr>
                     <th>Rang</th>
@@ -53,7 +53,7 @@ const CryptoList = () => {
                 </thead>
                 <tbody>
                 {cryptos.map((crypto) => (
-                    <tr key={crypto.id}>
+                    <tr key={crypto.id} className="crypto-row">
                         <td>{crypto.rank}</td>
                         <td>
                             <Link to={`/cryptocurrencies/${crypto.id}`}>{crypto.name}</Link>
@@ -67,5 +67,4 @@ const CryptoList = () => {
         </div>
     );
 }
-
- export default CryptoList
+    export default CryptoList

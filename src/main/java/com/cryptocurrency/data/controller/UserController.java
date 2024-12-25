@@ -12,13 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The UserController class is a Spring REST controller for managing users.
  * Author: Mouhamadou Ahibou DIALLO
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     /**
@@ -28,15 +30,40 @@ public class UserController {
     private UserService userService;
 
     /**
-     * Creates a new user in the database.
+     * Creates a new user with the given details.
      *
-     * @param user The user to be created.
-     * @return The created user.
+     * @param user The user object containing the details.
+     * @return The created user object.
      */
     @PostMapping("/create")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        if (userService.emailExists(user.getEmail())) {
+            System.out.println("cet email existe déja.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("cet email existe déja.");
+        }
+        if (userService.userNameExists(user.getUsername())) {
+            System.out.println("ce nom d'utilisateur existe déja.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("ce nom d'utilisateur existe déja.");
+        }
+
+        try {
+            User createdUser = userService.createUser(user);
+            System.out.println("user created: " + createdUser);
+
+            if (createdUser == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la création de l'utilisateur.");
+            }
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                    "message", "User created successfully.",
+                    "token", createdUser.getTokenHash()
+            ));
+        } catch (IllegalArgumentException e) {
+            System.out.println("error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                    "error", e.getMessage()
+            ));
+        }
     }
 
     /**
@@ -67,6 +94,14 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
+
+    /*
+    * {
+  "username" = "ahibou",
+  "email": "ahibou2018@example.com",
+  "passwordHash": "Diallo1957@"
+  * tokrn = $2a$10$kbicRMSFshkt3k1GyyqMf.PrXLY7oNLi0Xj95Z/G/dUlLGZMYjmaq
+}*/
 
     /**
      * Deletes a user with the given id.

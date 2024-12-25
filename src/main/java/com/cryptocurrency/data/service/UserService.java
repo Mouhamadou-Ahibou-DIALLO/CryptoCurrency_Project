@@ -3,13 +3,16 @@ package com.cryptocurrency.data.service;
 import com.cryptocurrency.data.model.User;
 import com.cryptocurrency.data.repository.UserRepository;
 
+import com.cryptocurrency.data.security.EncodedPassword;
+import com.cryptocurrency.data.security.EncodedToken;
+import com.cryptocurrency.data.utils.GenerateToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * The service for User objects.
@@ -130,12 +133,50 @@ public class UserService {
      * @return the created User object
      */
     public User createUser(User user) {
-        user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+        if (!isValidPassword(user.getPasswordHash())) {
+            throw new IllegalArgumentException("Le mot de passe doit comporter au moins 8 caractères et comprendre des lettres, des majuscules, des chiffres et des caractères spéciaux.");
+        }
 
-        String token = UUID.randomUUID().toString();
-        user.setTokenHash(passwordEncoder.encode(token));
+        String encodedPassword = EncodedPassword.encode(user.getPasswordHash());
+        user.setPasswordHash(encodedPassword);
+        System.out.println("getPasswordHash: " + encodedPassword);
 
-        return userRepository.save(user);
+        String token = GenerateToken.generateToken();
+        System.out.println("token: " + token);
+        String encodedToken = EncodedToken.encode(token);
+        user.setTokenHash(encodedToken);
+        System.out.println("tokenHash: " + encodedToken);
+
+        System.out.println("user created: " + user);
+        User savedUser = this.save(user);
+
+        if (savedUser == null) {
+            throw new IllegalArgumentException("L'utilisateur n'a pas pu être sauvegardé.");
+        }
+
+        return savedUser;
+    }
+
+    /**
+     * Checks if a user with the given email already exists in the database.
+     *
+     * @param email the email to search for
+     * @return true if a user with the given email is found, false otherwise
+     */
+    public boolean emailExists(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.isPresent();
+    }
+
+    /**
+     * Checks if a user with the given username already exists in the database.
+     *
+     * @param username the username to search for
+     * @return true if a user with the given username is found, false otherwise
+     */
+    public boolean userNameExists(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.isPresent();
     }
 
     /**
@@ -151,9 +192,25 @@ public class UserService {
 
         user.setUsername(userDetails.getUsername());
         user.setEmail(userDetails.getEmail());
-        user.setPasswordHash(passwordEncoder.encode(userDetails.getPasswordHash()));
 
-        return userRepository.save(user);
+        String encodedPassword = EncodedPassword.encode(userDetails.getPasswordHash());
+        String encodedToken = EncodedToken.encode(userDetails.getTokenHash());
+        user.setPasswordHash(encodedPassword);
+        user.setTokenHash(encodedToken);
+        System.out.println("done updating user: " + user);
+
+        return this.save(user);
+    }
+
+    /**
+     * Finds a user by their email and password hash.
+     *
+     * @param email the email of the user to be found
+     * @param passwordHash the password hash of the user to be found
+     * @return an Optional containing the User object if found, or an empty Optional if no user matches the given criteria
+     */
+    public Optional<User> findByEmailAndPasswordHash(String email, String passwordHash) {
+        return userRepository.findByEmailAndPasswordHash(email, passwordHash);
     }
 
     /**
@@ -164,14 +221,46 @@ public class UserService {
      * @return the token hash of the user
      */
     public String authenticateUser(String email, String password) {
+        System.out.println("email: " + email);
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+                .orElseThrow(() -> new RuntimeException("Invalid email"));
 
-        if (passwordEncoder.matches(password, user.getPasswordHash())) {
-            return user.getTokenHash();
-        } else {
-            throw new RuntimeException("Invalid email or password");
+        if (user != null) {
+            System.out.println("user: " + user);
+            System.out.println("password: " + password);
+            String encodedPassword = user.getPasswordHash();
+            boolean isRightPassword = EncodedPassword.isRightPassword(password, encodedPassword);
+
+            if (isRightPassword) {
+                Optional<User> userValid = this.findByEmailAndPasswordHash(email, encodedPassword);
+                if (userValid.isPresent()) {
+                    System.out.println("Login successful");
+                    return user.getTokenHash();
+                }
+                else {
+                    System.out.println("Login failed");
+                    throw new RuntimeException("Login failed");
+                }
+            }
+            else {
+                System.out.println("Mot de pass incorrect");
+                throw new RuntimeException("Mot de pass incorrect");
+            }
         }
+
+        System.out.println("not found user");
+        throw new RuntimeException("not found user");
+    }
+
+    /**
+     * Finds a user by their email and token hash.
+     *
+     * @param email    the email of the user to be found
+     * @param tokenHash the token hash of the user to be found
+     * @return an Optional containing the User object if found, or an empty Optional if no user matches the given criteria
+     */
+    public Optional<User> findByEmailAndTokenHash(String email, String tokenHash) {
+        return userRepository.findByEmailAndTokenHash(email, tokenHash);
     }
 
     /**
@@ -187,7 +276,31 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return passwordEncoder.matches(token, user.getTokenHash());
+        if (user != null) {
+            System.out.println("user: " + user);
+            String encodedToken = user.getTokenHash();
+            System.out.println("token: " + token);
+            System.out.println("encodedToken: " + encodedToken);
+
+            if (Objects.equals(token, encodedToken)) {
+                Optional<User> userValid = this.findByEmailAndTokenHash(email, encodedToken);
+                if (userValid.isPresent()) {
+                    System.out.println("Token is valid");
+                    return true;
+                }
+                else {
+                    System.out.println("Token is not valid");
+                    return false;
+                }
+            }
+            else {
+                System.out.println("Token is not valid");
+                return false;
+            }
+        }
+
+        System.out.println("User not found");
+        return false;
     }
 
 
@@ -201,5 +314,18 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         user.setTokenHash(null);
+    }
+
+    /**
+     * Verifies if the provided password matches the expected pattern.
+     *
+     * A valid password must contain at least 8 characters, and must contain at least one lowercase letter, one uppercase letter, one number, and one special character.
+     *
+     * @param password the password to verify
+     * @return true if the password is valid, false otherwise
+     */
+    private boolean isValidPassword(String password) {
+        String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+        return password != null && password.matches(passwordPattern);
     }
 }

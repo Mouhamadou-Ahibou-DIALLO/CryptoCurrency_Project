@@ -32,11 +32,13 @@ public class User {
     /**
      * The token hash of the User object.
      */
+    @Column(nullable = false)
     private String tokenHash;
 
     /**
      * The password hash of the User object.
      */
+    @Column(nullable = false)
     private String passwordHash;
 
     /**
@@ -149,5 +151,21 @@ public class User {
      */
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    /**
+     * Converts the User object into a string.
+     *
+     * @return A string representing the User object.
+     */
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", tokenHash='" + tokenHash + '\'' +
+                ", passwordHash='" + passwordHash + '\'' +
+                '}';
     }
 }

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import '../static/css/header.css';
+import {Link} from "react-router-dom";
 
 const Header = () => {
     const [search, setSearch] = useState("");
@@ -26,8 +27,13 @@ const Header = () => {
                 <button onClick={handleSearch}>Rechercher</button>
             </div>
             <div>
-                <button>Inscription</button>
-                <button>Connexion</button>
+                <Link to="/Register">
+                    <button>Inscription</button>
+                </Link>
+
+                <Link to="/Login">
+                    <button className="connexion">Connexion</button>
+                </Link>
             </div>
         </header>
     );

@@ -58,4 +58,22 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return the user with the given username and password hash
      */
     User findByUsernameAndPasswordHash(String username, String passwordHash);
+
+    /**
+     * Find a user by its email and password hash.
+     *
+     * @param email        the email to find the user for
+     * @param passwordHash the password hash to find the user for
+     * @return an optional containing the user with the given email and password hash, or an empty optional if none is found
+     */
+    Optional<User> findByEmailAndPasswordHash(String email, String passwordHash);
+
+    /**
+     * Find a user by its email and token hash.
+     *
+     * @param email the email to find the user for
+     * @param tokenHash the token hash to find the user for
+     * @return an optional containing the user with the given email and token hash, or an empty optional if none is found
+     */
+    Optional<User> findByEmailAndTokenHash(String email, String tokenHash);
 }
