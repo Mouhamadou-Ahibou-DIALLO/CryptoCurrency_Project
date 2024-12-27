@@ -83,22 +83,8 @@ const CryptoDetails = () => {
                 label: "Prix ($)",
                 data: priceHistory.map((entry) => entry.price),
                 fill: false,
-                backgroundColor: "rgba(75,192,192,0.4)",
-                borderColor: "rgba(75,192,192,1)",
-            },
-            {
-                label: "Volume ($)",
-                data: priceHistory.map((entry) => entry.volume),
-                fill: false,
                 backgroundColor: "rgba(255,159,64,0.4)",
                 borderColor: "rgba(255,159,64,1)",
-            },
-            {
-                label: "Market Cap ($)",
-                data: priceHistory.map((entry) => entry.market),
-                fill: false,
-                backgroundColor: "rgba(153,102,255,0.4)",
-                borderColor: "rgba(153,102,255,1)",
             },
         ],
     };
@@ -114,7 +100,7 @@ const CryptoDetails = () => {
 
     return (
         <div className="crypto-details">
-            <header className="header">
+            <header className="header-details">
                 <h1>La cryptomonnaie de l'avenir</h1>
                 <div className="button-container">
                     <Link to="/Register">

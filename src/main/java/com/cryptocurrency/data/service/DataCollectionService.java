@@ -1,12 +1,15 @@
 package com.cryptocurrency.data.service;
 
-import aj.org.objectweb.asm.TypeReference;
-import com.cryptocurrency.data.model.CryptoPriceHistory;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.cryptocurrency.data.model.CryptoPriceHistory;
 import com.cryptocurrency.data.model.CryptoCurrency;
 import com.cryptocurrency.data.repository.CryptoCurrencyRepository;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 
@@ -88,8 +91,11 @@ public class DataCollectionService {
 
             if (file.exists()) {
                 ObjectMapper objectMapper = new ObjectMapper();
-                //cryptoPriceHistoryMap = objectMapper.readValue(file,
-                      //  new TypeReference<Map<String, List<CryptoPriceHistory>>>() {});
+                objectMapper.registerModule(new JavaTimeModule());
+                objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+                TypeReference<Map<String, List<CryptoPriceHistory>>> typeReference = new TypeReference<>() {};
+                cryptoPriceHistoryMap = objectMapper.readValue(file, typeReference);
                 System.out.println("Les données ont été chargées avec succès.");
             } else {
                 System.out.println("Fichier non trouvé, un fichier vide sera créé.");
@@ -100,12 +106,17 @@ public class DataCollectionService {
     }
 
     /**
-     * Sauvegarde les données du fichier JSON.
-     */
+     * Saves the crypto price history data to a file when the application is stopped.
+     * The data is saved in JSON format to a file named "crypto_price_history.json"
+     * in the "src/main/resources" directory.
+     * */
     @PreDestroy
     public void saveCryptoPriceHistory() {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
             Path path = Paths.get("src/main/resources/" + DATA_FILE_NAME);
 
             objectMapper.writeValue(path.toFile(), cryptoPriceHistoryMap);
@@ -129,11 +140,9 @@ public class DataCollectionService {
             System.out.println("name for price history: " + name);
             LocalDateTime timestamp = LocalDateTime.now();
             Double price = crypto.getPrice();
-            Double change = crypto.getVolume();
-            Double market = crypto.getMarket();
 
             cryptoPriceHistoryMap.putIfAbsent(name, new ArrayList<>());
-            CryptoPriceHistory cryptoPriceHistory = new CryptoPriceHistory(timestamp, price, change, market);
+            CryptoPriceHistory cryptoPriceHistory = new CryptoPriceHistory(timestamp, price);
             System.out.println("cryptoPriceHistory for price history: " + cryptoPriceHistory);
             cryptoPriceHistoryMap.get(name).add(cryptoPriceHistory);
             System.out.println("Ajout dans la boucle is OKay");

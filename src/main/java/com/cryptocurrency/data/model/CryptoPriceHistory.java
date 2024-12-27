@@ -19,16 +19,6 @@ public class CryptoPriceHistory {
     private Double price;
 
     /**
-     * The volume of the CryptoCurrency at the given timestamp.
-     */
-    private Double volume;
-
-    /**
-     * The market cap of the CryptoCurrency at the given timestamp.
-     */
-    private Double market;
-
-    /**
      * Default constructor for the CryptoPriceHistory object.
      */
     public CryptoPriceHistory() {}
@@ -38,14 +28,10 @@ public class CryptoPriceHistory {
      *
      * @param timestamp The timestamp of the CryptoPriceHistory object.
      * @param price The price of the CryptoCurrency at the given timestamp.
-     * @param volume The volume of the CryptoCurrency at the given timestamp.
-     * @param market The market cap of the CryptoCurrency at the given timestamp.
      */
-    public CryptoPriceHistory(LocalDateTime timestamp, Double price, Double volume, Double market) {
+    public CryptoPriceHistory(LocalDateTime timestamp, Double price) {
         this.timestamp = timestamp;
         this.price = price;
-        this.volume = volume;
-        this.market = market;
     }
 
     /**
@@ -71,28 +57,6 @@ public class CryptoPriceHistory {
     }
 
     /**
-     * Returns the trading volume of the CryptoCurrency at the given timestamp.
-     * The volume is a Double object that represents the amount of the CryptoCurrency
-     * traded during the given time period.
-     *
-     * @return The trading volume of the CryptoCurrency at the given timestamp.
-     */
-    public Double getVolume() {
-        return volume;
-    }
-
-    /**
-     * Returns the market capitalization of the CryptoCurrency at the given timestamp.
-     * The market capitalization is a Double object that represents the total value
-     * of all the CryptoCurrency in circulation at the given timestamp.
-     *
-     * @return The market capitalization of the CryptoCurrency at the given timestamp.
-     */
-    public Double getMarket() {
-        return market;
-    }
-
-    /**
      * Sets the timestamp of the CryptoPriceHistory object.
      * The timestamp is a LocalDateTime object that represents the date and time
      * when the CryptoPriceHistory object was created.
@@ -112,34 +76,10 @@ public class CryptoPriceHistory {
         this.price = price;
     }
 
-    /**
-     * Sets the 24-hour trading volume of the CryptoCurrency at the given timestamp.
-     * The volume is a Double object that represents the amount of the CryptoCurrency
-     * traded during the given time period.
-     *
-     * @param volume The 24-hour trading volume to set.
-     */
-    public void setVolume(Double volume) {
-        this.volume = volume;
-    }
-
-    /**
-     * Sets the market capitalization of the CryptoCurrency at the given timestamp.
-     * The market capitalization is a Double object that represents the total value
-     * of all the CryptoCurrency in circulation at the given timestamp.
-     *
-     * @param market The market capitalization to set.
-     */
-    public void setMarket(Double market) {
-        this.market = market;
-    }
-
     public String toString() {
         return "CryptoPriceHistory{" +
                 "timestamp=" + timestamp +
                 ", price=" + price +
-                ", volume=" + volume +
-                ", market=" + market +
                 '}';
     }
 }

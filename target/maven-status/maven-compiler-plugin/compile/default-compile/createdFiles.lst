@@ -11,6 +11,7 @@ com/cryptocurrency/data/repository/AlertsRepository.class
 com/cryptocurrency/data/service/LoginRequestService.class
 com/cryptocurrency/data/config/JacksonConfig.class
 com/cryptocurrency/data/service/TokenRequestService.class
+com/cryptocurrency/data/service/DataCollectionService$1.class
 com/cryptocurrency/data/model/CryptoCurrency.class
 com/cryptocurrency/data/repository/UserRepository.class
 com/cryptocurrency/data/service/DataCollectionService.class
