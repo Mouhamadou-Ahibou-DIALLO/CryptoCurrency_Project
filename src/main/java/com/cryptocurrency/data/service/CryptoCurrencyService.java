@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The service for CryptoCurrency objects.
@@ -22,9 +23,9 @@ public class CryptoCurrencyService {
     private CryptoCurrencyRepository cryptoCurrencyRepository;
 
     /**
-     * Returns a CryptoCurrency object by its market capitalization rank.
+     * Returns a CryptoCurrency object by its market cap rank.
      *
-     * @param marketCapRank the rank to search for
+     * @param marketCapRank the market cap rank to search for
      * @return a CryptoCurrency object
      * @throws RuntimeException if the CryptoCurrency is not found
      */

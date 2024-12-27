@@ -1,5 +1,5 @@
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/CryptoCurrencyProjectApplicationTest.java
-/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/controller/AlertsControllerTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/controller/CryptoCurrencyControllerTest.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/AlertsTest.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/CryptoCurrencyTest.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/UserTest.java

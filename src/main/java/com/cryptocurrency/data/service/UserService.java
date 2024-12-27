@@ -6,8 +6,8 @@ import com.cryptocurrency.data.repository.UserRepository;
 import com.cryptocurrency.data.security.EncodedPassword;
 import com.cryptocurrency.data.security.EncodedToken;
 import com.cryptocurrency.data.utils.GenerateToken;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,12 +26,6 @@ public class UserService {
      */
     @Autowired
     private UserRepository userRepository;
-
-    /**
-     * The password encoder.
-     */
-
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     /**
      * Retrieve all users from the repository.
@@ -133,7 +127,8 @@ public class UserService {
      * @return the created User object
      */
     public User createUser(User user) {
-        if (!isValidPassword(user.getPasswordHash())) {
+        boolean verifyPassword = VerifyPasswordMatchesService.isValidPassword(user.getPasswordHash());
+        if (!verifyPassword) {
             throw new IllegalArgumentException("Le mot de passe doit comporter au moins 8 caractères et comprendre des lettres, des majuscules, des chiffres et des caractères spéciaux.");
         }
 
@@ -314,18 +309,5 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         user.setTokenHash(null);
-    }
-
-    /**
-     * Verifies if the provided password matches the expected pattern.
-     *
-     * A valid password must contain at least 8 characters, and must contain at least one lowercase letter, one uppercase letter, one number, and one special character.
-     *
-     * @param password the password to verify
-     * @return true if the password is valid, false otherwise
-     */
-    private boolean isValidPassword(String password) {
-        String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
-        return password != null && password.matches(passwordPattern);
     }
 }

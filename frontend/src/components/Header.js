@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import '../static/css/header.css';
-import {Link} from "react-router-dom";
+import "../static/css/header.css";
+import { Link } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ onSearch, onReset }) => {
     const [search, setSearch] = useState("");
 
     const handleSearchChange = (e) => {
@@ -10,27 +10,37 @@ const Header = () => {
     };
 
     const handleSearch = () => {
-        console.log("Searching for:", search);
-        // Implémentez la logique pour effectuer la recherche.
+        if (search.trim() === "") {
+            alert("Veuillez entrer une valeur pour la recherche !");
+            return;
+        }
+        onSearch(search);
+    };
+
+    const handleReset = () => {
+        setSearch("");
+        onReset();
     };
 
     return (
         <header className="header">
             <h1>La cryptomonnaie de l'avenir</h1>
-            <div>
+            <div className="search-container">
                 <input
                     type="text"
-                    placeholder="Rechercher..."
+                    placeholder="Rechercher par symbole, nom ou rang..."
                     value={search}
                     onChange={handleSearchChange}
                 />
                 <button onClick={handleSearch}>Rechercher</button>
+                <button onClick={handleReset} className="reset-button">
+                    Réinitialiser
+                </button>
             </div>
             <div>
                 <Link to="/Register">
                     <button>Inscription</button>
                 </Link>
-
                 <Link to="/Login">
                     <button className="connexion">Connexion</button>
                 </Link>

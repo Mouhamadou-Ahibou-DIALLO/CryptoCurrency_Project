@@ -1,3 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.login-header {
+    display: flex;
+    justify-content: space-between;
+    width: 97%;
+    background-color: #007bff;
+    color: white;
+    padding: 15px 30px;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.login-header .header-btn-register {
+    padding-right: 25px;
+}
+
+.login-header h1 {
+    font-size: 1.5em;
+}
+
+.header-btn-register {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    width: 10%;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.header-btn-register:hover {
+    background-color: #218838;
+}
+
+.header-btn-accueil {
+    background-color: #28a745;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    width:3%;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    position: fixed;
+    right: 240px;
+}
+
+.header-btn-accueil:hover {
+    background-color: #218838;
+}
+
+.login-form {
+    width: 50%;
+    height: 60%;
+    margin-top: 30px;
+    background-color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+input {
+    width: 70%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-btn-connect {
+    width: 60%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+}
+
+.login-btn-connect:hover {
+    background-color: #0056b3;
+}
+
+.error {
+    color: red;
+    font-size: 0.9em;
+}
+
+.success {
+    color: green;
+    font-size: 0.9em;
+}
+
 .register-link {
     text-align: center;
     margin-top: 10px;
@@ -13,63 +138,6 @@
     text-decoration: underline;
 }
 
-.login-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-}
-
-.login-header {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.header-btn {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-}
-
-.login-form {
-    width: 300px;
-    margin-top: 20px;
-}
-
-label {
-    display: block;
-    margin-bottom: 10px;
-}
-
-input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-}
-
-button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.error {
-    color: red;
-    font-size: 0.9em;
-}
-
-.success {
-    color: green;
-    font-size: 0.9em;
-}
-
 .token-popup {
     position: fixed;
     top: 30%;
@@ -79,4 +147,26 @@ button {
     padding: 20px;
     border: 1px solid #ccc;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.token-popup input {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.token-popup button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.token-popup button:hover {
+    background-color: #0056b3;
 }

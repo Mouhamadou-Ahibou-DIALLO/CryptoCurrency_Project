@@ -32,3 +32,103 @@
 .crypto-row:hover {
     background-color: #f1f1f1;
 }
+
+.crypto-row.up td {
+    background-color: rgba(0, 255, 0, 0.2);
+    transition: background-color 0.5s ease-in-out;
+}
+
+.crypto-row.down td {
+    background-color: rgba(255, 0, 0, 0.2);
+    transition: background-color 0.5s ease-in-out;
+}
+
+.crypto-row.new td {
+    background-color: rgba(0, 0, 255, 0.2);
+    transition: background-color 0.5s ease-in-out;
+}
+
+.crypto-row.up {
+    background-color: #d4edda;
+    animation: priceUp 0.5s ease-out;
+}
+
+.crypto-row.down {
+    background-color: #f8d7da;
+    animation: priceDown 0.5s ease-out;
+}
+
+.crypto-row.same {
+    background-color: #ffffff;
+}
+
+.crypto-row.new {
+    background-color: #cce5ff;
+    animation: priceNew 1s ease-out;
+}
+
+@keyframes priceUp {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes priceDown {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(0.95);
+    }
+}
+
+@keyframes priceNew {
+    from {
+        background-color: #cce5ff;
+    }
+    to {
+        background-color: #ffffff;
+    }
+}
+
+.crypto-row.up {
+    animation: upAnimation 1s ease-in-out;
+}
+
+.crypto-row.down {
+    animation: downAnimation 1s ease-in-out;
+}
+
+.crypto-row.new {
+    animation: newAnimation 1s ease-in-out;
+}
+
+@keyframes upAnimation {
+    from {
+        background-color: lightgreen;
+    }
+    to {
+        background-color: white;
+    }
+}
+
+@keyframes downAnimation {
+    from {
+        background-color: lightcoral;
+    }
+    to {
+        background-color: white;
+    }
+}
+
+@keyframes newAnimation {
+    from {
+        background-color: lightblue;
+    }
+    to {
+        background-color: white;
+    }
+}

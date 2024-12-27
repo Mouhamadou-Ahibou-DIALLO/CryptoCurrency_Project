@@ -1,10 +1,16 @@
 package com.cryptocurrency.data.service;
 
+import aj.org.objectweb.asm.TypeReference;
+import com.cryptocurrency.data.model.CryptoPriceHistory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.cryptocurrency.data.model.CryptoCurrency;
 import com.cryptocurrency.data.repository.CryptoCurrencyRepository;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -15,9 +21,11 @@ import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * The service for data collection.
@@ -29,7 +37,15 @@ public class DataCollectionService {
     /**
      * The repository for CryptoCurrency objects.
      * */
+    @Autowired
     private final CryptoCurrencyRepository cryptoCurrencyRepository;
+
+    /**
+     * A map of all the CryptoPriceHistory objects in the database.
+     * Each key is the name of a cryptocurrency, and the value is a list of
+     * CryptoPriceHistory objects for that currency.
+     * */
+    private static Map<String, List<CryptoPriceHistory>> cryptoPriceHistoryMap = new HashMap<>();
 
     /**
      * The logger for the service.
@@ -48,6 +64,11 @@ public class DataCollectionService {
     private String bearerToken;
 
     /**
+     * The path to the data file.
+     * */
+    private static final String DATA_FILE_NAME = "crypto_price_history.json";
+
+    /**
      * Constructs a new instance of the DataCollectionService class.
      *
      * @param cryptoCurrencyRepository The repository for CryptoCurrency objects.
@@ -55,6 +76,71 @@ public class DataCollectionService {
     public DataCollectionService(CryptoCurrencyRepository cryptoCurrencyRepository) {
         this.cryptoCurrencyRepository = cryptoCurrencyRepository;
     }
+
+    /**
+     * Chargement des données du fichier JSON au démarrage.
+     */
+    @PostConstruct
+    public void loadCryptoPriceHistory() {
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            File file = new File(Objects.requireNonNull(classLoader.getResource(DATA_FILE_NAME)).getFile());
+
+            if (file.exists()) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                //cryptoPriceHistoryMap = objectMapper.readValue(file,
+                      //  new TypeReference<Map<String, List<CryptoPriceHistory>>>() {});
+                System.out.println("Les données ont été chargées avec succès.");
+            } else {
+                System.out.println("Fichier non trouvé, un fichier vide sera créé.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Sauvegarde les données du fichier JSON.
+     */
+    @PreDestroy
+    public void saveCryptoPriceHistory() {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Path path = Paths.get("src/main/resources/" + DATA_FILE_NAME);
+
+            objectMapper.writeValue(path.toFile(), cryptoPriceHistoryMap);
+            System.out.println("Les données ont été sauvegardées avec succès.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Adds a new entry for each list of cryptocurrencies to the price history table in the database.
+     * Only existing cryptocurrencies in the database are added.
+     *
+     * @param cryptoCurrencyList a list of CryptoCurrency objects
+     */
+    public void addCryptoForPriceHistory(List<CryptoCurrency> cryptoCurrencyList) {
+        System.out.println("start adding cryptoCurrency for price history");
+        for (CryptoCurrency crypto : cryptoCurrencyList) {
+            System.out.println("crypto for price history: " + crypto);
+            String name = crypto.getName();
+            System.out.println("name for price history: " + name);
+            LocalDateTime timestamp = LocalDateTime.now();
+            Double price = crypto.getPrice();
+            Double change = crypto.getVolume();
+            Double market = crypto.getMarket();
+
+            cryptoPriceHistoryMap.putIfAbsent(name, new ArrayList<>());
+            CryptoPriceHistory cryptoPriceHistory = new CryptoPriceHistory(timestamp, price, change, market);
+            System.out.println("cryptoPriceHistory for price history: " + cryptoPriceHistory);
+            cryptoPriceHistoryMap.get(name).add(cryptoPriceHistory);
+            System.out.println("Ajout dans la boucle is OKay");
+        }
+        System.out.println("Collect for price history is done ...");
+    }
+
 
     /**
      * This method is scheduled to run every 60 seconds and collects market data from the CoinCap API.
@@ -83,6 +169,10 @@ public class DataCollectionService {
                 enforceTableLimitBeforeInsert();
 
                 cryptoCurrencyRepository.saveAll(cryptoCurrencyList);
+
+                System.out.println("Ajout des historiques de prix ...");
+                addCryptoForPriceHistory(cryptoCurrencyList);
+                System.out.println("Ajout terminé.");
 
                 logger.info("20 new lines inserée dans la table CryptoCurrency ...........");
             }
@@ -121,7 +211,7 @@ public class DataCollectionService {
                     double volume = node.path("volumeUsd24Hr").asDouble();
                     double price = node.path("priceUsd").asDouble();
                     double change = node.path("changePercent24Hr").asDouble();
-                    double vwap = node.path("vwap24Hr").asDouble();
+                    double vwap = node.path("vwap24Hr").asDouble();;
 
                     CryptoCurrency cryptocurrency = new CryptoCurrency();
                     cryptocurrency.setName(name);
@@ -158,5 +248,18 @@ public class DataCollectionService {
             logger.info("{} taille ", cryptoCurrencyList.size());
             cryptoCurrencyRepository.deleteAll();
         }
+    }
+
+    /**
+     * Returns a map of all the CryptoPriceHistory objects in the database.
+     * Each key is the name of a cryptocurrency, and the value is a list of
+     * CryptoPriceHistory objects for that currency.
+     *
+     * @return A map of all the CryptoPriceHistory objects in the database.
+     */
+    public static Map<String, List<CryptoPriceHistory>> getCryptoPriceHistoryMap() {
+        System.out.println("get is okay for price history");
+        System.out.println(cryptoPriceHistoryMap);
+        return cryptoPriceHistoryMap;
     }
 }

@@ -2,12 +2,14 @@ com/cryptocurrency/data/config/CorsConfig.class
 com/cryptocurrency/data/service/EmailService.class
 com/cryptocurrency/data/CryptoCurrencyProjectApplication.class
 com/cryptocurrency/data/security/ConfigurationApplicationSecurity.class
+com/cryptocurrency/data/model/CryptoPriceHistory.class
 com/cryptocurrency/data/controller/UserController.class
 com/cryptocurrency/data/service/UserService.class
 com/cryptocurrency/data/config/CookieConfig.class
 com/cryptocurrency/data/controller/AlertsController.class
 com/cryptocurrency/data/repository/AlertsRepository.class
 com/cryptocurrency/data/service/LoginRequestService.class
+com/cryptocurrency/data/config/JacksonConfig.class
 com/cryptocurrency/data/service/TokenRequestService.class
 com/cryptocurrency/data/model/CryptoCurrency.class
 com/cryptocurrency/data/repository/UserRepository.class
@@ -19,6 +21,7 @@ com/cryptocurrency/data/config/CorsConfig$1.class
 com/cryptocurrency/data/security/EncodedPassword.class
 com/cryptocurrency/data/service/CryptoCurrencyService.class
 com/cryptocurrency/data/controller/CryptoCurrencyController.class
+com/cryptocurrency/data/service/VerifyPasswordMatchesService.class
 com/cryptocurrency/data/scheduler/AlertChecker.class
 com/cryptocurrency/data/security/EncodedToken.class
 com/cryptocurrency/data/service/AlertsService.class

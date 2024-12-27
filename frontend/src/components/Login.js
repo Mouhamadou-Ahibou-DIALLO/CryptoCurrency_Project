@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../static/css/login.css";
+import {Link} from "react-router-dom";
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -36,16 +37,11 @@ function Login() {
         e.preventDefault();
         if (!validateForm()) return;
 
-        const username = "momo";
-        const password = "Avignon2024@?";
-        const credentials = btoa(`${username}:${password}`);
-
         try {
             const response = await fetch("/api/users/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Basic ${credentials}`,
                 },
                 body: JSON.stringify(formData),
             });
@@ -65,16 +61,12 @@ function Login() {
     };
 
     const handleVerifyToken = async () => {
-        const username = "momo";
-        const password = "Avignon2024@?";
-        const credentials = btoa(`${username}:${password}`);
 
         try {
             const response = await fetch("/api/users/verify-token", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Basic ${credentials}`,
                 },
                 body: JSON.stringify({ email, token }),
             });
@@ -95,7 +87,8 @@ function Login() {
         <div className="login-container">
             <header className="login-header">
                 <h1>La cryptomonnaie de l'avenir</h1>
-                <button className="header-btn" onClick={() => (window.location.href = "/register")}>
+                <Link to="/" className="header-btn-accueil">Accueil</Link>
+                <button className="header-btn-register" onClick={() => (window.location.href = "/Register")}>
                     S'inscrire
                 </button>
             </header>
@@ -103,7 +96,7 @@ function Login() {
                 <h2>Connexion</h2>
 
                 <label>
-                    Email :
+                    <p>Email :</p>
                     <input
                         type="email"
                         name="email"
@@ -114,7 +107,7 @@ function Login() {
                 {errors.email && <p className="error">{errors.email}</p>}
 
                 <label>
-                    Mot de passe :
+                    <p>Mot de passe :</p>
                     <input
                         type="password"
                         name="password"
@@ -126,7 +119,7 @@ function Login() {
 
                 {errors.apiError && <p className="error">{errors.apiError}</p>}
 
-                <button type="submit">Se connecter</button>
+                <button type="submit" className="login-btn-connect">Se connecter</button>
                 <p className="register-link">
                     Vous n'avez pas de compte ?{" "}
                     <a href="/Register">Inscrivez-vous ici</a>

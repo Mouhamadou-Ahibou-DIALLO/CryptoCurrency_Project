@@ -29,24 +29,14 @@
 - password_hash
 
 
+# Étape  : Établir les Relations globales :
+User —< Alerts (1:N)
+Cryptocurrency —< Alerts (1:N)
+
+
 # Étape  : Concevoir le schéma ERD
 
-+-------------------+          +-------------------+          +-------------------+
-|      User         |          |   Cryptocurrency  |          |       Alerts      |
-+-------------------+          +-------------------+          +-------------------+
-| id (PK)           |<-------->| id (PK)           |<-------->| id (PK)           |
-| username          |          | name              |          | user_id (FK)      |
-| email             |          | symbol            |          | crypto_id (FK)    |
-| token_hash        |          | rank              |          | price_threshold   |
-| password_hash     |          | timestamp         |          | variation_threshold|
-+-------------------+          | price             |          +-------------------+
-                               | volume            |
-                               | market            |
-                               | supply            |
-                               | max_supply        |
-                               | vwap              |
-                               | change            |
-                               +-------------------+
+~/CryptoCurrency_Project/Schema ERD.webp
 
 
-Une représentation visuelle du schéma est disponible dans le fichier diagramme visuel.pdf, générée avec le site https://dbdiagram.io/
+Une représentation visuelle du schéma est disponible dans le fichier diagramme visuel.webp, générée avec le site https://dbdiagram.io/

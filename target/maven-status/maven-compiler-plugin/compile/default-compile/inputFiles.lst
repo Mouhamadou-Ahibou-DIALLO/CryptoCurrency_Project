@@ -1,11 +1,13 @@
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/CryptoCurrencyProjectApplication.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/config/CookieConfig.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/config/CorsConfig.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/config/JacksonConfig.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/controller/AlertsController.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/controller/CryptoCurrencyController.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/controller/UserController.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/model/Alerts.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/model/CryptoCurrency.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/model/CryptoPriceHistory.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/model/User.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/repository/AlertsRepository.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/repository/CryptoCurrencyRepository.java
@@ -21,4 +23,5 @@
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/LoginRequestService.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/TokenRequestService.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/UserService.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/VerifyPasswordMatchesService.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/utils/GenerateToken.java

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import '../static/css/register.css';
+import {Link} from "react-router-dom";
 
 function Register() {
     const [formData, setFormData] = useState({
@@ -9,7 +10,6 @@ function Register() {
         confirmPassword: "",
     });
     const [errors, setErrors] = useState({});
-    const [successMessage, setSuccessMessage] = useState("");
     const [showPopup, setShowPopup] = useState(false);
     const [token, setToken] = useState("");
 
@@ -33,16 +33,20 @@ function Register() {
             newErrors.email = "Veuillez entrer une adresse email valide.";
         }
 
+        console.log("password:", formData.password);
+        console.log("test password:", passwordRegex.test(formData.password));
+
         if (!formData.password) {
             newErrors.password = "Le mot de passe est obligatoire.";
         } else if (!passwordRegex.test(formData.password)) {
-            newErrors.password =
-                "Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre, et un caractère spécial.";
+            newErrors.password = "Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre, et un caractère spécial.";
         }
 
         if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
         }
+
+        console.log("Erreurs détectées :", newErrors);
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -54,15 +58,10 @@ function Register() {
         if (!validateForm()) return;
 
         try {
-            const username = "momo";
-            const password = "Avignon2024@?";
-            const credentials = btoa(`${username}:${password}`);
-
             const response = await fetch("/api/users/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Basic ${credentials}`,
                 },
                 body: JSON.stringify(formData),
             });
@@ -91,7 +90,8 @@ function Register() {
         <div className="signup-container">
             <header className="signup-header">
                 <h1>La cryptomonnaie de l'avenir</h1>
-                <button className="header-btn" onClick={() => (window.location.href = "/Login")}>
+                <Link to="/" className="header-btn-accueilRegister">Accueil</Link>
+                <button className="header-btn-register" onClick={() => (window.location.href = "/Login")}>
                     Connexion
                 </button>
             </header>
@@ -144,7 +144,7 @@ function Register() {
 
                 {errors.apiError && <p className="error">{errors.apiError}</p>}
 
-                <button type="submit">S'inscrire</button>
+                <button type="submit" className="signup-btn">S'inscrire</button>
 
                 <p>
                     Vous avez déjà un compte ? <a href="/Login">Connectez-vous</a>.

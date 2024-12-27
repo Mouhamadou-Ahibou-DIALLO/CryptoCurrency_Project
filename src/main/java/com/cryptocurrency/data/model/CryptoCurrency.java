@@ -1,7 +1,6 @@
 package com.cryptocurrency.data.model;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 /**
@@ -71,6 +70,9 @@ public class CryptoCurrency {
      */
     private Double vwap;
 
+    /**
+     * The timestamp of the last update of the CryptoCurrency.
+     */
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
