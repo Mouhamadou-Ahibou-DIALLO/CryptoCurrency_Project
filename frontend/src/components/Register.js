@@ -6,7 +6,7 @@ function Register() {
     const [formData, setFormData] = useState({
         username: "",
         email: "",
-        password: "",
+        passwordHash: "",
         confirmPassword: "",
     });
     const [errors, setErrors] = useState({});
@@ -18,6 +18,7 @@ function Register() {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+        console.log("handle input changed");
     };
 
     const validateForm = () => {
@@ -33,19 +34,17 @@ function Register() {
             newErrors.email = "Veuillez entrer une adresse email valide.";
         }
 
-        console.log("password:", formData.password);
-        console.log("test password:", passwordRegex.test(formData.password));
-
-        if (!formData.password) {
-            newErrors.password = "Le mot de passe est obligatoire.";
-        } else if (!passwordRegex.test(formData.password)) {
-            newErrors.password = "Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre, et un caractère spécial.";
+        if (!formData.passwordHash) {
+            newErrors.passwordHash = "Le mot de passe est obligatoire.";
+        } else if (!passwordRegex.test(formData.passwordHash)) {
+            newErrors.passwordHash = "Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre, et un caractère spécial.";
         }
 
-        if (formData.password !== formData.confirmPassword) {
+        if (formData.passwordHash !== formData.confirmPassword) {
             newErrors.confirmPassword = "Les mots de passe ne correspondent pas.";
         }
 
+        console.log("valid form");
         console.log("Erreurs détectées :", newErrors);
 
         setErrors(newErrors);
@@ -57,21 +56,24 @@ function Register() {
 
         if (!validateForm()) return;
 
+        const { confirmPassword, ...dataToSend } = formData;
+
         try {
             const response = await fetch("/api/users/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(dataToSend),
             });
 
             const data = await response.json();
+            console.log("done submit");
 
             if (response.ok) {
                 setToken(data.token);
                 setShowPopup(true);
-                setFormData({ username: "", email: "", password: "", confirmPassword: "" });
+                setFormData({ username: "", email: "", passwordHash: "", confirmPassword: "" });
                 setErrors({});
             } else {
                 setErrors({ apiError: data.error || "Une erreur est survenue." });
@@ -124,12 +126,12 @@ function Register() {
                     Mot de passe :
                     <input
                         type="password"
-                        name="password"
-                        value={formData.password}
+                        name="passwordHash"
+                        value={formData.passwordHash}
                         onChange={handleInputChange}
                     />
                 </label>
-                {errors.password && <p className="error">{errors.password}</p>}
+                {errors.passwordHash && <p className="error">{errors.passwordHash}</p>}
 
                 <label>
                     Confirmer le mot de passe :

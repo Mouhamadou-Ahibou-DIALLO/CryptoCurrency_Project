@@ -17,9 +17,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
+/**
+ * The ConfigurationApplicationSecurity class is a Spring configuration class for configuring application security.
+ * It provides a security filter chain with the following configuration:
+ * Author: Mouhamadou Ahibou DIALLO
+ */
 @Configuration
 @EnableWebSecurity
 public class ConfigurationApplicationSecurity {
@@ -39,18 +43,20 @@ public class ConfigurationApplicationSecurity {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return
-            httpSecurity
-                    .csrf(AbstractHttpConfigurer::disable)
-                    .authorizeHttpRequests(auth -> auth
-                            .requestMatchers(POST, "/api/users/create").permitAll()
-                            .requestMatchers(POST, "/api/users/login").permitAll()
-                            .requestMatchers(POST, "/api/users/verify-token").permitAll()
-                            .requestMatchers(POST, "api/users/logout").permitAll()
-                            .requestMatchers(GET, "/api/users").permitAll()
-                            .anyRequest().authenticated()
-                    )
-                    .httpBasic(Customizer.withDefaults())
-                    .build();
+                httpSecurity
+                        .csrf(AbstractHttpConfigurer::disable)
+                        .authorizeHttpRequests(auth -> auth
+                                .requestMatchers(POST, "/api/users/create").permitAll()
+                                .requestMatchers(POST, "/api/users/login").permitAll()
+                                .requestMatchers(POST, "/api/users/verify-token").permitAll()
+                                .requestMatchers(POST, "api/users/logout").permitAll()
+                                .requestMatchers(GET, "/api/users").permitAll()
+                                .requestMatchers(PUT, "api/users/update").permitAll()
+                                .requestMatchers(DELETE, "api/users/{id}").permitAll()
+                                .anyRequest().authenticated()
+                        )
+                        .httpBasic(Customizer.withDefaults())
+                        .build();
     }
 
     /**

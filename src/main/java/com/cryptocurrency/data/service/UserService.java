@@ -308,6 +308,8 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        System.out.println("logout user done: " + user);
+        user.setEmail(null);
         user.setTokenHash(null);
     }
 }

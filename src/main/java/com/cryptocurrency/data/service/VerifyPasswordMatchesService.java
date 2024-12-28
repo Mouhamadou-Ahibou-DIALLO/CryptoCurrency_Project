@@ -17,7 +17,13 @@ public class VerifyPasswordMatchesService {
      * @return true if the password is valid, false otherwise
      */
     public static boolean isValidPassword(String password) {
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("Le mot de passe ne peut pas être nul ou vide.");
+        }
+
         String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
-        return password != null && password.matches(passwordPattern);
+        System.out.println("Password received: " + password);
+        System.out.println("Password matches pattern: " + password.matches(passwordPattern));
+        return password.matches(passwordPattern);
     }
 }

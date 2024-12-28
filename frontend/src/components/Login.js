@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import "../static/css/login.css";
 import {Link} from "react-router-dom";
 
@@ -16,6 +16,7 @@ function Login() {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+        console.log("handle input change");
     };
 
     const validateForm = () => {
@@ -29,6 +30,7 @@ function Login() {
             newErrors.password = "Le mot de passe est obligatoire.";
         }
 
+        console.log("validating form");
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -46,6 +48,7 @@ function Login() {
                 body: JSON.stringify(formData),
             });
 
+            console.log("Done")
             const data = await response.text();
             if (response.ok) {
                 setSuccessMessage("Connexion réussie !");
@@ -72,13 +75,16 @@ function Login() {
             });
 
             const data = await response.text();
+            console.log("done")
             if (response.ok) {
                 alert("Token vérifié avec succès !");
+                localStorage.setItem("authToken", data);
                 window.location.href = "/Dashboard";
             } else {
                 alert(data);
             }
         } catch (error) {
+            console.log("erreur")
             alert("Erreur de connexion au serveur.");
         }
     };

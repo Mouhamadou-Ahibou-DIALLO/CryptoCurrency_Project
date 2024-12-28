@@ -95,14 +95,6 @@ public class UserController {
         }
     }
 
-    /*
-    * {
-  "username" = "ahibou",
-  "email": "ahibou2018@example.com",
-  "passwordHash": "Diallo1957@"
-  * tokrn = $2a$10$kbicRMSFshkt3k1GyyqMf.PrXLY7oNLi0Xj95Z/G/dUlLGZMYjmaq
-}*/
-
     /**
      * Deletes a user with the given id.
      *
