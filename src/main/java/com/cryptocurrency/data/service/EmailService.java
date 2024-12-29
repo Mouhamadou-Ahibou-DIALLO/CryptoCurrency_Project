@@ -53,4 +53,12 @@ public class EmailService {
         mailSender.send(message);
         System.out.println("Notification envoyée à " + alert.getUser().getEmail());
     }
+
+    public void sendEmail(String email, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject(subject);
+        message.setText(text);
+        mailSender.send(message);
+    }
 }

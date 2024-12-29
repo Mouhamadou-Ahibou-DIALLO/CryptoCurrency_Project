@@ -38,6 +38,9 @@ const Header = ({ onSearch, onReset }) => {
                 </button>
             </div>
             <div>
+                <Link to="/About">
+                    <button>A propos</button>
+                </Link>
                 <Link to="/Register">
                     <button>Inscription</button>
                 </Link>

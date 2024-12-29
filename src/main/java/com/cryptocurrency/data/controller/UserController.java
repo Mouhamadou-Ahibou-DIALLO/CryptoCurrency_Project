@@ -1,6 +1,8 @@
 package com.cryptocurrency.data.controller;
 
 import com.cryptocurrency.data.model.User;
+import com.cryptocurrency.data.security.EncodedPassword;
+import com.cryptocurrency.data.service.EmailService;
 import com.cryptocurrency.data.service.LoginRequestService;
 import com.cryptocurrency.data.service.TokenRequestService;
 import com.cryptocurrency.data.service.UserService;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,10 +76,53 @@ public class UserController {
      * @param user        The user object containing the updated details.
      * @return The updated user object.
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-        User updatedUser = userService.updateUser(id, user);
-        return ResponseEntity.ok(updatedUser);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user) {
+        try {
+            User updatedUser = userService.updateUser(id, user);
+            System.out.println("user updated: " + updatedUser);
+
+            if (updatedUser == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors du update de l'utilisateur.");
+            }
+
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of(
+                    "message", "User updated successfully.",
+                    "token", updatedUser.getTokenHash()
+            ));
+        } catch (IllegalArgumentException e) {
+            System.out.println("error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                    "error", e.getMessage()
+            ));
+        }
+    }
+
+    /**
+     * Updates a user's token hash.
+     *
+     * @param id The id of the user to be updated.
+     * @return The updated user object.
+     */
+    @PutMapping("/update-token/{id}")
+    public ResponseEntity<?> updateToken(@PathVariable Long id) {
+        try {
+            User updatedUser = userService.updateToken(id);
+
+            if (updatedUser == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors du update de l'utilisateur.");
+            }
+
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of(
+                    "message", "User updated successfully.",
+                    "token", updatedUser.getTokenHash()
+            ));
+        } catch (IllegalArgumentException e) {
+            System.out.println("error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
+                    "error", e.getMessage()
+            ));
+        }
     }
 
     /**
@@ -101,10 +147,25 @@ public class UserController {
      * @param id the id of the user to be deleted
      * @return a success message if the user is deleted successfully
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
         return ResponseEntity.ok("User deleted successfully");
+    }
+
+    /**
+     * Retrieves a user by their ID.
+     *
+     * @param id The ID of the user to be retrieved.
+     * @return A ResponseEntity containing the User object if found, or a not found status if the user does not exist.
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.findById(id);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
     }
 
     /**
@@ -125,10 +186,23 @@ public class UserController {
      * @return A response indicating whether the token is valid.
      */
     @PostMapping("/verify-token")
-    public ResponseEntity<String> verifyToken(@RequestBody TokenRequestService tokenRequest) {
+    public ResponseEntity<?> verifyToken(@RequestBody TokenRequestService tokenRequest) {
         boolean isValid = userService.verifyToken(tokenRequest.getEmail(), tokenRequest.getToken());
         if (isValid) {
-            return ResponseEntity.ok("Token is valid.");
+            User user = userService.findByEmail(tokenRequest.getEmail());
+
+            if (user != null) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("id", user.getId());
+                response.put("username", user.getUsername());
+                response.put("passwordHash", user.getPasswordHash());
+                response.put("email", user.getEmail());
+                response.put("tokenHash", user.getTokenHash());
+
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Utilisateur non trouvé.");
+            }
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token.");
         }
@@ -145,5 +219,54 @@ public class UserController {
         userService.logoutUser(email);
         return ResponseEntity.ok("User logged out successfully");
     }
+
+    /**
+     * Handles a forgot password request.
+     *
+     * @param request the request containing the user's email
+     * @return a success message if the email is sent successfully, a not found status if the email is not found, or an internal server error status if an error occurs
+     */
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        User user = userService.findByEmail(email);
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Email non trouvé."));
+        }
+
+        String token = user.getTokenHash();
+
+        EmailService emailService = new EmailService();
+        String resetLink = "http://localhost:3000/reset-password?token=" + token;
+        emailService.sendEmail(email, "Réinitialisation de mot de passe",
+                "Cliquez sur ce lien pour réinitialiser votre mot de passe : " + resetLink);
+
+        return ResponseEntity.ok(Map.of("message", "Un email de réinitialisation a été envoyé."));
+    }
+
+    /**
+     * Resets the password for a user using the provided token.
+     *
+     * @param request a map containing the token and the new password hash
+     * @return a ResponseEntity containing a success message if the password is reset successfully,
+     *         or a bad request status with an error message if the token is invalid or expired
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
+        String token = request.get("token");
+        String newPassword = request.get("passwordHash");
+
+        User user = userService.findByTokenHash(token);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Token invalide ou expiré."));
+        }
+
+        user.setPasswordHash(EncodedPassword.encode(newPassword));
+        userService.save(user);
+
+        return ResponseEntity.ok(Map.of("message", "Mot de passe réinitialisé avec succès."));
+    }
+
 }
 

@@ -79,6 +79,9 @@ function Login() {
             if (response.ok) {
                 alert("Token vérifié avec succès !");
                 localStorage.setItem("authToken", data);
+                localStorage.setItem("id", data.id);
+                localStorage.setItem("username", data.username);
+                localStorage.setItem("email", data.email);
                 window.location.href = "/Dashboard";
             } else {
                 alert(data);

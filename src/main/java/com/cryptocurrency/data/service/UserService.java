@@ -185,15 +185,38 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        boolean verifyPassword = VerifyPasswordMatchesService.isValidPassword(userDetails.getPasswordHash());
+        if (!verifyPassword) {
+            throw new IllegalArgumentException("Le mot de passe doit comporter au moins 8 caractères et comprendre des lettres, des majuscules, des chiffres et des caractères spéciaux.");
+        }
+
         user.setUsername(userDetails.getUsername());
         user.setEmail(userDetails.getEmail());
 
         String encodedPassword = EncodedPassword.encode(userDetails.getPasswordHash());
-        String encodedToken = EncodedToken.encode(userDetails.getTokenHash());
+        String newToken = EncodedToken.encode(userDetails.getTokenHash());
         user.setPasswordHash(encodedPassword);
-        user.setTokenHash(encodedToken);
+        user.setTokenHash(newToken);
         System.out.println("done updating user: " + user);
 
+        return this.save(user);
+    }
+
+    /**
+     * Generates a new token for a user and updates their token hash.
+     *
+     * @param id the ID of the user for whom to generate a new token
+     * @return the User object with the updated token hash
+     * @throws RuntimeException if no user is found with the given email
+     */
+    public User updateToken(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String token = GenerateToken.generateToken();
+        String newToken = EncodedToken.encode(token);
+        user.setTokenHash(newToken);
+        System.out.println("done updating user: " + user);
         return this.save(user);
     }
 

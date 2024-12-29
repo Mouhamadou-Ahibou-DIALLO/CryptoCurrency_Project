@@ -32,6 +32,11 @@ public class Alerts {
     private CryptoCurrency cryptoCurrency;
 
     /**
+     * The name associated with the Alerts object.
+     */
+    private String name;
+
+    /**
      * The price threshold associated with the Alerts object.
      */
     private Double priceThreshold;
@@ -62,6 +67,24 @@ public class Alerts {
         this.cryptoCurrency = cryptoCurrency;
         this.priceThreshold = priceThreshold;
         this.variationThreshold = variationThreshold;
+    }
+
+    /**
+     * Returns the name associated with the Alerts object.
+     *
+     * @return The name associated with the Alerts object.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name associated with the Alerts object.
+     *
+     * @param name The name to set for the Alerts object.
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
