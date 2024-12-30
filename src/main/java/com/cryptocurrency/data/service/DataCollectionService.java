@@ -271,4 +271,13 @@ public class DataCollectionService {
         System.out.println(cryptoPriceHistoryMap);
         return cryptoPriceHistoryMap;
     }
+
+    public static List<Double> getPriceHistory(String name) {
+        List<CryptoPriceHistory> cryptoPriceHistoryList = cryptoPriceHistoryMap.get(name);
+        List<Double> priceHistory = new ArrayList<>();
+        for (CryptoPriceHistory cryptoPriceHistory : cryptoPriceHistoryList) {
+            priceHistory.add(cryptoPriceHistory.getPrice());
+        }
+        return priceHistory;
+    }
 }

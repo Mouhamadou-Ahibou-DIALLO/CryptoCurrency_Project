@@ -2,40 +2,52 @@ import "../static/css/dashboard.css";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import "./ChartConfig";
+import {useParams} from "react-router-dom";
 
 const Dashboard = () => {
+    const {id} = useParams()
+    const [userData, setUserData] = useState(null);
     const [cryptos, setCryptos] = useState([]);
     const [filteredCryptos, setFilteredCryptos] = useState([]);
     const [selectedCrypto, setSelectedCrypto] = useState(null);
+
     const [priceHistory, setPriceHistory] = useState([]);
     const [movingAveragePrediction, setMovingAveragePrediction] = useState(null);
     const [linearRegressionPrediction, setLinearRegressionPrediction] = useState(null);
+    const [marginError, setMarginError] = useState(null);
     const [loading, setLoading] = useState(true);
+
     const [startDate, setStartDate] = useState("2024-12-27T00:00:00");
     const [endDate, setEndDate] = useState("2025-01-31T23:59:59");
-    const [userData, setUserData] = useState({
-        id: '',
-        username: '',
-        email: ''
-    });
+
     const [showProfileOptions, setShowProfileOptions] = useState(false);
     const [showGenerateModal, setShowGenerateModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [generatedToken, setGeneratedToken] = useState("");
     const [showModifyModal, setShowModifyModal] = useState(false);
     const [enteredToken, setEnteredToken] = useState("");
+    const [showAlerts, setShowAlerts] = useState(false);
 
     const username = "momo";
     const password = "Avignon2024@?";
     const credentials = btoa(`${username}:${password}`);
 
     useEffect(() => {
-        const id = localStorage.getItem('id');
-        const username = localStorage.getItem('username');
-        const email = localStorage.getItem('email');
 
-        setUserData({ id, username, email });
-
+        const fetchId = async () => {
+            try {
+                const response = await fetch(`/api/users/${id}`, {
+                });
+                if (!response.ok) {
+                    throw new Error("Erreur lors de la récupération des données.");
+                }
+                const data = await response.json();
+                setUserData(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchId();
 
         const fetchCryptos = async () => {
             try {
@@ -62,7 +74,7 @@ const Dashboard = () => {
     useEffect(() => {
         if (selectedCrypto?.name && startDate && endDate) {
             fetchPriceHistory(selectedCrypto.name).then(() => {
-                fetchPredictions(selectedCrypto.name, 7);
+                fetchPredictions(selectedCrypto.name, 7, priceHistory[priceHistory.length - 1].price);
             });
         }
     }, [selectedCrypto?.name, startDate, endDate]);
@@ -93,9 +105,9 @@ const Dashboard = () => {
         fetchPriceHistory(cryptoName);
     };
 
-    const fetchPredictions = async (cryptoName, period) => {
+    const fetchPredictions = async (cryptoName, period, predictedPrice) => {
         try {
-            const [movingAverageResponse, linearRegressionResponse] = await Promise.all([
+            const [movingAverageResponse, linearRegressionResponse, errorMarginResponse] = await Promise.all([
                 fetch(`/api/predictions/moving-average?name=${cryptoName}&period=${period}`, {
                     headers: {
                         Authorization: `Basic ${credentials}`,
@@ -106,17 +118,24 @@ const Dashboard = () => {
                         Authorization: `Basic ${credentials}`,
                     },
                 }),
+                fetch(`/api/predictions/error-margin?name=${cryptoName}&predictedPrice=${predictedPrice}`, {
+                    headers: {
+                        Authorization: `Basic ${credentials}`,
+                    },
+                })
             ]);
 
-            if (!movingAverageResponse.ok || !linearRegressionResponse.ok) {
+            if (!movingAverageResponse.ok || !linearRegressionResponse.ok  || !errorMarginResponse.ok) {
                 throw new Error("Erreur lors de la récupération des données de prédiction.");
             }
 
             const movingAverage = await movingAverageResponse.json();
             const linearRegression = await linearRegressionResponse.json();
+            const marginError = await errorMarginResponse.json();
 
             setMovingAveragePrediction(movingAverage);
             setLinearRegressionPrediction(linearRegression);
+            setMarginError(marginError);
         } catch (error) {
             console.error(error);
         }
@@ -124,6 +143,7 @@ const Dashboard = () => {
 
     const handleLogout = () => {
         localStorage.removeItem("authToken");
+        localStorage.removeItem("id");
         window.location.href = "/Login";
     };
 
@@ -155,6 +175,15 @@ const Dashboard = () => {
                 borderColor: "rgba(153, 102, 255, 1)",
                 borderDash: [10, 5],
             },
+            {
+                label: "Marge d'erreur",
+                data: priceHistory.map((_, index) =>
+                    index === priceHistory.length - 1 ? marginError : null
+                ),
+                fill: false,
+                borderColor: "rgba(255, 159, 64, 1)",
+                borderDash: [10, 5],
+            },
         ],
     };
 
@@ -180,6 +209,7 @@ const Dashboard = () => {
     };
 
     const handleGenerateToken = async () => {
+        setShowGenerateModal(true);
         try {
             const response = await fetch(`/api/users/update-token/${userData.id}`, { method: "PUT" });
             const data = await response.json();
@@ -195,7 +225,29 @@ const Dashboard = () => {
     };
 
     const handleModifyProfile = () => {
-        setShowModifyModal(true);
+        setShowModifyModal(!showModifyModal);
+    };
+
+    const handleShowAlerts = () => {
+        setShowAlerts(!showAlerts);
+    };
+
+    const handlePageAlerts = async () => {
+        try {
+            const response = await fetch(`/api/users/verify-token`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: userData.email, token: enteredToken }),
+            });
+
+            if (response.ok) {
+                window.location.href = "/PageAlerts/{userData.id}";
+            } else {
+                alert("Token invalide.");
+            }
+        } catch (error) {
+            console.error("Erreur lors de la vérification du token:", error);
+        }
     };
 
     const handleTokenVerificationModifyProfile = async () => {
@@ -207,7 +259,7 @@ const Dashboard = () => {
             });
 
             if (response.ok) {
-                window.location.href = "/ModifierProfil";
+                window.location.href = "/ModifierProfil/{userData.id}";
             } else {
                 alert("Token invalide.");
             }
@@ -217,7 +269,7 @@ const Dashboard = () => {
     };
 
     const handleDeleteAccount = () => {
-        setShowDeleteModal(true);
+        setShowDeleteModal(!showDeleteModal);
     };
 
     const handleDeleteProfile = async () => {
@@ -248,7 +300,7 @@ const Dashboard = () => {
             <header className="dashboard-header">
                 <h1>La cryptomonnaie de l'avenir</h1>
                 <div className="header-buttons">
-                    <button>Page pour les alertes</button>
+                    <button onClick={handleShowAlerts}>Page pour les alertes</button>
                     <button>Notifications</button>
                     <button onClick={handleProfileClick}>Profil utilisateur</button>
                     <button onClick={handleLogout}>Déconnexion</button>
@@ -311,13 +363,13 @@ const Dashboard = () => {
 
             {showProfileOptions && (
                 <div className="profile-options">
-                    <button onClick={() => setShowProfileOptions(false)}>Fermer</button>
+                    <button onClick={() => setShowProfileOptions(false)} className="close-PU">Fermer</button>
                     <h3>Options du profil</h3>
                     <p><strong>Votre nom d'utilisateur :</strong> {userData.username}</p>
                     <p><strong>Votre email :</strong> {userData.email}</p>
-                    <button onClick={handleModifyProfile}>Modifier Profil</button>
-                    <button onClick={handleGenerateToken}>Générer un nouveau token</button>
-                    <button onClick={handleDeleteAccount}>Supprimer Profil</button>
+                    <button onClick={handleModifyProfile} className="modify-PU">Modifier Profil</button>
+                    <button onClick={handleGenerateToken} className="genere-PU">Générer un nouveau token</button>
+                    <button onClick={handleDeleteAccount} className="sup-PU">Supprimer Profil</button>
                 </div>
             )}
 
@@ -334,6 +386,23 @@ const Dashboard = () => {
                         />
                         <button onClick={handleTokenVerificationModifyProfile}>Vérifier</button>
                         <button onClick={() => setShowModifyModal(false)}>Annuler</button>
+                    </div>
+                </div>
+            )}
+
+            {showAlerts && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>Vérification du Token</h2>
+                        <p>Veuillez entrer votre token pour accéder à la page des alertes :</p>
+                        <input
+                            type="text"
+                            placeholder="Entrer votre token"
+                            value={enteredToken}
+                            onChange={(e) => setEnteredToken(e.target.value)}
+                        />
+                        <button onClick={handlePageAlerts}>Vérifier</button>
+                        <button onClick={() => setShowAlerts(false)}>Annuler</button>
                     </div>
                 </div>
             )}

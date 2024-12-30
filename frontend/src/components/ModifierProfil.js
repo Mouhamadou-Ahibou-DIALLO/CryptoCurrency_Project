@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from "react";
 import "../static/css/editProfile.css";
+import {useParams} from "react-router-dom";
 
 const EditProfile = () => {
-    const [userData, setUserData] = useState({
-        id: "",
-        username: "",
-        email: "",
-        passwordHash: "",
-    });
+    const {id} = useParams()
+    const [userData, setUserData] = useState(null);
 
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
 
     useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            const user = JSON.parse(storedUser);
-            setUserData({
-                ...userData,
-                id: user.id || "",
-                username: user.username || "",
-                email: user.email || "",
-                passwordHash: user.passwordHash || "",
-            });
-        }
+        const fetchId = async () => {
+            try {
+                const response = await fetch(`/api/users/${id}`, {
+                });
+                if (!response.ok) {
+                    throw new Error("Erreur lors de la récupération des données.");
+                }
+                const data = await response.json();
+                setUserData(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchId();
     }, []);
 
     const handleInputChange = (e) => {
@@ -65,7 +65,9 @@ const EditProfile = () => {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(userData.id,{
+
+            body: JSON.stringify({
+                id: userData.id,
                 username: userData.username,
                 email: userData.email,
                 passwordHash: newPassword
@@ -76,7 +78,7 @@ const EditProfile = () => {
             alert("Profil mis à jour !");
             const updatedUser = await response.json();
             localStorage.setItem("user", JSON.stringify(updatedUser));
-            window.location.href = "/dashboard";
+            window.location.href = "/dashboard/{id}";
         } else {
             console.error("Erreur de mise à jour");
         }
@@ -89,7 +91,7 @@ const EditProfile = () => {
     };
 
     const handleReturnToAccount = () => {
-        window.location.href = "/dashboard";
+        window.location.href = "/dashboard/{id}";
     };
 
     return (

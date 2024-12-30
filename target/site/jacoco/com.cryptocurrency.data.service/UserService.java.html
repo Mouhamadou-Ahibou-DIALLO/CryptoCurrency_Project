@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.service</a> &gt; <span class="el_source">UserService.java</span></div><h1>UserService.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.service;
+
+import com.cryptocurrency.data.model.User;
+import com.cryptocurrency.data.repository.UserRepository;
+
+import com.cryptocurrency.data.security.EncodedPassword;
+import com.cryptocurrency.data.security.EncodedToken;
+import com.cryptocurrency.data.utils.GenerateToken;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+/**
+ * The service for User objects.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
+@Service
+<span class="fc" id="L22">public class UserService {</span>
+
+    /**
+     * The repository for User objects.
+     */
+    @Autowired
+    private UserRepository userRepository;
+
+    /**
+     * Retrieve all users from the repository.
+     *
+     * @return a list of all User objects.
+     */
+    public List&lt;User&gt; findAll() {
+<span class="fc" id="L36">        return userRepository.findAll();</span>
+    }
+
+    /**
+     * Find a user by its username.
+     *
+     * @param username the username to find the user for
+     * @return a User object with the given username, or an empty optional if none is found
+     */
+    public User findByUsername(String username) {
+<span class="fc" id="L46">        return userRepository.findByUsername(username)</span>
+<span class="pc" id="L47">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
+    }
+
+    /**
+     * Find a user by its email.
+     *
+     * @param email the email to find the user for
+     * @return a User object with the given email, or an empty optional if none is found
+     */
+    public User findByEmail(String email) {
+<span class="fc" id="L57">        return userRepository.findByEmail(email)</span>
+<span class="pc" id="L58">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
+    }
+    /**
+     * Find a user by its id.
+     *
+     * @param id the id to find the user for
+     * @return a User object with the given id, or null if none is found
+     */
+    public User findById(Long id) {
+<span class="fc" id="L67">        Optional&lt;User&gt; result = userRepository.findById(id);</span>
+<span class="fc" id="L68">        return result.orElse(null);</span>
+    }
+
+    /**
+     * Find a user by its token hash.
+     *
+     * @param tokenHash the token hash to find the user for
+     * @return a User object with the given token hash
+     * @throws RuntimeException if no user is found with the given token hash
+     */
+    public User findByTokenHash(String tokenHash) {
+<span class="fc" id="L79">        return userRepository.findByTokenHash(tokenHash)</span>
+<span class="pc" id="L80">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
+    }
+
+    /**
+     * Find users by their password hash.
+     *
+     * @param passwordHash the password hash to search for
+     * @return a list of users with the given password hash
+     */
+    public List&lt;User&gt; findByPasswordHash(String passwordHash) {
+<span class="fc" id="L90">        return userRepository.findByPasswordHash(passwordHash);</span>
+    }
+
+    /**
+     * Find a user by its username and password hash.
+     *
+     * @param username      the username to find the user for
+     * @param passwordHash the password hash to find the user for
+     * @return a User object with the given username and password hash, or null if none is found
+     */
+    public User findByUsernameAndPasswordHash(String username, String passwordHash) {
+<span class="fc" id="L101">        return userRepository.findByUsernameAndPasswordHash(username, passwordHash);</span>
+    }
+
+    /**
+     * Saves a User object in the repository.
+     *
+     * @param user the User object to save
+     * @return the saved User object
+     */
+    public User save(User user) {
+<span class="fc" id="L111">        return userRepository.save(user);</span>
+    }
+
+    /**
+     * Deletes a user by its id.
+     *
+     * @param id the id of the user to be deleted
+     */
+    public void deleteById(Long id) {
+<span class="fc" id="L120">        userRepository.deleteById(id);</span>
+<span class="fc" id="L121">    }</span>
+
+    /**
+     * Creates a new user, encoding their password and generating a token.
+     *
+     * @param user the User object to be created
+     * @return the created User object
+     */
+    public User createUser(User user) {
+<span class="nc" id="L130">        boolean verifyPassword = VerifyPasswordMatchesService.isValidPassword(user.getPasswordHash());</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (!verifyPassword) {</span>
+<span class="nc" id="L132">            throw new IllegalArgumentException(&quot;Le mot de passe doit comporter au moins 8 caractères et comprendre des lettres, des majuscules, des chiffres et des caractères spéciaux.&quot;);</span>
+        }
+
+<span class="nc" id="L135">        String encodedPassword = EncodedPassword.encode(user.getPasswordHash());</span>
+<span class="nc" id="L136">        user.setPasswordHash(encodedPassword);</span>
+<span class="nc" id="L137">        System.out.println(&quot;getPasswordHash: &quot; + encodedPassword);</span>
+
+<span class="nc" id="L139">        String token = GenerateToken.generateToken();</span>
+<span class="nc" id="L140">        System.out.println(&quot;token: &quot; + token);</span>
+<span class="nc" id="L141">        String encodedToken = EncodedToken.encode(token);</span>
+<span class="nc" id="L142">        user.setTokenHash(encodedToken);</span>
+<span class="nc" id="L143">        System.out.println(&quot;tokenHash: &quot; + encodedToken);</span>
+
+<span class="nc" id="L145">        System.out.println(&quot;user created: &quot; + user);</span>
+<span class="nc" id="L146">        User savedUser = this.save(user);</span>
+
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (savedUser == null) {</span>
+<span class="nc" id="L149">            throw new IllegalArgumentException(&quot;L'utilisateur n'a pas pu être sauvegardé.&quot;);</span>
+        }
+
+<span class="nc" id="L152">        return savedUser;</span>
+    }
+
+    /**
+     * Checks if a user with the given email already exists in the database.
+     *
+     * @param email the email to search for
+     * @return true if a user with the given email is found, false otherwise
+     */
+    public boolean emailExists(String email) {
+<span class="nc" id="L162">        Optional&lt;User&gt; user = userRepository.findByEmail(email);</span>
+<span class="nc" id="L163">        return user.isPresent();</span>
+    }
+
+    /**
+     * Checks if a user with the given username already exists in the database.
+     *
+     * @param username the username to search for
+     * @return true if a user with the given username is found, false otherwise
+     */
+    public boolean userNameExists(String username) {
+<span class="nc" id="L173">        Optional&lt;User&gt; user = userRepository.findByUsername(username);</span>
+<span class="nc" id="L174">        return user.isPresent();</span>
+    }
+
+    /**
+     * Updates a user with the given details.
+     *
+     * @param id          the id of the user to be updated
+     * @param userDetails the User object containing the updated details
+     * @return the updated User object
+     */
+    public User updateUser(Long id, User userDetails) {
+<span class="nc" id="L185">        User user = userRepository.findById(id)</span>
+<span class="nc" id="L186">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
+
+<span class="nc" id="L188">        boolean verifyPassword = VerifyPasswordMatchesService.isValidPassword(userDetails.getPasswordHash());</span>
+<span class="nc bnc" id="L189" title="All 2 branches missed.">        if (!verifyPassword) {</span>
+<span class="nc" id="L190">            throw new IllegalArgumentException(&quot;Le mot de passe doit comporter au moins 8 caractères et comprendre des lettres, des majuscules, des chiffres et des caractères spéciaux.&quot;);</span>
+        }
+
+<span class="nc" id="L193">        user.setUsername(userDetails.getUsername());</span>
+<span class="nc" id="L194">        user.setEmail(userDetails.getEmail());</span>
+
+<span class="nc" id="L196">        String encodedPassword = EncodedPassword.encode(userDetails.getPasswordHash());</span>
+<span class="nc" id="L197">        String newToken = EncodedToken.encode(userDetails.getTokenHash());</span>
+<span class="nc" id="L198">        user.setPasswordHash(encodedPassword);</span>
+<span class="nc" id="L199">        user.setTokenHash(newToken);</span>
+<span class="nc" id="L200">        System.out.println(&quot;done updating user: &quot; + user);</span>
+
+<span class="nc" id="L202">        return this.save(user);</span>
+    }
+
+    /**
+     * Generates a new token for a user and updates their token hash.
+     *
+     * @param id the ID of the user for whom to generate a new token
+     * @return the User object with the updated token hash
+     * @throws RuntimeException if no user is found with the given email
+     */
+    public User updateToken(Long id) {
+<span class="nc" id="L213">        User user = userRepository.findById(id)</span>
+<span class="nc" id="L214">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
+
+<span class="nc" id="L216">        String token = GenerateToken.generateToken();</span>
+<span class="nc" id="L217">        String newToken = EncodedToken.encode(token);</span>
+<span class="nc" id="L218">        user.setTokenHash(newToken);</span>
+<span class="nc" id="L219">        System.out.println(&quot;done updating user: &quot; + user);</span>
+<span class="nc" id="L220">        return this.save(user);</span>
+    }
+
+    /**
+     * Finds a user by their email and password hash.
+     *
+     * @param email the email of the user to be found
+     * @param passwordHash the password hash of the user to be found
+     * @return an Optional containing the User object if found, or an empty Optional if no user matches the given criteria
+     */
+    public Optional&lt;User&gt; findByEmailAndPasswordHash(String email, String passwordHash) {
+<span class="nc" id="L231">        return userRepository.findByEmailAndPasswordHash(email, passwordHash);</span>
+    }
+
+    /**
+     * Authenticates a user using their email and password.
+     *
+     * @param email    the email of the user to be authenticated
+     * @param password the password of the user to be authenticated
+     * @return the token hash of the user
+     */
+    public String authenticateUser(String email, String password) {
+<span class="nc" id="L242">        System.out.println(&quot;email: &quot; + email);</span>
+<span class="nc" id="L243">        User user = userRepository.findByEmail(email)</span>
+<span class="nc" id="L244">                .orElseThrow(() -&gt; new RuntimeException(&quot;Invalid email&quot;));</span>
+
+<span class="nc bnc" id="L246" title="All 2 branches missed.">        if (user != null) {</span>
+<span class="nc" id="L247">            System.out.println(&quot;user: &quot; + user);</span>
+<span class="nc" id="L248">            System.out.println(&quot;password: &quot; + password);</span>
+<span class="nc" id="L249">            String encodedPassword = user.getPasswordHash();</span>
+<span class="nc" id="L250">            boolean isRightPassword = EncodedPassword.isRightPassword(password, encodedPassword);</span>
+
+<span class="nc bnc" id="L252" title="All 2 branches missed.">            if (isRightPassword) {</span>
+<span class="nc" id="L253">                Optional&lt;User&gt; userValid = this.findByEmailAndPasswordHash(email, encodedPassword);</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">                if (userValid.isPresent()) {</span>
+<span class="nc" id="L255">                    System.out.println(&quot;Login successful&quot;);</span>
+<span class="nc" id="L256">                    return user.getTokenHash();</span>
+                }
+                else {
+<span class="nc" id="L259">                    System.out.println(&quot;Login failed&quot;);</span>
+<span class="nc" id="L260">                    throw new RuntimeException(&quot;Login failed&quot;);</span>
+                }
+            }
+            else {
+<span class="nc" id="L264">                System.out.println(&quot;Mot de pass incorrect&quot;);</span>
+<span class="nc" id="L265">                throw new RuntimeException(&quot;Mot de pass incorrect&quot;);</span>
+            }
+        }
+
+<span class="nc" id="L269">        System.out.println(&quot;not found user&quot;);</span>
+<span class="nc" id="L270">        throw new RuntimeException(&quot;not found user&quot;);</span>
+    }
+
+    /**
+     * Finds a user by their email and token hash.
+     *
+     * @param email    the email of the user to be found
+     * @param tokenHash the token hash of the user to be found
+     * @return an Optional containing the User object if found, or an empty Optional if no user matches the given criteria
+     */
+    public Optional&lt;User&gt; findByEmailAndTokenHash(String email, String tokenHash) {
+<span class="nc" id="L281">        return userRepository.findByEmailAndTokenHash(email, tokenHash);</span>
+    }
+
+    /**
+    /**
+     * Verifies if the provided token matches the stored token hash for the user with the given email.
+     *
+     * @param email the email of the user whose token is to be verified
+     * @param token the token to verify
+     * @return true if the token is valid, false otherwise
+     * @throws RuntimeException if the user is not found
+     */
+    public boolean verifyToken(String email, String token) {
+<span class="nc" id="L294">        User user = userRepository.findByEmail(email)</span>
+<span class="nc" id="L295">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
+
+<span class="nc bnc" id="L297" title="All 2 branches missed.">        if (user != null) {</span>
+<span class="nc" id="L298">            System.out.println(&quot;user: &quot; + user);</span>
+<span class="nc" id="L299">            String encodedToken = user.getTokenHash();</span>
+<span class="nc" id="L300">            System.out.println(&quot;token: &quot; + token);</span>
+<span class="nc" id="L301">            System.out.println(&quot;encodedToken: &quot; + encodedToken);</span>
+
+<span class="nc bnc" id="L303" title="All 2 branches missed.">            if (Objects.equals(token, encodedToken)) {</span>
+<span class="nc" id="L304">                Optional&lt;User&gt; userValid = this.findByEmailAndTokenHash(email, encodedToken);</span>
+<span class="nc bnc" id="L305" title="All 2 branches missed.">                if (userValid.isPresent()) {</span>
+<span class="nc" id="L306">                    System.out.println(&quot;Token is valid&quot;);</span>
+<span class="nc" id="L307">                    return true;</span>
+                }
+                else {
+<span class="nc" id="L310">                    System.out.println(&quot;Token is not valid&quot;);</span>
+<span class="nc" id="L311">                    return false;</span>
+                }
+            }
+            else {
+<span class="nc" id="L315">                System.out.println(&quot;Token is not valid&quot;);</span>
+<span class="nc" id="L316">                return false;</span>
+            }
+        }
+
+<span class="nc" id="L320">        System.out.println(&quot;User not found&quot;);</span>
+<span class="nc" id="L321">        return false;</span>
+    }
+
+
+    /**
+     * Logs out a user with the given email.
+     *
+     * @param email the email of the user to be logged out
+     */
+    public void logoutUser(String email) {
+<span class="nc" id="L331">        User user = userRepository.findByEmail(email)</span>
+<span class="nc" id="L332">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
+
+<span class="nc" id="L334">        System.out.println(&quot;logout user done: &quot; + user);</span>
+<span class="nc" id="L335">        user.setEmail(null);</span>
+<span class="nc" id="L336">        user.setTokenHash(null);</span>
+<span class="nc" id="L337">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="AdditionalModuleElements">
+    <content url="file://$MODULE_DIR$" dumb="true">
+      <sourceFolder url="file://$MODULE_DIR$/backend/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/src/main/java/com" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/src/main/java/com/cryptocurrency/project" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/src/main/java/com/cryptocurrency/project/model" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/src/main/java/com/cryptocurrency/project/repository" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/src/main/java/com/cryptocurrency/project/scheduler" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/src/main/java/com/cryptocurrency/project/security" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/src/main/java/com/cryptocurrency/project/service" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/backend/src/test/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/main/java" isTestSource="false" />
+    </content>
+  </component>
+  <component name="FacetManager">
+    <facet type="jpa" name="JPA">
+      <configuration>
+        <setting name="validation-enabled" value="true" />
+        <setting name="provider-name" value="Hibernate" />
+        <datasource-mapping />
+        <naming-strategy-map />
+      </configuration>
+    </facet>
+  </component>
+</module>

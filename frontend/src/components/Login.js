@@ -77,12 +77,13 @@ function Login() {
             const data = await response.text();
             console.log("done")
             if (response.ok) {
+                const parsedData = JSON.parse(data);
                 alert("Token vérifié avec succès !");
-                localStorage.setItem("authToken", data);
-                localStorage.setItem("id", data.id);
-                localStorage.setItem("username", data.username);
-                localStorage.setItem("email", data.email);
-                window.location.href = "/Dashboard";
+                localStorage.setItem("authToken", parsedData.token);
+                localStorage.setItem("id", parsedData.id);
+                localStorage.setItem("username", parsedData.username);
+                localStorage.setItem("email", parsedData.email);
+                window.location.href = `/Dashboard/${parsedData.id}`;
             } else {
                 alert(data);
             }
@@ -127,6 +128,10 @@ function Login() {
                 {errors.password && <p className="error">{errors.password}</p>}
 
                 {errors.apiError && <p className="error">{errors.apiError}</p>}
+
+                <p className="register-link">Mot de passe oublie ? {" "}
+                    <a href="/ForgotPassword">Cliquez ici</a>
+                </p>
 
                 <button type="submit" className="login-btn-connect">Se connecter</button>
                 <p className="register-link">

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -109,28 +110,33 @@ public class AlertsService {
     }
 
     /**
-     * Check all alerts to see if any have been triggered.
+     * Checks all alerts in the database and sends notifications to users if the current
+     * price of the cryptocurrency exceeds their specified price threshold or if the price
+     * change percentage exceeds their specified variation threshold.
+     * This method retrieves all alerts, iterates through each alert, and checks the
+     * current price and change percentage of the associated cryptocurrency. If the
+     * conditions are met, it sends an email notification to the user.
      */
     public void checkAlerts() {
         List<Alerts> alerts = alertsRepository.findAll();
 
         for (Alerts alert : alerts) {
-            double currentPrice = getCurrentPrice(alert.getCryptoCurrency());
+            List<Alerts> alertsUser = findByUser(alert.getUser());
+            CryptoCurrency cryptoCurrency = alert.getCryptoCurrency();
 
-            if (currentPrice >= alert.getPriceThreshold()) {
-                emailService.sendNotification(alert, currentPrice);
+            for (Alerts alertUser : alertsUser) {
+                Double currentPrice = cryptoCurrency.getPrice();
+                Double changePercentage = cryptoCurrency.getChange();
+
+                if (currentPrice > alertUser.getPriceThreshold()) {
+                    emailService.sendNotification(alertUser, currentPrice);
+                }
+
+                if (Math.abs(changePercentage) > alertUser.getVariationThreshold()) {
+                    emailService.sendNotification(alertUser, changePercentage);
+                }
             }
         }
-    }
-
-    /**
-     * Gets the current price for a given market data entry.
-     *
-     * @param currency the cryptocurrency entry to get the current price for
-     * @return the current price for the given market data entry
-     */
-    private double getCurrentPrice(CryptoCurrency currency) {
-        return currency.getPrice();
     }
 
     /**
@@ -141,30 +147,91 @@ public class AlertsService {
      * @return the created alert
      */
     public Alerts createAlert(User user, Alerts alert) {
+        if (user == null) {
+            throw new IllegalArgumentException("L'utilisateur ne peut pas être null.");
+        }
+
+        if (alert.getCryptoCurrency() == null ||
+                (alert.getPriceThreshold() == null && alert.getVariationThreshold() == null)) {
+            throw new IllegalArgumentException("L'alerte doit avoir une crypto-monnaie et au moins un seuil défini.");
+        }
+
+        List<Alerts> existingAlerts = findByUser(user);
+
+        for (Alerts existingAlert : existingAlerts) {
+            if (existingAlert.getCryptoCurrency().equals(alert.getCryptoCurrency()) &&
+                    Objects.equals(existingAlert.getPriceThreshold(), alert.getPriceThreshold()) &&
+                    Objects.equals(existingAlert.getVariationThreshold(), alert.getVariationThreshold())) {
+                throw new IllegalStateException("Une alerte similaire existe déjà pour cet utilisateur.");
+            }
+        }
+
+        if (checkNombreAlerts(user)) {
+            throw new IllegalStateException("Vous avez atteint le nombre maximum d'alertes., Passez à un abonnement Premium.");
+        }
+
         alert.setUser(user);
+        alert.setName(alert.getName());
+        alert.setCryptoCurrency(alert.getCryptoCurrency());
+        alert.setPriceThreshold(alert.getPriceThreshold());
+        alert.setVariationThreshold(alert.getVariationThreshold());
+
+        System.out.println("creation is done");
         return alertsRepository.save(alert);
     }
-}
 
-/*
-if (alert.getVariationThreshold() != null) {
-            Double previousPrice = marketDataService.getPreviousPrice(alert.getMarketData());
-            Double priceChange = ((currentPrice - previousPrice) / previousPrice) * 100;
-
-            if (Math.abs(priceChange) >= alert.getVariationThreshold()) {
-                sendEmailNotification(alert.getUser(), alert);
-            }
-
-    public void checkTechnicalIndicators() {
-    List<Alert> alerts = alertRepository.findAll();
-
-    for (Alert alert : alerts) {
-        // Vérifier l'indicateur technique
-        Double rsi = marketDataService.getRSI(alert.getMarketData());
-
-        if (rsi > alert.getTechnicalThreshold()) {
-            sendEmailNotification(alert.getUser(), alert);
-        }
+    public boolean checkNombreAlerts(User user) {
+        List<Alerts> alerts = findByUser(user);
+        return alerts.size() == 10;
     }
+
+    /**
+     * Updates an existing alert for the given user.
+     *
+     * @param alertId the ID of the alert to update
+     * @param user the user who owns the alert
+     * @param updatedAlert the updated alert object
+     * @return the updated alert
+     */
+    public Alerts updateAlert(Long alertId, User user, Alerts updatedAlert) {
+        Alerts existingAlert = alertsRepository.findById(alertId)
+                .orElseThrow(() -> new RuntimeException("Alerte introuvable"));
+
+        if (!existingAlert.getUser().equals(user)) {
+            throw new IllegalStateException("Vous n'êtes pas autorisé à modifier cette alerte.");
+        }
+
+        existingAlert.setName(updatedAlert.getName());
+        existingAlert.setPriceThreshold(updatedAlert.getPriceThreshold());
+        existingAlert.setVariationThreshold(updatedAlert.getVariationThreshold());
+        existingAlert.setCryptoCurrency(updatedAlert.getCryptoCurrency());
+
+        System.out.println("update is done");
+        return alertsRepository.save(existingAlert);
+    }
+
+    /**
+     * Deletes an alert with the given ID for the given user.
+     *
+     * @param alertId the ID of the alert to delete
+     * @param user the user who owns the alert
+     *
+     * @throws RuntimeException if the alert is not found
+     * @throws IllegalStateException if the user is not authorized to delete the alert
+     */
+    public void deleteAlert(Long alertId, User user) {
+        Alerts alert = alertsRepository.findById(alertId)
+                .orElseThrow(() -> new RuntimeException("Alerte introuvable"));
+
+        if (!alert.getUser().equals(user)) {
+            throw new IllegalStateException("Vous n'êtes pas autorisé à supprimer cette alerte.");
+        }
+
+        System.out.println("delete is done");
+        alertsRepository.delete(alert);
+    }
+
+
+
 }
- */
+

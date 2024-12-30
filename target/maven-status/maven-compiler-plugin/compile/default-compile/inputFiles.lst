@@ -4,6 +4,7 @@
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/config/JacksonConfig.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/controller/AlertsController.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/controller/CryptoCurrencyController.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/controller/PredictionController.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/controller/UserController.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/model/Alerts.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/model/CryptoCurrency.java
@@ -21,6 +22,7 @@
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/DataCollectionService.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/EmailService.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/LoginRequestService.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/PredictionService.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/TokenRequestService.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/UserService.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/main/java/com/cryptocurrency/data/service/VerifyPasswordMatchesService.java

@@ -37,7 +37,7 @@ Cryptocurrency —< Alerts (1:N)
 
 # Étape  : Concevoir le schéma ERD
 
-~/CryptoCurrency_Project/Schema ERD.webp
+~/CryptoCurrency_Project/Schema ERD.png
 
 
-Une représentation visuelle du schéma est disponible dans le fichier diagramme visuel.webp, générée avec le site https://dbdiagram.io/
+Une représentation visuelle du schéma est disponible dans le fichier diagramme visuel.jpg, générée avec le site https://dbdiagram.io/

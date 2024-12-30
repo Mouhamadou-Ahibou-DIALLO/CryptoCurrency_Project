@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Alerts.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.model</a> &gt; <span class="el_source">Alerts.java</span></div><h1>Alerts.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.model;
+
+import jakarta.persistence.*;
+
+/**
+ * This class represents an Alerts object.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
+@Entity
+@Table(name = &quot;alerts&quot;)
+public class Alerts {
+
+    /**
+     * The ID of the Alerts object.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    /**
+     * The user associated with the Alerts object.
+     */
+    @ManyToOne
+    @JoinColumn(name = &quot;user_id&quot;, nullable = false)
+    private User user;
+
+    /**
+     * The market data associated with the Alerts object.
+     */
+    @ManyToOne
+    @JoinColumn(name = &quot;crypto_id&quot;, nullable = false)
+    private CryptoCurrency cryptoCurrency;
+
+    /**
+     * The name associated with the Alerts object.
+     */
+    private String name;
+
+    /**
+     * The price threshold associated with the Alerts object.
+     */
+    private Double priceThreshold;
+
+    /**
+     * The variation threshold associated with the Alerts object.
+     */
+    private Double variationThreshold;
+
+    /**
+     * Default constructor for the Alerts class.
+     */
+<span class="fc" id="L52">    public Alerts() {}</span>
+
+
+    /**
+     * Constructor for the Alerts class.
+     *
+     * @param id The ID of the Alerts object.
+     * @param user The user associated with the Alerts object.
+     * @param cryptoCurrency The cryptocurrency associated with the Alerts object.
+     * @param priceThreshold The price threshold associated with the Alerts object.
+     * @param variationThreshold The variation threshold associated with the Alerts object.
+     */
+<span class="fc" id="L64">    public Alerts(Long id, User user, CryptoCurrency cryptoCurrency, Double priceThreshold, Double variationThreshold) {</span>
+<span class="fc" id="L65">        this.id = id;</span>
+<span class="fc" id="L66">        this.user = user;</span>
+<span class="fc" id="L67">        this.cryptoCurrency = cryptoCurrency;</span>
+<span class="fc" id="L68">        this.priceThreshold = priceThreshold;</span>
+<span class="fc" id="L69">        this.variationThreshold = variationThreshold;</span>
+<span class="fc" id="L70">    }</span>
+
+    /**
+     * Returns the name associated with the Alerts object.
+     *
+     * @return The name associated with the Alerts object.
+     */
+    public String getName() {
+<span class="nc" id="L78">        return name;</span>
+    }
+
+    /**
+     * Sets the name associated with the Alerts object.
+     *
+     * @param name The name to set for the Alerts object.
+     */
+    public void setName(String name) {
+<span class="nc" id="L87">        this.name = name;</span>
+<span class="nc" id="L88">    }</span>
+
+    /**
+     * Returns the user associated with the Alerts object.
+     *
+     * @return The user associated with the Alerts object.
+     */
+    public User getUser() {
+<span class="fc" id="L96">        return user;</span>
+    }
+
+    /**
+     * Sets the user associated with the Alerts object.
+     *
+     * @param user The user associated with the Alerts object.
+     */
+    public void setUser(User user) {
+<span class="fc" id="L105">        this.user = user;</span>
+<span class="fc" id="L106">    }</span>
+
+    /**
+     * Sets the ID of the Alerts object.
+     *
+     * @param id The ID of the Alerts object.
+     */
+    public void setId(Long id) {
+<span class="fc" id="L114">        this.id = id;</span>
+<span class="fc" id="L115">    }</span>
+
+    /**
+     * Returns the ID of the Alerts object.
+     *
+     * @return The ID of the Alerts object.
+     */
+    public Long getId() {
+<span class="fc" id="L123">        return id;</span>
+    }
+
+    /**
+     * Returns the CryptoCurrency object associated with the Alerts object.
+     *
+     * @return The CryptoCurrency object associated with the Alerts object.
+     */
+    public CryptoCurrency getCryptoCurrency() {
+<span class="fc" id="L132">        return cryptoCurrency;</span>
+    }
+
+    /**
+     * Sets the CryptoCurrency object associated with the Alerts object.
+     *
+     * @param cryptoCurrency The CryptoCurrency object to associate with the Alerts object.
+     */
+    public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
+<span class="fc" id="L141">        this.cryptoCurrency = cryptoCurrency;</span>
+<span class="fc" id="L142">    }</span>
+
+    /**
+     * Returns the price threshold associated with the Alerts object.
+     *
+     * @return The price threshold associated with the Alerts object.
+     */
+    public Double getPriceThreshold() {
+<span class="fc" id="L150">        return priceThreshold;</span>
+    }
+
+    /**
+     * Sets the price threshold associated with the Alerts object.
+     *
+     * @param priceThreshold The price threshold associated with the Alerts object.
+     */
+    public void setPriceThreshold(Double priceThreshold) {
+<span class="fc" id="L159">        this.priceThreshold = priceThreshold;</span>
+<span class="fc" id="L160">    }</span>
+
+    /**
+     * Returns the variation threshold associated with the Alerts object.
+     *
+     * @return The variation threshold associated with the Alerts object.
+     */
+    public Double getVariationThreshold() {
+<span class="fc" id="L168">        return variationThreshold;</span>
+    }
+
+    /**
+     * Sets the variation threshold associated with the Alerts object.
+     *
+     * @param variationThreshold The variation threshold to set for the Alerts object.
+     */
+    public void setVariationThreshold(Double variationThreshold) {
+<span class="fc" id="L177">        this.variationThreshold = variationThreshold;</span>
+<span class="fc" id="L178">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

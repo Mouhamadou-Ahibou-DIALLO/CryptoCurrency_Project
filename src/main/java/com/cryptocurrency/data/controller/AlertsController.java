@@ -16,7 +16,7 @@ import java.util.List;
  * Author: Mouhamadou Ahibou DIALLO
  */
 @RestController
-@RequestMapping("/alerts")
+@RequestMapping("/api/alerts")
 public class AlertsController {
 
     /**
@@ -39,35 +39,51 @@ public class AlertsController {
 
     /**
      * Creates a new alert for the given user.
-     *
-     * @param user   the user whose alert is to be created
      * @param alert  the alert to be created
      * @return the created alert
      */
-    @PostMapping("/users/{user}/alerts")
-    public ResponseEntity<Alerts> createAlert(
-            @PathVariable("user") User user,
-            @RequestBody Alerts alert) {
-        Alerts createdAlert = alertsService.createAlert(user, alert);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdAlert);
+    @PostMapping("/create")
+    public ResponseEntity<String> createAlert(@RequestBody Alerts alert) {
+        try {
+            User user = alert.getUser();
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur ne peut pas быть null.");
+            }
+
+            if (alert.getCryptoCurrency() == null ||
+                    (alert.getPriceThreshold() == null && alert.getVariationThreshold() == null)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'alerte doit avoir une crypto-monnaie et au moins un seuil definit.");
+            }
+
+            Alerts createdAlert = alertsService.createAlert(user, alert);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdAlert.getName());
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("Passez à un abonnement Premium")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     /**
      * Updates an existing alert with the given ID.
      *
      * @param id   the ID of the alert to be updated
-     * @param alert the updated alert object
+     * @param updatedAlert the updated alert object
      * @return the updated alert
      */
-    @PutMapping("/{id}")
-    public ResponseEntity<Alerts> updateAlert(@PathVariable Long id, @RequestBody Alerts alert) {
-        Alerts existingAlert = alertsService.findById(id);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateAlert(@PathVariable Long id, @RequestBody Alerts updatedAlert) {
+        try {
+            User user = updatedAlert.getUser();
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur ne peut pas être null.");
+            }
 
-        if (existingAlert != null) {
-            alert.setId(id);
-            return ResponseEntity.ok(alertsService.save(alert));
-        } else {
-            return ResponseEntity.notFound().build();
+            Alerts updated = alertsService.updateAlert(id, user, updatedAlert);
+            return ResponseEntity.ok(updated.getName() + " updated successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -77,9 +93,18 @@ public class AlertsController {
      * @param id the ID of the alert to be deleted
      * @return a response entity indicating the deletion was successful
      */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAlert(@PathVariable Long id) {
-        alertsService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteAlert(@PathVariable Long id, @RequestParam Alerts alertDeleted) {
+        try {
+            User user = alertDeleted.getUser();
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur ne peut pas être null.");
+            }
+
+            alertsService.deleteAlert(id, user);
+            return ResponseEntity.ok("Alert deleted successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }

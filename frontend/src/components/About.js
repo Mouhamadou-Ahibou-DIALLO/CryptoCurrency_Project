@@ -1,6 +1,7 @@
 import React from "react";
-import "../static/css/About.css";
+import "../static/css/about.css";
 import {Link} from "react-router-dom";
+import logo from "../static/images/about.jpg";
 
 const About = () => {
     return (
@@ -8,10 +9,10 @@ const About = () => {
             <header className="header">
                 <h1>À Propos de nous</h1>
                 <Link to="/">
-                    <button>Accueil</button>
+                    <button className="about-accueil">Accueil</button>
                 </Link>
                 <Link to="/Register">
-                    <button>Inscription</button>
+                    <button className="about-register">Inscription</button>
                 </Link>
                 <Link to="/Login">
                     <button className="connexion">Connexion</button>
@@ -32,17 +33,19 @@ const About = () => {
                     Rejoignez-nous et soyez un acteur du changement vers un système
                     financier global plus équitable.
                 </p>
-                <img
-                    src="../static/images/about.webp"
-                    alt="La Cryptomonnaie de l'Avenir"
-                    className="about-image"
-                />
+                <p>
+                    <img
+                        src={logo}
+                        alt="La Cryptomonnaie de l'Avenir"
+                        className="about-image"
+                    />
+                </p>
             </section>
             <section className="contact-section">
                 <h2>Contactez-nous</h2>
                 <p>Pour toute question ou collaboration, n'hésitez pas à nous écrire :</p>
                 <p>
-                    <strong>Email :</strong>{" "}
+                <strong>Email :</strong>{" "}
                     <a href="mailto:ahiboudiallo2018@gmail.com">
                         ahiboudiallo2018@gmail.com
                     </a>

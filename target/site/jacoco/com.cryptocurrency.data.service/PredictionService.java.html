@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PredictionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.service</a> &gt; <span class="el_source">PredictionService.java</span></div><h1>PredictionService.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.service;
+
+import com.cryptocurrency.data.model.CryptoPriceHistory;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.OptionalDouble;
+
+/**
+ * The PredictionService class provides methods for making predictions and calculating error margins.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
+@Service
+<span class="fc" id="L14">public class PredictionService {</span>
+
+    /**
+     * Calculates the moving average for a given period.
+     *
+     * @param priceHistory A list of CryptoPriceHistory objects.
+     * @param period The number of data points to use for the moving average.
+     * @return The moving average for the given period.
+     * @throws IllegalArgumentException If the given period exceeds the number of data points in priceHistory.
+     */
+    public static double calculateMovingAverage(List&lt;CryptoPriceHistory&gt; priceHistory, int period) {
+<span class="nc bnc" id="L25" title="All 2 branches missed.">        if (priceHistory.size() &lt; period) {</span>
+<span class="nc" id="L26">            throw new IllegalArgumentException(&quot;Not enough data points for the given period.&quot;);</span>
+        }
+
+<span class="nc" id="L29">        return priceHistory.stream()</span>
+<span class="nc" id="L30">                .mapToDouble(CryptoPriceHistory::getPrice)</span>
+<span class="nc" id="L31">                .skip(priceHistory.size() - period)</span>
+<span class="nc" id="L32">                .average()</span>
+<span class="nc" id="L33">                .orElse(0.0);</span>
+    }
+
+/**
+ * Predicts the next price of a cryptocurrency using linear regression.
+ *
+ * This method calculates the linear regression line (y = mx + c)
+ * based on the given price history data points and predicts the
+ * next price by extrapolating the line.
+ *
+ * @param priceHistory A list of CryptoPriceHistory objects containing
+ *                     historical price data. Must contain at least two data points.
+ * @return The predicted next price of the cryptocurrency.
+ * @throws IllegalArgumentException If the list contains fewer than two data points.
+ */
+    public static double predictNextPriceUsingLinearRegression(List&lt;CryptoPriceHistory&gt; priceHistory) {
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (priceHistory.size() &lt; 2) {</span>
+<span class="nc" id="L50">            throw new IllegalArgumentException(&quot;Not enough data points for regression.&quot;);</span>
+        }
+
+<span class="nc" id="L53">        int n = priceHistory.size();</span>
+<span class="nc" id="L54">        double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;</span>
+
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        for (int i = 0; i &lt; n; i++) {</span>
+<span class="nc" id="L57">            double x = i + 1;</span>
+<span class="nc" id="L58">            double y = priceHistory.get(i).getPrice();</span>
+
+<span class="nc" id="L60">            sumX += x;</span>
+<span class="nc" id="L61">            sumY += y;</span>
+<span class="nc" id="L62">            sumXY += x * y;</span>
+<span class="nc" id="L63">            sumX2 += x * x;</span>
+        }
+
+<span class="nc" id="L66">        double slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);</span>
+<span class="nc" id="L67">        double intercept = (sumY - slope * sumX) / n;</span>
+
+<span class="nc" id="L69">        return slope * (n + 1) + intercept;</span>
+    }
+
+    /**
+     * Calculates the error margin in percentage between the actual prices and a predicted price.
+     *
+     * The error margin is calculated as the absolute difference between the predicted price and the average of the actual prices, divided by the average of the actual prices, and expressed as a percentage.
+     *
+     * @param actualPrices A list of actual prices of a cryptocurrency.
+     * @param predictedPrice The predicted price of the cryptocurrency.
+     * @return The error margin in percentage.
+     */
+    public static double calculateErrorMargin(List&lt;Double&gt; actualPrices, double predictedPrice) {
+<span class="nc" id="L82">        OptionalDouble avgActualPrice = actualPrices.stream().mapToDouble(Double::doubleValue).average();</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        return avgActualPrice.isPresent() ? Math.abs((predictedPrice - avgActualPrice.getAsDouble()) / avgActualPrice.getAsDouble()) * 100 : 0.0;</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -30,17 +30,17 @@ const ForgotPassword = () => {
             <header className="header">
                 <h1>La Cryptomonnaie de l'avenir</h1>
                 <Link to="/">
-                    <button>Accueil</button>
+                    <button className="forgot-accueil">Accueil</button>
                 </Link>
                 <Link to="/Register">
-                    <button>Inscription</button>
+                    <button className="forgot-register">Inscription</button>
                 </Link>
                 <Link to="/Login">
                     <button className="connexion">Connexion</button>
                 </Link>
             </header>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="forgot-form">
                 <h2>Mot de passe oublié</h2>
                 <input
                     type="email"
@@ -50,9 +50,9 @@ const ForgotPassword = () => {
                     required
                 />
                 <button type="submit">Envoyer</button>
-                <p>{message}</p>
+                <p className={message.includes("Erreur") ? "error" : "success"}>{message}</p>
             </form>
         </div>
-)
+    )
 };
 export default ForgotPassword;

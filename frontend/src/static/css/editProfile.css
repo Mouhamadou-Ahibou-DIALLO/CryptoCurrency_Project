@@ -1,6 +1,8 @@
 .edit-profile-container {
     font-family: Arial, sans-serif;
     max-width: 800px;
+    align-content: center;
+    align-items: center;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ddd;
@@ -22,12 +24,13 @@
     top: 0;
     left: 0;
     right: 0;
-    width: 100%;
+    width: 99%;
     z-index: 1000;
 }
 
 .edit-profile-header h1 {
     margin: 0;
+    color: white;
 }
 
 .header-buttons button {
@@ -35,7 +38,7 @@
     background-color: #28a745;
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 10px 20px 10px 15px;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -64,7 +67,7 @@
 }
 
 .form-group input {
-    width: 100%;
+    width: 90%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;

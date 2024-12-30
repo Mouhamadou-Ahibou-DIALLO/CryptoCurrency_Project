@@ -14,19 +14,32 @@
     z-index: 1000;
 }
 
-.about-page .header h1 {
+.header h1 {
     margin: 0;
     font-size: 1.8rem;
+    color: white;
 }
 
-.about-page .header div {
+.header div {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 5px;
 }
 
-.about-page .header button {
-    padding: 15px 10px 10px;
+.about-accueil {
+    position: fixed;
+    right: 300px;
+    top: 20px;
+}
+
+.about-register {
+    position: fixed;
+    right: 160px;
+    top: 20px;
+}
+
+.header button {
+    padding: 10px 15px;
     border: none;
     border-radius: 5px;
     background-color: #28a745;
@@ -36,18 +49,18 @@
     transition: background-color 0.3s ease;
 }
 
-.about-page .header button:hover {
+.header button:hover {
     background-color: #218838;
 }
 
 .about-page .connexion {
     padding-right: 20px;
-    margin-right: 30px;
 }
 
 .about-section,
 .contact-section {
-    max-width: 800px;
+    max-width: 80%;
+    max-height: 70%;
     margin: 20px auto;
     background: white;
     border-radius: 8px;
@@ -66,7 +79,7 @@ p {
 }
 
 .about-image {
-    max-width: 100%;
+    max-width: 20%;
     border-radius: 8px;
     margin-top: 15px;
 }
@@ -76,7 +89,17 @@ p {
     padding: 20px;
     background-color: #2c3e50;
     color: white;
-    position: relative;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: white;
 }
 
 a {

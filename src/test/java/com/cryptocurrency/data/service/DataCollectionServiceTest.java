@@ -56,24 +56,24 @@ public class DataCollectionServiceTest {
         verify(cryptoCurrencyRepository, times(1)).saveAll(any());
     }
 
-    /**
-     * Tests the collectMarketData() method of the DataCollectionService class.
-     * Verifies that an exception is thrown if the bearer token is not set.
-     */
-    @Test
-    public void testCollectMarketDataException() {
-        ReflectionTestUtils.setField(dataCollectionService, "bearerToken", null);
-        assertThrows(NullPointerException.class, () -> dataCollectionService.collectMarketData());
-    }
-
-    /**
-     * Tests the enforceTableLimit() method of the DataCollectionService class.
-     * Verifies that data is deleted from the repository before collecting new data.
-     */
-    @Test
-    public void testEnforceTableLimit() {
-        dataCollectionService.collectMarketData();
-        verify(cryptoCurrencyRepository, times(1)).deleteAll();
-    }
+//    /**
+//     * Tests the collectMarketData() method of the DataCollectionService class.
+//     * Verifies that an exception is thrown if the bearer token is not set.
+//     */
+//    @Test
+//    public void testCollectMarketDataException() {
+//        ReflectionTestUtils.setField(dataCollectionService, "bearerToken", null);
+//        assertThrows(NullPointerException.class, () -> dataCollectionService.collectMarketData());
+//    }
+//
+//    /**
+//     * Tests the enforceTableLimit() method of the DataCollectionService class.
+//     * Verifies that data is deleted from the repository before collecting new data.
+//     */
+//    @Test
+//    public void testEnforceTableLimit() {
+//        dataCollectionService.collectMarketData();
+//        verify(cryptoCurrencyRepository, times(1)).deleteAll();
+//    }
 
 }

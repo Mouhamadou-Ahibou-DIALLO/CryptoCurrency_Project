@@ -124,6 +124,19 @@ CryptoCurrency_Project/
 #                  Bagdes                STATUT
 # Build CI/CD
 
+[![Quality Gate Status](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=alert_status&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
+
+[![Coverage](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=coverage&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
+
+[![Duplicated Lines (%)](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=duplicated_lines_density&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
+
+[![Security Hotspots](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=security_hotspots&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
+
+[![Reliability Rating](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=software_quality_reliability_rating&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
+
+[![Security Issues](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=software_quality_security_issues&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
+
+[![Maintainability Issues](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=software_quality_maintainability_issues&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
 
 # Couverture de Tests
 

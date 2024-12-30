@@ -9,6 +9,7 @@ import EditProfile from "./components/ModifierProfil";
 import About from "./components/About";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
+import PageAlerts from "./components/PageAlerts";
 import ProtectedRoute from "./components/ProtectedRoutes";
 
 const App = () => {
@@ -33,8 +34,9 @@ const App = () => {
                 <Route path="/Login" element={<Login />} />
                 <Route path="/ForgotPassword" element={<ForgotPassword />} />
                 <Route path="/ResetPassword" element={<ResetPassword />} />
-                <Route path="/Dashboard" element={<Dashboard />} />
-                <Route path="/ModifierProfil" element={<EditProfile />} />
+                <Route path="/Dashboard/:id" element={<Dashboard />} />
+                <Route path="/ModifierProfil/:id" element={<EditProfile />} />
+                <Route path="/PageAlerts" element={<PageAlerts />} />
                 <Route path="/" element={<CryptoList />} />
                 <Route path="/cryptocurrencies/:id" element={<CryptoDetails />} />
                 <Route path="*" element={<div>Page non trouvée</div>} />

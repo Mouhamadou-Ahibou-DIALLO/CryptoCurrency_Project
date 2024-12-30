@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
+import '../static/css/resetPassword.css';
 
 const ResetPassword = () => {
     const [passwordHash, setPassword] = useState("");
@@ -45,16 +46,16 @@ const ResetPassword = () => {
             <header className="header">
                 <h1>La Cryptomonnaie de l'avenir</h1>
                 <Link to="/">
-                    <button>Accueil</button>
+                    <button className="reset-accueil">Accueil</button>
                 </Link>
                 <Link to="/Register">
-                    <button>Inscription</button>
+                    <button className="reset-register">Inscription</button>
                 </Link>
                 <Link to="/Login">
                     <button className="connexion">Connexion</button>
                 </Link>
             </header>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="reset-password-form">
                 <h2>Réinitialiser le mot de passe</h2>
                 <input
                     type="password"
@@ -71,7 +72,7 @@ const ResetPassword = () => {
                     required
                 />
                 <button type="submit">Réinitialiser</button>
-                <p>{message}</p>
+                <p className={message.includes("Erreur") ? "error" : "success"}>{message}</p>
             </form>
         </div>
     );

@@ -21,7 +21,7 @@ public class PredictionService {
      * @return The moving average for the given period.
      * @throws IllegalArgumentException If the given period exceeds the number of data points in priceHistory.
      */
-    public double calculateMovingAverage(List<CryptoPriceHistory> priceHistory, int period) {
+    public static double calculateMovingAverage(List<CryptoPriceHistory> priceHistory, int period) {
         if (priceHistory.size() < period) {
             throw new IllegalArgumentException("Not enough data points for the given period.");
         }
@@ -45,7 +45,7 @@ public class PredictionService {
  * @return The predicted next price of the cryptocurrency.
  * @throws IllegalArgumentException If the list contains fewer than two data points.
  */
-    public double predictNextPriceUsingLinearRegression(List<CryptoPriceHistory> priceHistory) {
+    public static double predictNextPriceUsingLinearRegression(List<CryptoPriceHistory> priceHistory) {
         if (priceHistory.size() < 2) {
             throw new IllegalArgumentException("Not enough data points for regression.");
         }
@@ -78,7 +78,7 @@ public class PredictionService {
      * @param predictedPrice The predicted price of the cryptocurrency.
      * @return The error margin in percentage.
      */
-    public double calculateErrorMargin(List<Double> actualPrices, double predictedPrice) {
+    public static double calculateErrorMargin(List<Double> actualPrices, double predictedPrice) {
         OptionalDouble avgActualPrice = actualPrices.stream().mapToDouble(Double::doubleValue).average();
         return avgActualPrice.isPresent() ? Math.abs((predictedPrice - avgActualPrice.getAsDouble()) / avgActualPrice.getAsDouble()) * 100 : 0.0;
     }
