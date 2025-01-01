@@ -3,8 +3,9 @@ package com.cryptocurrency.data.service;
 import com.cryptocurrency.data.model.CryptoPriceHistory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.OptionalDouble;
 
 /**
  * The PredictionService class provides methods for making predictions and calculating error margins.
@@ -14,73 +15,94 @@ import java.util.OptionalDouble;
 public class PredictionService {
 
     /**
-     * Calculates the moving average for a given period.
+     * Calculates the moving averages of the given cryptocurrency over the given period.
+     * This method retrieves the historical price data for the specified cryptocurrency
+     * and applies a moving average model to calculate the moving averages.
      *
-     * @param priceHistory A list of CryptoPriceHistory objects.
-     * @param period The number of data points to use for the moving average.
-     * @return The moving average for the given period.
-     * @throws IllegalArgumentException If the given period exceeds the number of data points in priceHistory.
+     * @param priceHistory A list of CryptoPriceHistory objects containing
+     *                     historical price data. Must contain at least two data points.
+     * @return A list of up to 5 moving averages for the cryptocurrency.
+     * @throws IllegalArgumentException If the list contains fewer than two data points.
      */
-    public static double calculateMovingAverage(List<CryptoPriceHistory> priceHistory, int period) {
-        if (priceHistory.size() < period) {
-            throw new IllegalArgumentException("Not enough data points for the given period.");
-        }
+    public static List<CryptoPriceHistory> calculateMovingAverages(List<CryptoPriceHistory> priceHistory) {
+        List<CryptoPriceHistory> movingAverages = new ArrayList<>();
 
-        return priceHistory.stream()
-                .mapToDouble(CryptoPriceHistory::getPrice)
-                .skip(priceHistory.size() - period)
-                .average()
-                .orElse(0.0);
+        Collections.shuffle(priceHistory);
+        List<CryptoPriceHistory> randomSubList = priceHistory.subList(0, Math.min(5, priceHistory.size()));
+
+        for (int i = 0; i < randomSubList.size(); i++) {
+            double sum = 0;
+            for (int j = 0; j <= i; j++) {
+                sum += randomSubList.get(j).getPrice();
+            }
+            movingAverages.add(new CryptoPriceHistory(randomSubList.get(i).getTimestamp(), sum / (i + 1)));
+        }
+        return movingAverages;
     }
 
-/**
- * Predicts the next price of a cryptocurrency using linear regression.
- *
- * This method calculates the linear regression line (y = mx + c)
- * based on the given price history data points and predicts the
- * next price by extrapolating the line.
- *
- * @param priceHistory A list of CryptoPriceHistory objects containing
- *                     historical price data. Must contain at least two data points.
- * @return The predicted next price of the cryptocurrency.
- * @throws IllegalArgumentException If the list contains fewer than two data points.
- */
-    public static double predictNextPriceUsingLinearRegression(List<CryptoPriceHistory> priceHistory) {
+    /**
+     * Predicts the next 5 prices of a cryptocurrency using linear regression.
+     *
+     * This method retrieves the historical price data for the specified cryptocurrency
+     * and applies a linear regression model to predict the next 5 prices.
+     *
+     * @param priceHistory A list of CryptoPriceHistory objects containing
+     *                     historical price data. Must contain at least two data points.
+     * @return A list of up to 5 predicted prices for the cryptocurrency.
+     * @throws IllegalArgumentException If the list contains fewer than two data points.
+     */
+    public static List<CryptoPriceHistory> predictNextPricesUsingLinearRegression(List<CryptoPriceHistory> priceHistory) {
         if (priceHistory.size() < 2) {
             throw new IllegalArgumentException("Not enough data points for regression.");
         }
 
-        int n = priceHistory.size();
+        Collections.shuffle(priceHistory);
+        List<CryptoPriceHistory> randomSubList = priceHistory.subList(0, Math.min(5, priceHistory.size()));
+
+        int n = randomSubList.size();
         double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
 
         for (int i = 0; i < n; i++) {
             double x = i + 1;
-            double y = priceHistory.get(i).getPrice();
+            double y = randomSubList.get(i).getPrice();
 
             sumX += x;
             sumY += y;
             sumXY += x * y;
             sumX2 += x * x;
         }
-
         double slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
         double intercept = (sumY - slope * sumX) / n;
 
-        return slope * (n + 1) + intercept;
+        List<CryptoPriceHistory> predictedPrices = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            predictedPrices.add(new CryptoPriceHistory(priceHistory.get(n - 1).getTimestamp().plusDays(i), slope * (n + i) + intercept));
+        }
+        return predictedPrices;
     }
 
     /**
-     * Calculates the error margin in percentage between the actual prices and a predicted price.
+     * Calculates the error margins between actual and predicted prices of a cryptocurrency.
      *
-     * The error margin is calculated as the absolute difference between the predicted price and the average of the actual prices, divided by the average of the actual prices, and expressed as a percentage.
+     * This method shuffles the provided lists of actual and predicted prices and calculates
+     * the error margins for up to 5 data points. The error margin is the absolute percentage
+     * difference between the actual and predicted price.
      *
-     * @param actualPrices A list of actual prices of a cryptocurrency.
-     * @param predictedPrice The predicted price of the cryptocurrency.
-     * @return The error margin in percentage.
+     * @param actualPrices A list of CryptoPriceHistory objects representing actual historical prices.
+     * @param predictedPrices A list of CryptoPriceHistory objects representing predicted prices.
+     * @return A list of CryptoPriceHistory objects where each contains the timestamp of the actual
+     *         price and the error margin expressed as a percentage.
      */
-    public static double calculateErrorMargin(List<Double> actualPrices, double predictedPrice) {
-        OptionalDouble avgActualPrice = actualPrices.stream().mapToDouble(Double::doubleValue).average();
-        return avgActualPrice.isPresent() ? Math.abs((predictedPrice - avgActualPrice.getAsDouble()) / avgActualPrice.getAsDouble()) * 100 : 0.0;
+    public static List<CryptoPriceHistory> calculateErrorMargins(List<CryptoPriceHistory> actualPrices, List<CryptoPriceHistory> predictedPrices) {
+        Collections.shuffle(actualPrices);
+        Collections.shuffle(predictedPrices);
+        List<CryptoPriceHistory> errorMargins = new ArrayList<>();
+        for (int i = 0; i < Math.min(actualPrices.size(), 5); i++) {
+            double actualPrice = actualPrices.get(i).getPrice();
+            double predictedPrice = predictedPrices.get(i).getPrice();
+            double margin = Math.abs((predictedPrice - actualPrice) / actualPrice) * 100;
+            errorMargins.add(new CryptoPriceHistory(actualPrices.get(i).getTimestamp(), margin));
+        }
+        return errorMargins;
     }
 }
-

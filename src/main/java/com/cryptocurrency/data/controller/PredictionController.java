@@ -4,86 +4,116 @@ import com.cryptocurrency.data.model.CryptoPriceHistory;
 import com.cryptocurrency.data.service.DataCollectionService;
 import com.cryptocurrency.data.service.PredictionService;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/predictions")
 public class PredictionController {
 
-    private final static Map<String, List<CryptoPriceHistory>> cryptoPriceHistoryMap = DataCollectionService.getCryptoPriceHistoryMap();
-
     /**
-     * Returns the moving average of the given cryptocurrency over the given period.
-     * <p>
-     * The returned value is the average price of the given cryptocurrency over the given period.
-     * The period is specified in terms of the number of data points to use for the moving average.
-     * <p>
-     * If there is no data available for the requested cryptocurrency, an
-     * {@link IllegalArgumentException} is thrown.
+     * Returns a list of price history entries for the given cryptocurrency name,
+     * filtered by the given start and end dates.
      *
-     * @param name The name of the cryptocurrency to retrieve the moving average for.
-     * @param period The number of data points to use for the moving average.
-     * @return The moving average of the given cryptocurrency over the given period.
-     * @throws IllegalArgumentException If there is no data available for the requested cryptocurrency.
-     */
-    @GetMapping("/moving-average")
-    public double getMovingAverage(@RequestParam String name, @RequestParam int period) {
-        List<CryptoPriceHistory> history = cryptoPriceHistoryMap.get(name);
-        if (history == null) {
-            throw new IllegalArgumentException("No data available for the requested cryptocurrency.");
-        }
-        return PredictionService.calculateMovingAverage(history, period);
-    }
-
-    /**
-     * Returns the predicted next price of a cryptocurrency using linear regression.
-     * <p>
-     * This method retrieves the historical price data for the specified cryptocurrency
-     * and applies a linear regression model to predict the next price.
-     * <p>
-     * If there is no data available for the requested cryptocurrency, an
-     * {@link IllegalArgumentException} is thrown.
-     *
-     * @param name The name of the cryptocurrency to predict the next price for.
-     * @return The predicted next price of the cryptocurrency using linear regression.
-     * @throws IllegalArgumentException If there is no data available for the requested cryptocurrency.
+     * @param name The name of the cryptocurrency to retrieve price history for.
+     * @param start The start date of the period to retrieve price history for.
+     * @param end The end date of the period to retrieve price history for.
+     * @return A ResponseEntity containing the filtered list of price history entries.
      */
     @GetMapping("/linear-regression")
-    public double getLinearRegressionPrediction(@RequestParam String name) {
-        List<CryptoPriceHistory> history = cryptoPriceHistoryMap.get(name);
-        if (history == null) {
-            throw new IllegalArgumentException("No data available for the requested cryptocurrency.");
+    public ResponseEntity<List<CryptoPriceHistory>> getLinearRegression(@RequestParam String name, @RequestParam String start, @RequestParam String end) {
+        List<CryptoPriceHistory> cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);
+        List<CryptoPriceHistory> predictedPrices = PredictionService.predictNextPricesUsingLinearRegression(cryptoPriceHistoryList);
+
+        if (cryptoPriceHistoryList.isEmpty()) {
+            System.out.println("Data exists but list is empty for key: " + name);
+            return ResponseEntity.notFound().build();
         }
-        return PredictionService.predictNextPriceUsingLinearRegression(history);
+
+        List<CryptoPriceHistory> filteredHistory = getCryptoPriceHistory(name, predictedPrices, start, end);
+
+        return ResponseEntity.ok(filteredHistory);
     }
 
     /**
-     * Returns the error margin of a predicted price of a cryptocurrency.
-     * <p>
-     * The error margin is calculated as the absolute difference between the predicted price
-     * and the average of the actual prices, divided by the average of the actual prices,
-     * and expressed as a percentage.
-     * <p>
-     * The method retrieves the historical price data for the specified cryptocurrency
-     * and applies the error margin calculation.
-     * <p>
-     * If there is no data available for the requested cryptocurrency, an
-     * {@link IllegalArgumentException} is thrown.
+     * Returns a list of predicted prices for the given cryptocurrency name,
+     * calculated using the moving average model, and filtered by the given start and end dates.
      *
-     * @param name The name of the cryptocurrency to calculate the error margin for.
-     * @param predictedPrice The predicted price of the cryptocurrency.
-     * @return The error margin of the predicted price expressed as a percentage.
-     * @throws IllegalArgumentException If there is no data available for the requested cryptocurrency.
+     * @param name The name of the cryptocurrency to retrieve price history for.
+     * @param start The start date of the period to retrieve price history for.
+     * @param end The end date of the period to retrieve price history for.
+     * @return A ResponseEntity containing the filtered list of price history entries.
      */
-    @GetMapping("/error-margin")
-    public double getErrorMargin(@RequestParam String name, @RequestParam double predictedPrice) {
-        List<Double> history = DataCollectionService.getPriceHistory(name);
-        return PredictionService.calculateErrorMargin(history, predictedPrice);
+    @GetMapping("/moving-average")
+    public ResponseEntity<List<CryptoPriceHistory>> getMovingAverage(@RequestParam String name, @RequestParam String start, @RequestParam String end) {
+        List<CryptoPriceHistory> cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);
+        List<CryptoPriceHistory> predictedPrices = PredictionService.calculateMovingAverages(cryptoPriceHistoryList);
+
+        if (cryptoPriceHistoryList == null) {
+            System.out.println("No data found for key: " + name);
+            return ResponseEntity.notFound().build();
+        }
+
+        List<CryptoPriceHistory> filteredHistory = getCryptoPriceHistory(name, predictedPrices, start, end);
+
+        return ResponseEntity.ok(filteredHistory);
+    }
+
+    /**
+     * Returns a list of predicted prices for the given cryptocurrency name,
+     * calculated using the linear regression model, and filtered by the given start and end dates.
+     * The list also includes the error margins for each predicted price.
+     *
+     * @param name The name of the cryptocurrency to retrieve price history for.
+     * @param start The start date of the period to retrieve price history for.
+     * @param end The end date of the period to retrieve price history for.
+     * @return A ResponseEntity containing the filtered list of price history entries,
+     *         including the predicted prices and their error margins.
+     */
+    @GetMapping("/marging-error")
+    public ResponseEntity<List<CryptoPriceHistory>> getMargingError(@RequestParam String name, @RequestParam String start, @RequestParam String end) {
+        List<CryptoPriceHistory> cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);
+        List<CryptoPriceHistory> predictedPrices = PredictionService.predictNextPricesUsingLinearRegression(cryptoPriceHistoryList);
+        List<CryptoPriceHistory> margingError = PredictionService.calculateErrorMargins(cryptoPriceHistoryList, predictedPrices);
+
+        if (cryptoPriceHistoryList.isEmpty()) {
+            System.out.println("Data exists but list is empty for key: " + name);
+            return ResponseEntity.notFound().build();
+        }
+
+        List<CryptoPriceHistory> filteredHistory = getCryptoPriceHistory(name, margingError, start, end);
+
+        return ResponseEntity.ok(filteredHistory);
+    }
+
+    /**
+     * Filters the given list of CryptoPriceHistory entries for a specific cryptocurrency
+     * to include only those between the specified start and end dates.
+     *
+     * @param name The name of the cryptocurrency whose price history is being filtered.
+     * @param cryptoPriceHistoryList The list of CryptoPriceHistory entries to filter.
+     * @param start The start date of the period to filter entries, in ISO 8601 format.
+     * @param end The end date of the period to filter entries, in ISO 8601 format.
+     * @return A list of CryptoPriceHistory entries within the specified date range.
+     */
+    private List<CryptoPriceHistory> getCryptoPriceHistory(String name, List<CryptoPriceHistory> cryptoPriceHistoryList, String start, String end) {
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+        LocalDateTime startDate = LocalDateTime.parse(start, formatter);
+        LocalDateTime endDate = LocalDateTime.parse(end, formatter);
+
+        System.out.println("Key name: " + name + " graphe prédictions");
+        System.out.println("CryptoPriceHistoryList: " + DataCollectionService.getCryptoPriceHistoryMap().get(name) + " graphe prédictions");
+
+        return cryptoPriceHistoryList.stream()
+                .filter(entry -> !entry.getTimestamp().isBefore(startDate) && !entry.getTimestamp().isAfter(endDate))
+                .collect(Collectors.toList());
     }
 }

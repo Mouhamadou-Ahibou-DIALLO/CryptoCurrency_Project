@@ -78,13 +78,17 @@ public class UserController {
      */
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user) {
+    	System.out.println("start updating user in controller: ");
         try {
             User updatedUser = userService.updateUser(id, user);
-            System.out.println("user updated: " + updatedUser);
+            System.out.println("user updated in controller: " + updatedUser);
 
             if (updatedUser == null) {
+            	System.out.println("updatingUser in controller is null: ");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors du update de l'utilisateur.");
             }
+            
+            System.out.println("done updating user in controller: " + user);
 
             return ResponseEntity.status(HttpStatus.OK).body(Map.of(
                     "message", "User updated successfully.",

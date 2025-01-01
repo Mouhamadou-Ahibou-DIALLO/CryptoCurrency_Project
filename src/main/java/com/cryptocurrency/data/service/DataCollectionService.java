@@ -133,7 +133,7 @@ public class DataCollectionService {
      * @param cryptoCurrencyList a list of CryptoCurrency objects
      */
     public void addCryptoForPriceHistory(List<CryptoCurrency> cryptoCurrencyList) {
-        System.out.println("start adding cryptoCurrency for price history");
+        System.out.println("start adding cryptoCurrency for price history dans DataCollectionService");
         for (CryptoCurrency crypto : cryptoCurrencyList) {
             System.out.println("crypto for price history: " + crypto);
             String name = crypto.getName();
@@ -143,9 +143,8 @@ public class DataCollectionService {
 
             cryptoPriceHistoryMap.putIfAbsent(name, new ArrayList<>());
             CryptoPriceHistory cryptoPriceHistory = new CryptoPriceHistory(timestamp, price);
-            System.out.println("cryptoPriceHistory for price history: " + cryptoPriceHistory);
             cryptoPriceHistoryMap.get(name).add(cryptoPriceHistory);
-            System.out.println("Ajout dans la boucle is OKay");
+            System.out.println("Ajout dans la boucle is OKay for price history dans DataCollectionService");
         }
         System.out.println("Collect for price history is done ...");
     }
@@ -268,16 +267,6 @@ public class DataCollectionService {
      */
     public static Map<String, List<CryptoPriceHistory>> getCryptoPriceHistoryMap() {
         System.out.println("get is okay for price history");
-        System.out.println(cryptoPriceHistoryMap);
         return cryptoPriceHistoryMap;
-    }
-
-    public static List<Double> getPriceHistory(String name) {
-        List<CryptoPriceHistory> cryptoPriceHistoryList = cryptoPriceHistoryMap.get(name);
-        List<Double> priceHistory = new ArrayList<>();
-        for (CryptoPriceHistory cryptoPriceHistory : cryptoPriceHistoryList) {
-            priceHistory.add(cryptoPriceHistory.getPrice());
-        }
-        return priceHistory;
     }
 }

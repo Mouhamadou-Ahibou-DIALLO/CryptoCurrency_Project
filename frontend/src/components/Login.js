@@ -74,6 +74,7 @@ function Login() {
                 body: JSON.stringify({ email, token }),
             });
 
+            const isAuth = true
             const data = await response.text();
             console.log("done")
             if (response.ok) {
@@ -83,6 +84,8 @@ function Login() {
                 localStorage.setItem("id", parsedData.id);
                 localStorage.setItem("username", parsedData.username);
                 localStorage.setItem("email", parsedData.email);
+
+                console.log("parsed data ", data.token);
                 window.location.href = `/Dashboard/${parsedData.id}`;
             } else {
                 alert(data);

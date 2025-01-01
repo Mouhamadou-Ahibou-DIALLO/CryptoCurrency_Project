@@ -1,8 +1,8 @@
-import "../static/css/dashboard.css";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import "./ChartConfig";
 import {useParams} from "react-router-dom";
+import "../static/css/dashboard.css";
 
 const Dashboard = () => {
     const {id} = useParams()
@@ -24,9 +24,13 @@ const Dashboard = () => {
     const [showGenerateModal, setShowGenerateModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [generatedToken, setGeneratedToken] = useState("");
-    const [showModifyModal, setShowModifyModal] = useState(false);
     const [enteredToken, setEnteredToken] = useState("");
     const [showAlerts, setShowAlerts] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+    const [oldPassword, setOldPassword] = useState("");
 
     const username = "momo";
     const password = "Avignon2024@?";
@@ -74,7 +78,7 @@ const Dashboard = () => {
     useEffect(() => {
         if (selectedCrypto?.name && startDate && endDate) {
             fetchPriceHistory(selectedCrypto.name).then(() => {
-                fetchPredictions(selectedCrypto.name, 7, priceHistory[priceHistory.length - 1].price);
+                fetchPredictions(selectedCrypto.name, 7);
             });
         }
     }, [selectedCrypto?.name, startDate, endDate]);
@@ -105,46 +109,44 @@ const Dashboard = () => {
         fetchPriceHistory(cryptoName);
     };
 
-    const fetchPredictions = async (cryptoName, period, predictedPrice) => {
+    const fetchPredictions = async (cryptoName) => {
         try {
-            const [movingAverageResponse, linearRegressionResponse, errorMarginResponse] = await Promise.all([
-                fetch(`/api/predictions/moving-average?name=${cryptoName}&period=${period}`, {
+            const [movingAverageResponse, linearRegressionResponse, marginErrorResponse] = await Promise.all([
+                fetch(`/api/predictions/moving-average?name=${cryptoName}&start=${startDate}&end=${endDate}`, {
                     headers: {
                         Authorization: `Basic ${credentials}`,
                     },
                 }),
-                fetch(`/api/predictions/linear-regression?name=${cryptoName}`, {
+                fetch(`/api/predictions/linear-regression?name=${cryptoName}&start=${startDate}&end=${endDate}`, {
                     headers: {
                         Authorization: `Basic ${credentials}`,
                     },
                 }),
-                fetch(`/api/predictions/error-margin?name=${cryptoName}&predictedPrice=${predictedPrice}`, {
+                fetch(`/api/predictions/marging-error?name=${cryptoName}&start=${startDate}&end=${endDate}`, {
                     headers: {
                         Authorization: `Basic ${credentials}`,
                     },
-                })
+                }),
             ]);
 
-            if (!movingAverageResponse.ok || !linearRegressionResponse.ok  || !errorMarginResponse.ok) {
+            if (!movingAverageResponse.ok || !linearRegressionResponse.ok || !marginErrorResponse.ok) {
                 throw new Error("Erreur lors de la récupération des données de prédiction.");
             }
 
             const movingAverage = await movingAverageResponse.json();
             const linearRegression = await linearRegressionResponse.json();
-            const marginError = await errorMarginResponse.json();
+            const marginError = await marginErrorResponse.json();
 
-            setMovingAveragePrediction(movingAverage);
-            setLinearRegressionPrediction(linearRegression);
-            setMarginError(marginError);
+            console.log("Moving Average Data: ", movingAverage);
+            console.log("Linear Regression Data: ", linearRegression);
+            console.log("Margin Error Data: ", marginError);
+
+            setMovingAveragePrediction(movingAverage.map((entry) => entry.price));
+            setLinearRegressionPrediction(linearRegression.map((entry) => entry.price));
+            setMarginError(marginError.map((entry) => entry.price));
         } catch (error) {
             console.error(error);
         }
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("id");
-        window.location.href = "/Login";
     };
 
     const chartData = {
@@ -159,31 +161,25 @@ const Dashboard = () => {
             },
             {
                 label: "Prédiction Moyenne Mobile",
-                data: priceHistory.map((_, index) =>
-                    index === priceHistory.length - 1 ? movingAveragePrediction : null
-                ),
+                data: movingAveragePrediction || [],
                 fill: false,
                 borderColor: "rgba(255, 99, 132, 1)",
                 borderDash: [5, 5],
             },
             {
                 label: "Prédiction Régression Linéaire",
-                data: priceHistory.map((_, index) =>
-                    index === priceHistory.length - 1 ? linearRegressionPrediction : null
-                ),
+                data: linearRegressionPrediction || [],
                 fill: false,
                 borderColor: "rgba(153, 102, 255, 1)",
                 borderDash: [10, 5],
             },
-            {
-                label: "Marge d'erreur",
-                data: priceHistory.map((_, index) =>
-                    index === priceHistory.length - 1 ? marginError : null
-                ),
-                fill: false,
-                borderColor: "rgba(255, 159, 64, 1)",
-                borderDash: [10, 5],
-            },
+            // {
+            //     label: "Prédiction Erreur de Margin",
+            //     data: marginError || [],
+            //     fill: false,
+            //     borderColor: "rgba(255, 159, 64, 1)",
+            //     borderDash: [15, 5],
+            // },
         ],
     };
 
@@ -202,6 +198,77 @@ const Dashboard = () => {
                 },
             },
         },
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUserData({
+            ...userData,
+            [name]: value,
+        });
+    };
+
+    const validatePasswordCriteria = (password) => {
+        const criteria = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return criteria.test(password);
+    };
+
+    const validatePasswords = () => {
+        if (!oldPassword) {
+      		setPasswordError("L'ancien mot de passe est requis.");
+      		return false;
+      	}
+
+        if (!validatePasswordCriteria(newPassword)) {
+            setPasswordError(
+                "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial."
+            );
+            return false;
+        }
+        if (newPassword !== confirmPassword) {
+            setPasswordError("Les mots de passe ne correspondent pas.");
+            return false;
+        }
+        setPasswordError("");
+        return true;
+    };
+
+    console.log(id);
+
+    const handleSubmit = (e) => {
+        if (!validatePasswords()) return;
+
+        e.preventDefault();
+        const payload = {
+            id: id,
+            username: userData.username,
+            email: userData.email,
+            passwordHash: newPassword,
+        };
+
+        fetch(`/api/users/update/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    alert("Profil mis à jour avec succès !");
+                    setShowPopup(false);
+                } else {
+                    return response.json().then((err) => {
+                        throw new Error(err.error || "Erreur lors de la mise à jour");
+                    });
+                }
+            })
+            .catch((error) => alert(error.message));
+    };
+
+
+    const handleLogout = () => {
+        window.location.href = "/Login";
     };
 
     const handleProfileClick = () => {
@@ -224,10 +291,6 @@ const Dashboard = () => {
         }
     };
 
-    const handleModifyProfile = () => {
-        setShowModifyModal(!showModifyModal);
-    };
-
     const handleShowAlerts = () => {
         setShowAlerts(!showAlerts);
     };
@@ -241,25 +304,7 @@ const Dashboard = () => {
             });
 
             if (response.ok) {
-                window.location.href = "/PageAlerts/{userData.id}";
-            } else {
-                alert("Token invalide.");
-            }
-        } catch (error) {
-            console.error("Erreur lors de la vérification du token:", error);
-        }
-    };
-
-    const handleTokenVerificationModifyProfile = async () => {
-        try {
-            const response = await fetch(`/api/users/verify-token`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: userData.email, token: enteredToken }),
-            });
-
-            if (response.ok) {
-                window.location.href = "/ModifierProfil/{userData.id}";
+                window.location.href = `/PageAlerts/${userData.id}`;
             } else {
                 alert("Token invalide.");
             }
@@ -367,26 +412,9 @@ const Dashboard = () => {
                     <h3>Options du profil</h3>
                     <p><strong>Votre nom d'utilisateur :</strong> {userData.username}</p>
                     <p><strong>Votre email :</strong> {userData.email}</p>
-                    <button onClick={handleModifyProfile} className="modify-PU">Modifier Profil</button>
+                    <button onClick={() => setShowPopup(true)} className="modify-PU">Modifier Profil</button>
                     <button onClick={handleGenerateToken} className="genere-PU">Générer un nouveau token</button>
                     <button onClick={handleDeleteAccount} className="sup-PU">Supprimer Profil</button>
-                </div>
-            )}
-
-            {showModifyModal && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h2>Vérification du Token</h2>
-                        <p>Veuillez entrer votre token pour accéder à la modification du profil :</p>
-                        <input
-                            type="text"
-                            placeholder="Entrer votre token"
-                            value={enteredToken}
-                            onChange={(e) => setEnteredToken(e.target.value)}
-                        />
-                        <button onClick={handleTokenVerificationModifyProfile}>Vérifier</button>
-                        <button onClick={() => setShowModifyModal(false)}>Annuler</button>
-                    </div>
                 </div>
             )}
 
@@ -436,6 +464,79 @@ const Dashboard = () => {
                     </div>
                 </div>
             )}
+
+            {showPopup && (
+                <div className="popup-overlay">
+                    <div className="popup-container">
+                        <h2>Modifier le profil</h2>
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group">
+                                <label htmlFor="username">Nom d'utilisateur</label>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    value={userData.username}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="email">Email</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={userData.email}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="oldPassword">Ancien mot de passe</label>
+                                <input
+                                    type="password"
+                                    id="oldPassword"
+                                    name="oldPassword"
+                                    value={oldPassword}
+                                    onChange={(e) => setOldPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="newPassword">Nouveau mot de passe</label>
+                                <input
+                                    type="password"
+                                    id="newPassword"
+                                    name="newPassword"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="ConfirmPassword">Confirmer le mot de passe</label>
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="form-actions">
+                                {passwordError && <p className="error-message">{passwordError}</p>}
+                                <button type="button" onClick={() => setShowPopup(false)}>
+                                    Annuler
+                                </button>
+                                <button onClick={handleSubmit}>Sauvegarder</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };

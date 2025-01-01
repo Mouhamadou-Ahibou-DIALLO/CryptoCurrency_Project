@@ -184,19 +184,24 @@ public class UserService {
     public User updateUser(Long id, User userDetails) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+        System.out.println("user first step for update: " + user);
 
         boolean verifyPassword = VerifyPasswordMatchesService.isValidPassword(userDetails.getPasswordHash());
         if (!verifyPassword) {
             throw new IllegalArgumentException("Le mot de passe doit comporter au moins 8 caractères et comprendre des lettres, des majuscules, des chiffres et des caractères spéciaux.");
         }
+        
+        System.out.println("password user for update: " + userDetails.getPasswordHash());
 
         user.setUsername(userDetails.getUsername());
+        System.out.println("username updating user: " + userDetails.getUsername());
         user.setEmail(userDetails.getEmail());
+        System.out.println("email updating user: " + userDetails.getEmail());
 
         String encodedPassword = EncodedPassword.encode(userDetails.getPasswordHash());
-        String newToken = EncodedToken.encode(userDetails.getTokenHash());
+        //String newToken = EncodedToken.encode(userDetails.getTokenHash());
         user.setPasswordHash(encodedPassword);
-        user.setTokenHash(newToken);
+        //user.setTokenHash(newToken);
         System.out.println("done updating user: " + user);
 
         return this.save(user);

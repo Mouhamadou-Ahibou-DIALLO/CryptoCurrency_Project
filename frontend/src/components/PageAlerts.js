@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import '../static/css/pageAlerts.css';
-import {useParams} from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
 const PageAlerts = () => {
-    const {id} = useParams();
+    const { id } = useParams();
     const [alerts, setAlerts] = useState([]);
     const [cryptos, setCryptos] = useState([]);
     const [userData, setUserData] = useState({});
     const [showCreatePopup, setShowCreatePopup] = useState(false);
     const [showUpdatePopup, setShowUpdatePopup] = useState(false);
-    const [currentAlert, setCurrentAlert] = useState(null);
     const [showDeletePopup, setShowDeletePopup] = useState(false);
+    const [currentAlert, setCurrentAlert] = useState(null);
 
     const [newAlert, setNewAlert] = useState({
         name: '',
-        crypto: '',
+        crypto_id: '',
         priceThreshold: '',
         variationThreshold: '',
     });
@@ -27,36 +27,45 @@ const PageAlerts = () => {
         const fetchData = async () => {
             try {
                 const userResponse = await fetch(`/api/users/${id}`);
+                if (!userResponse.ok) throw new Error("Erreur lors de la récupération des données utilisateur.");
                 const user = await userResponse.json();
                 setUserData(user);
 
-                const alertsResponse = await fetch(`/api/alerts?user=${userData}`, {
-                    headers: {
-                        Authorization: `Basic ${credentials}`,
-                    },});
+                const alertsResponse = await fetch(`/api/alerts?user_id=${id}`, {
+                    headers: { Authorization: `Basic ${credentials}` },
+                });
+                if (!alertsResponse.ok) throw new Error("Erreur lors de la récupération des alertes utilisateur.");
                 const userAlerts = await alertsResponse.json();
                 setAlerts(userAlerts);
 
                 const cryptosResponse = await fetch('/api/cryptocurrencies', {
-                    headers: {
-                        Authorization: `Basic ${credentials}`,
-                    },});
+                    headers: { Authorization: `Basic ${credentials}` },
+                });
+                if (!cryptosResponse.ok) throw new Error("Erreur lors de la récupération des cryptomonnaies.");
                 const cryptoData = await cryptosResponse.json();
                 setCryptos(cryptoData);
             } catch (error) {
-                console.error("Erreur lors de la récupération des données :", error);
+                console.error("Erreur lors de la récupération des données:", error);
             }
         };
 
         fetchData();
-    }, [userId]);
+    }, [id]);
 
     const handleCreateAlert = async () => {
+        if (alerts.length >= 10) {
+            alert("Vous avez atteint la limite de 10 alertes. Passez à un abonnement premium pour ajouter plus d'alertes.");
+            return;
+        }
+
         try {
             const response = await fetch('/api/alerts/create', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...newAlert, user: userData }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Basic ${credentials}`,
+                },
+                body: JSON.stringify({ ...newAlert, user_id: id }),
             });
             if (response.ok) {
                 const createdAlert = await response.json();
@@ -67,7 +76,7 @@ const PageAlerts = () => {
                 alert(`Erreur : ${error}`);
             }
         } catch (error) {
-            console.error("Erreur lors de la création de l'alerte :", error);
+            console.error("Erreur lors de la création de l'alerte:", error);
         }
     };
 
@@ -75,8 +84,11 @@ const PageAlerts = () => {
         try {
             const response = await fetch(`/api/alerts/update/${currentAlert.id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...currentAlert, user: userData }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Basic ${credentials}`,
+                },
+                body: JSON.stringify(currentAlert),
             });
             if (response.ok) {
                 const updatedAlert = await response.json();
@@ -87,7 +99,7 @@ const PageAlerts = () => {
                 alert(`Erreur : ${error}`);
             }
         } catch (error) {
-            console.error("Erreur lors de la mise à jour de l'alerte :", error);
+            console.error("Erreur lors de la mise à jour de l'alerte:", error);
         }
     };
 
@@ -95,6 +107,7 @@ const PageAlerts = () => {
         try {
             const response = await fetch(`/api/alerts/delete/${currentAlert.id}`, {
                 method: 'DELETE',
+                headers: { Authorization: `Basic ${credentials}` },
             });
             if (response.ok) {
                 setAlerts(alerts.filter(alert => alert.id !== currentAlert.id));
@@ -104,16 +117,24 @@ const PageAlerts = () => {
                 alert(`Erreur : ${error}`);
             }
         } catch (error) {
-            console.error("Erreur lors de la suppression de l'alerte :", error);
+            console.error("Erreur lors de la suppression de l'alerte:", error);
         }
+    };
+    
+    const handleLogout = () => {
+        window.location.href = "/Login";
+    };
+
+    const handleReturnToAccount = () => {
+        window.location.href = `/Dashboard/${userData.id}`;
     };
 
     return (
         <div className="app">
             <header className="app-header">
-                <h1>La cryptomonnaie de l'avenir</h1>
-                <button id="account-btn">Retour à votre compte</button>
-                <button id="logout-btn">Déconnexion</button>
+                <h1>La Cryptomonnaie de l'avenir</h1>
+                <button className="btn-return-to-account" onClick={handleReturnToAccount}>Retour à ton compte</button>
+                <button className="btn-logout" onClick={handleLogout}>Déconnexion</button>
             </header>
 
             <div className="container">
@@ -126,28 +147,14 @@ const PageAlerts = () => {
                     {alerts.map(alert => (
                         <li key={alert.id} className="alert-item">
                             <div>
-                                <h3>{alert.title}</h3>
-                                <p>Crypto : {alert.crypto}</p>
+                                <h3>{alert.name}</h3>
+                                <p>Crypto : {cryptos.find(c => c.id === alert.crypto_id)?.name || 'N/A'}</p>
                                 <p>Prix seuil : ${alert.priceThreshold}</p>
-                                <p>Taux d'échange : {alert.variationThreshold}%</p>
+                                <p>Taux de variation : {alert.variationThreshold}%</p>
                             </div>
                             <div className="alert-buttons">
-                                <button
-                                    onClick={() => {
-                                        setCurrentAlert(alert);
-                                        setShowUpdatePopup(true);
-                                    }}
-                                >
-                                    Modifier
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setCurrentAlert(alert);
-                                        setShowDeletePopup(true);
-                                    }}
-                                >
-                                    Supprimer
-                                </button>
+                                <button onClick={() => { setCurrentAlert(alert); setShowUpdatePopup(true); }}>Modifier</button>
+                                <button onClick={() => { setCurrentAlert(alert); setShowDeletePopup(true); }}>Supprimer</button>
                             </div>
                         </li>
                     ))}
@@ -195,24 +202,22 @@ const Popup = ({ title, alert, setAlert, cryptos, onSave, onCancel }) => (
         <div className="popup-content">
             <h2>{title}</h2>
             <label>
-                Titre :
+                Nom de l'alerte :
                 <input
                     type="text"
-                    value={alert.title}
-                    onChange={e => setAlert({ ...alert, title: e.target.value })}
+                    value={alert.name}
+                    onChange={e => setAlert({ ...alert, name: e.target.value })}
                 />
             </label>
             <label>
-                Crypto :
+                Cryptomonnaie :
                 <select
-                    value={alert.crypto}
-                    onChange={e => setAlert({ ...alert, crypto: e.target.value })}
+                    value={alert.crypto_id}
+                    onChange={e => setAlert({ ...alert, crypto_id: e.target.value })}
                 >
                     <option value="">--Choisir--</option>
                     {cryptos.map(crypto => (
-                        <option key={crypto.name} value={crypto.name}>
-                            {crypto.name}
-                        </option>
+                        <option key={crypto.id} value={crypto.id}>{crypto.name}</option>
                     ))}
                 </select>
             </label>
@@ -225,7 +230,7 @@ const Popup = ({ title, alert, setAlert, cryptos, onSave, onCancel }) => (
                 />
             </label>
             <label>
-                Taux d'échange (%) :
+                Taux de variation (%) :
                 <input
                     type="number"
                     value={alert.variationThreshold}
@@ -241,3 +246,4 @@ const Popup = ({ title, alert, setAlert, cryptos, onSave, onCancel }) => (
 );
 
 export default PageAlerts;
+
