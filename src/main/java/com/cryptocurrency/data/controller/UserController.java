@@ -51,7 +51,7 @@ public class UserController {
 
         try {
             User createdUser = userService.createUser(user);
-            System.out.println("user created: " + createdUser);
+            System.out.println("user created: ");
 
             if (createdUser == null) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la création de l'utilisateur.");
@@ -81,14 +81,14 @@ public class UserController {
     	System.out.println("start updating user in controller: ");
         try {
             User updatedUser = userService.updateUser(id, user);
-            System.out.println("user updated in controller: " + updatedUser);
+            System.out.println("user updated in controller: ");
 
             if (updatedUser == null) {
             	System.out.println("updatingUser in controller is null: ");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors du update de l'utilisateur.");
             }
             
-            System.out.println("done updating user in controller: " + user);
+            System.out.println("done updating user in controller: ");
 
             return ResponseEntity.status(HttpStatus.OK).body(Map.of(
                     "message", "User updated successfully.",
@@ -272,5 +272,32 @@ public class UserController {
         return ResponseEntity.ok(Map.of("message", "Mot de passe réinitialisé avec succès."));
     }
 
+    @PostMapping("/upgrade-to-premium")
+    public ResponseEntity<Map<String, String>> upgradeToPremium(@RequestBody Map<String, Long> request) {
+        Long userId = request.get("userId");
+        boolean success = userService.updateUserStatusToPremium(userId);
+
+        Map<String, String> response = new HashMap<>();
+        if (success) {
+            response.put("success", "true");
+        } else {
+            response.put("success", "false");
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/downgrade-to-standard")
+    public ResponseEntity<Map<String, String>> downgradeToStandard(@RequestBody Map<String, Long> request) {
+        Long userId = request.get("userId");
+        boolean success = userService.updateUserStatusToFree(userId);
+
+        Map<String, String> response = new HashMap<>();
+        if (success) {
+            response.put("success", "true");
+        } else {
+            response.put("success", "false");
+        }
+        return ResponseEntity.ok(response);
+    }
 }
 

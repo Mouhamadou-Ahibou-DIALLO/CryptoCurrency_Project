@@ -14,12 +14,11 @@ const App = () => {
     return (
             <div>
                 <Routes>
-                    {/* Routes accessibles sans authentification */}
                     <Route path="/About" element={<About />} />
                     <Route path="/Register" element={<Register />} />
                     <Route path="/Login" element={<Login />} />
-                    <Route path="Dashboard/:id" element={<Dashboard />} />
                     <Route path="/PageAlerts/:id" element={<PageAlerts />} />
+                    <Route path="/Dashboard/:id" element={<Dashboard />} />
                     <Route path="/ForgotPassword" element={<ForgotPassword />} />
                     <Route path="/ResetPassword" element={<ResetPassword />} />
                     <Route path="/" element={<CryptoList />} />

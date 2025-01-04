@@ -51,6 +51,7 @@ public class EmailService {
                 + "Cordialement,\nVotre application Crypto");
 
         mailSender.send(message);
+        System.out.println("le message a ete envoyé: " + message);
         System.out.println("Notification envoyée à " + alert.getUser().getEmail());
     }
 

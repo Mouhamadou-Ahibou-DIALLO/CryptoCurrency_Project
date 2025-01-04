@@ -46,26 +46,58 @@ body {
 .btn-return-to-account {
     position: fixed;
     right: 200px;
-    top: 20px;
+    top: 30px;
 }
 
 .btn-logout {
     position: fixed;
     right: 50px;
-    top: 20px;
+    top: 30px;
+}
+
+.btn-upgrade-premium {
+    position: fixed;
+    right: 400px;
+    top: 30px;
+}
+
+.btn-break-contrat {
+    position: fixed;
+    right: 400px;
+    top: 30px;
+}
+
+.btn-portefeuille {
+    position: fixed;
+    right: 700px;
+    top: 30px;
 }
 
 .container {
-    max-width: 900px;
-    margin: 20px auto;
+    margin-top: 100px;
     padding: 20px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    width: auto;
+    overflow-y: auto;
+    max-height: calc(100vh - 100px);
 }
 
-.create-alert-button {
-    background-color: #0077cc;
+.sticky-alerts-container {
+    width: 100%;
+}
+
+.sticky-alerts-container {
+    position: sticky;
+    top: 20px;
+    z-index: 999;
+    margin-bottom: 20px;
+}
+
+.btn-create-alert {
+    background-color: lightgreen;
     color: #fff;
     border: none;
     padding: 12px 20px;
@@ -76,7 +108,7 @@ body {
     margin-bottom: 20px;
 }
 
-.create-alert-button:hover {
+.btn-create-alert:hover {
     background-color: #005fa3;
 }
 
@@ -95,24 +127,21 @@ body {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.alert-item h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: #333;
+.btn-update-alert {
+    background-color: #ffc107;
+    color: #fff;
+    padding-right: 20px;
 }
 
-.alert-item .alert-buttons {
-    display: flex;
-    gap: 10px;
+.btn-delete-alert {
+    background-color: #dc3545;
+    color: #fff;
+    padding-left: 20px;
 }
 
-.alert-item .alert-buttons button {
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.btn-update-alert:hover,
+.btn-delete-alert:hover {
+    background-color: #2c3e50;
 }
 
 .alert-item .alert-buttons .edit-button {
@@ -198,4 +227,43 @@ body {
 
 .popup-content .cancel-button:hover {
     background-color: #c82333;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 400px;
+}
+
+.modal-actions button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-actions button:first-child {
+    background: #4caf50;
+    color: white;
+}
+
+.modal-actions button:last-child {
+    background: #f44336;
+    color: white;
 }

@@ -34,7 +34,7 @@ public class PredictionController {
         List<CryptoPriceHistory> predictedPrices = PredictionService.predictNextPricesUsingLinearRegression(cryptoPriceHistoryList);
 
         if (cryptoPriceHistoryList.isEmpty()) {
-            System.out.println("Data exists but list is empty for key: " + name);
+            System.out.println("Data exists but list is empty for key: ");
             return ResponseEntity.notFound().build();
         }
 
@@ -58,7 +58,7 @@ public class PredictionController {
         List<CryptoPriceHistory> predictedPrices = PredictionService.calculateMovingAverages(cryptoPriceHistoryList);
 
         if (cryptoPriceHistoryList == null) {
-            System.out.println("No data found for key: " + name);
+            System.out.println("No data found for key: ");
             return ResponseEntity.notFound().build();
         }
 
@@ -85,7 +85,7 @@ public class PredictionController {
         List<CryptoPriceHistory> margingError = PredictionService.calculateErrorMargins(cryptoPriceHistoryList, predictedPrices);
 
         if (cryptoPriceHistoryList.isEmpty()) {
-            System.out.println("Data exists but list is empty for key: " + name);
+            System.out.println("Data exists but list is empty for key: ");
             return ResponseEntity.notFound().build();
         }
 
@@ -109,8 +109,8 @@ public class PredictionController {
         LocalDateTime startDate = LocalDateTime.parse(start, formatter);
         LocalDateTime endDate = LocalDateTime.parse(end, formatter);
 
-        System.out.println("Key name: " + name + " graphe prédictions");
-        System.out.println("CryptoPriceHistoryList: " + DataCollectionService.getCryptoPriceHistoryMap().get(name) + " graphe prédictions");
+        System.out.println("Key name: graphe prédictions");
+        //System.out.println("CryptoPriceHistoryList: " + DataCollectionService.getCryptoPriceHistoryMap().get(name) + " graphe prédictions");
 
         return cryptoPriceHistoryList.stream()
                 .filter(entry -> !entry.getTimestamp().isBefore(startDate) && !entry.getTimestamp().isAfter(endDate))

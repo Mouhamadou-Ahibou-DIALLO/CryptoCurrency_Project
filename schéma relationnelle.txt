@@ -14,13 +14,13 @@
 - vwap (prix moyen ponderé)
 - change (variation en pourcentage)
 
-** Alerts
+** alert
 - id (clé primaire, unique)
 - name (nom de l'alerte)
 - user_id (clé étrangère vers User)
 - crypto_id (clé étrangère vers Cryptocurrency)
-- price_threshold (seuil de prix pour l'alerte)
-- variation_threshold (seuil de variation)
+- priceThreshold (seuil de prix pour l'alerte)
+- variationThreshold (seuil de variation)
 
 ** User
 - id (clé primaire, unique)

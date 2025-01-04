@@ -37,7 +37,7 @@ Le projet intègre :
 ### **Backend**
 - **Framework** : Spring Boot (support HTTPS).
 - **Langage** : Java.
-- **Base de données** : SQLite.
+- **Base de données** : SQLite3.
 
 ### **Frontend**
 - **Framework** : Thymeleaf.
@@ -61,7 +61,7 @@ Le projet intègre :
 Avant de commencer, assurez-vous d’avoir installé :
 - **Java** (17 ou supérieur).
 - **Docker** et **Kubernetes** (Minikube pour local).
-- **SQLite**.
+- **SQLite3**.
 - **npm** (pour le frontend).
 
 ### **Cloner le repository**
@@ -79,6 +79,28 @@ Démarrez le backend Spring Boot :
 - **cd frontend**
 - **npm install**
 - **npm start**
+
+### **Test de performance**
+- **1) Installer k6
+Commencez par installer k6 :
+-**sudo apt update**
+- **sudo apt install -y gnupg software-properties-common ca-certificates**
+- **curl -s https://dl.k6.io/key.gpg | sudo gpg --dearmor --output /usr/share/keyrings/k6-archive-keyring.gpg**
+- **echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list**
+- **sudo apt update**
+- **sudo apt install k6**
+
+- **2) Ecrire les scripts de tests**
+  Les scripts de test de k6 sont écrits en JavaScript. Par exemple, pour tester un endpoint HTTP, créez un fichier nommé test.js :
+
+- **3) Exécuter les tests**
+- **k6 run test.js**
+
+- **4) Analyser les résultats**
+- **k6 report**
+
+- **5) Générer un rapport détaillé**
+- **k6 run --out json=result.json test.js**
      
 ### **Dockerisation et déploiement**
 Construisez les images Docker :

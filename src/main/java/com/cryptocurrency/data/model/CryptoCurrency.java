@@ -2,6 +2,7 @@ package com.cryptocurrency.data.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * This class represents a CryptoCurrency object.
@@ -75,6 +76,12 @@ public class CryptoCurrency {
      */
     @Column(nullable = false)
     private LocalDateTime timestamp;
+
+    /**
+     * The alerts associated with the CryptoCurrency.
+     */
+    @OneToMany(mappedBy = "cryptoCurrency", cascade = CascadeType.ALL)
+    private List<Alerts> alerts;
 
     /**
      * Constructor for the CryptoCurrency class.

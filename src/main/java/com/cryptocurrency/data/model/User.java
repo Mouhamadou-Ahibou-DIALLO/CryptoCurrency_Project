@@ -2,6 +2,8 @@ package com.cryptocurrency.data.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 /**
  * This class represents a User object.
  * Author: Mouhamadou Ahibou DIALLO
@@ -40,6 +42,15 @@ public class User {
      */
     @Column(nullable = false)
     private String passwordHash;
+
+    @Column(nullable = false)
+    private String statut;
+
+    /**
+     * The alerts associated with the User object.
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Alerts> alerts;
 
     /**
      * Default constructor for the User object.
@@ -167,5 +178,23 @@ public class User {
                 ", tokenHash='" + tokenHash + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +
                 '}';
+    }
+
+    /**
+     * Sets the status of the User object.
+     *
+     * @param statut the status to set for the User object
+     */
+    public void setStatut(String statut) {
+        this.statut = statut;
+    }
+
+    /**
+     * Returns the status of the User object.
+     *
+     * @return The status of the User object.
+     */
+    public String getStatut() {
+        return statut;
     }
 }

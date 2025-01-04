@@ -134,15 +134,15 @@ public class UserService {
 
         String encodedPassword = EncodedPassword.encode(user.getPasswordHash());
         user.setPasswordHash(encodedPassword);
-        System.out.println("getPasswordHash: " + encodedPassword);
+        System.out.println("getPasswordHash: ");
 
         String token = GenerateToken.generateToken();
-        System.out.println("token: " + token);
+        System.out.println("token: ");
         String encodedToken = EncodedToken.encode(token);
         user.setTokenHash(encodedToken);
-        System.out.println("tokenHash: " + encodedToken);
+        System.out.println("tokenHash: ");
 
-        System.out.println("user created: " + user);
+        System.out.println("user created: ");
         User savedUser = this.save(user);
 
         if (savedUser == null) {
@@ -184,25 +184,25 @@ public class UserService {
     public User updateUser(Long id, User userDetails) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        System.out.println("user first step for update: " + user);
+        System.out.println("user first step for update: ");
 
         boolean verifyPassword = VerifyPasswordMatchesService.isValidPassword(userDetails.getPasswordHash());
         if (!verifyPassword) {
             throw new IllegalArgumentException("Le mot de passe doit comporter au moins 8 caractères et comprendre des lettres, des majuscules, des chiffres et des caractères spéciaux.");
         }
         
-        System.out.println("password user for update: " + userDetails.getPasswordHash());
+        System.out.println("password user for update: ");
 
         user.setUsername(userDetails.getUsername());
-        System.out.println("username updating user: " + userDetails.getUsername());
+        System.out.println("username updating user: ");
         user.setEmail(userDetails.getEmail());
-        System.out.println("email updating user: " + userDetails.getEmail());
+        System.out.println("email updating user: ");
 
         String encodedPassword = EncodedPassword.encode(userDetails.getPasswordHash());
         //String newToken = EncodedToken.encode(userDetails.getTokenHash());
         user.setPasswordHash(encodedPassword);
         //user.setTokenHash(newToken);
-        System.out.println("done updating user: " + user);
+        System.out.println("done updating user: ");
 
         return this.save(user);
     }
@@ -221,7 +221,7 @@ public class UserService {
         String token = GenerateToken.generateToken();
         String newToken = EncodedToken.encode(token);
         user.setTokenHash(newToken);
-        System.out.println("done updating user: " + user);
+        System.out.println("done updating user: ");
         return this.save(user);
     }
 
@@ -249,8 +249,8 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Invalid email"));
 
         if (user != null) {
-            System.out.println("user: " + user);
-            System.out.println("password: " + password);
+            System.out.println("user: ");
+            System.out.println("password: ");
             String encodedPassword = user.getPasswordHash();
             boolean isRightPassword = EncodedPassword.isRightPassword(password, encodedPassword);
 
@@ -300,10 +300,10 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (user != null) {
-            System.out.println("user: " + user);
+            System.out.println("user: ");
             String encodedToken = user.getTokenHash();
-            System.out.println("token: " + token);
-            System.out.println("encodedToken: " + encodedToken);
+            System.out.println("token: ");
+            System.out.println("encodedToken: ");
 
             if (Objects.equals(token, encodedToken)) {
                 Optional<User> userValid = this.findByEmailAndTokenHash(email, encodedToken);
@@ -336,8 +336,31 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        System.out.println("logout user done: " + user);
+        System.out.println("logout user done: ");
         user.setEmail(null);
         user.setTokenHash(null);
+    }
+
+    public boolean updateUserStatusToPremium(Long userId) {
+        String statut = "premium";
+        return updateUserStatut(userId, statut);
+    }
+
+    public boolean updateUserStatusToFree(Long userId) {
+        String statut = "normal";
+        return updateUserStatut(userId, statut);
+    }
+
+    private boolean updateUserStatut(Long id, String statut) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            if (!user.get().getStatut().equals(statut)) {
+                User userSetStatut = user.get();
+                userSetStatut.setStatut(statut);
+                userRepository.save(userSetStatut);
+                return true;
+            }
+        }
+        return false;
     }
 }

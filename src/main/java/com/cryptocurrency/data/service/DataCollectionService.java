@@ -135,9 +135,7 @@ public class DataCollectionService {
     public void addCryptoForPriceHistory(List<CryptoCurrency> cryptoCurrencyList) {
         System.out.println("start adding cryptoCurrency for price history dans DataCollectionService");
         for (CryptoCurrency crypto : cryptoCurrencyList) {
-            System.out.println("crypto for price history: " + crypto);
             String name = crypto.getName();
-            System.out.println("name for price history: " + name);
             LocalDateTime timestamp = LocalDateTime.now();
             Double price = crypto.getPrice();
 
@@ -154,7 +152,7 @@ public class DataCollectionService {
      * This method is scheduled to run every 60 seconds and collects market data from the CoinCap API.
      * The collected data is then saved to the database.
      */
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 6000000)
     public void collectMarketData() {
         logger.info("Starting data collection ......");
 
@@ -172,14 +170,14 @@ public class DataCollectionService {
             if (response.isSuccessful()) {
                 assert response.body() != null;
                 String responseBody = response.body().string();
-                List<CryptoCurrency> cryptoCurrencyList = parseMarketData(responseBody);
+                //List<CryptoCurrency> cryptoCurrencyList = parseMarketData(responseBody);
 
-                enforceTableLimitBeforeInsert();
+                //enforceTableLimitBeforeInsert();
 
-                cryptoCurrencyRepository.saveAll(cryptoCurrencyList);
+                //cryptoCurrencyRepository.saveAll(cryptoCurrencyList);
 
                 System.out.println("Ajout des historiques de prix ...");
-                addCryptoForPriceHistory(cryptoCurrencyList);
+                //addCryptoForPriceHistory(cryptoCurrencyList);
                 System.out.println("Ajout terminé.");
 
                 logger.info("20 new lines inserée dans la table CryptoCurrency ...........");

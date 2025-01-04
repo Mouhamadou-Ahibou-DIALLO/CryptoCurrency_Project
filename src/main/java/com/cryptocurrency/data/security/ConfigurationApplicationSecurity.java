@@ -60,6 +60,8 @@ public class ConfigurationApplicationSecurity {
                                 .requestMatchers(POST, "api/alerts/create").permitAll()
                                 .requestMatchers(DELETE, "api/alerts/delete/{id}").permitAll()
                                 .requestMatchers(PUT, "api/alerts/update/{id}").permitAll()
+                                .requestMatchers(POST, "api/users/downgrade-to-standard").permitAll()
+                                .requestMatchers(POST, "api/users/upgrade-to-premium").permitAll()
                                 .anyRequest().authenticated()
                         )
                         .httpBasic(Customizer.withDefaults())

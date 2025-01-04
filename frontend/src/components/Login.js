@@ -74,18 +74,17 @@ function Login() {
                 body: JSON.stringify({ email, token }),
             });
 
-            const isAuth = true
             const data = await response.text();
             console.log("done")
             if (response.ok) {
                 const parsedData = JSON.parse(data);
                 alert("Token vérifié avec succès !");
-                localStorage.setItem("authToken", parsedData.token);
+                localStorage.setItem("authToken", parsedData.tokenHash);
                 localStorage.setItem("id", parsedData.id);
                 localStorage.setItem("username", parsedData.username);
                 localStorage.setItem("email", parsedData.email);
 
-                console.log("parsed data ", data.token);
+                console.log("parsed data ", data.tokenHash);
                 window.location.href = `/Dashboard/${parsedData.id}`;
             } else {
                 alert(data);

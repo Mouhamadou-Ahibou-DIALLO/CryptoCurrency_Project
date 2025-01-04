@@ -21,10 +21,11 @@ public class PredictionService {
      *
      * @param priceHistory A list of CryptoPriceHistory objects containing
      *                     historical price data. Must contain at least two data points.
-     * @return A list of up to 5 moving averages for the cryptocurrency.
+     * @return A list of up to 10 moving averages for the cryptocurrency.
      * @throws IllegalArgumentException If the list contains fewer than two data points.
      */
     public static List<CryptoPriceHistory> calculateMovingAverages(List<CryptoPriceHistory> priceHistory) {
+        System.out.println("calculate moving averages");
         List<CryptoPriceHistory> movingAverages = new ArrayList<>();
 
         Collections.shuffle(priceHistory);
@@ -37,6 +38,7 @@ public class PredictionService {
             }
             movingAverages.add(new CryptoPriceHistory(randomSubList.get(i).getTimestamp(), sum / (i + 1)));
         }
+
         return movingAverages;
     }
 
@@ -48,10 +50,11 @@ public class PredictionService {
      *
      * @param priceHistory A list of CryptoPriceHistory objects containing
      *                     historical price data. Must contain at least two data points.
-     * @return A list of up to 5 predicted prices for the cryptocurrency.
+     * @return A list of up to 10 predicted prices for the cryptocurrency.
      * @throws IllegalArgumentException If the list contains fewer than two data points.
      */
     public static List<CryptoPriceHistory> predictNextPricesUsingLinearRegression(List<CryptoPriceHistory> priceHistory) {
+        System.out.println("predict next prices using linear regression");
         if (priceHistory.size() < 2) {
             throw new IllegalArgumentException("Not enough data points for regression.");
         }
@@ -78,6 +81,7 @@ public class PredictionService {
         for (int i = 1; i <= 5; i++) {
             predictedPrices.add(new CryptoPriceHistory(priceHistory.get(n - 1).getTimestamp().plusDays(i), slope * (n + i) + intercept));
         }
+
         return predictedPrices;
     }
 
@@ -85,7 +89,7 @@ public class PredictionService {
      * Calculates the error margins between actual and predicted prices of a cryptocurrency.
      *
      * This method shuffles the provided lists of actual and predicted prices and calculates
-     * the error margins for up to 5 data points. The error margin is the absolute percentage
+     * the error margins for up to 10 data points. The error margin is the absolute percentage
      * difference between the actual and predicted price.
      *
      * @param actualPrices A list of CryptoPriceHistory objects representing actual historical prices.
@@ -94,15 +98,19 @@ public class PredictionService {
      *         price and the error margin expressed as a percentage.
      */
     public static List<CryptoPriceHistory> calculateErrorMargins(List<CryptoPriceHistory> actualPrices, List<CryptoPriceHistory> predictedPrices) {
+        System.out.println("clacule error margins");
         Collections.shuffle(actualPrices);
         Collections.shuffle(predictedPrices);
+
         List<CryptoPriceHistory> errorMargins = new ArrayList<>();
         for (int i = 0; i < Math.min(actualPrices.size(), 5); i++) {
             double actualPrice = actualPrices.get(i).getPrice();
             double predictedPrice = predictedPrices.get(i).getPrice();
+
             double margin = Math.abs((predictedPrice - actualPrice) / actualPrice) * 100;
             errorMargins.add(new CryptoPriceHistory(actualPrices.get(i).getTimestamp(), margin));
         }
+
         return errorMargins;
     }
 }

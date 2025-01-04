@@ -5,6 +5,9 @@ import com.cryptocurrency.data.model.CryptoCurrency;
 import com.cryptocurrency.data.model.User;
 import com.cryptocurrency.data.repository.AlertsRepository;
 
+import com.cryptocurrency.data.repository.CryptoCurrencyRepository;
+import com.cryptocurrency.data.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +20,7 @@ import java.util.Optional;
  * Author: Mouhamadou Ahibou DIALLO
  */
 @Service
+@Transactional
 public class AlertsService {
 
     /**
@@ -24,6 +28,12 @@ public class AlertsService {
      */
     @Autowired
     private AlertsRepository alertsRepository;
+
+    @Autowired
+    private CryptoCurrencyRepository cryptoCurrencyRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * The service for Email objects.
@@ -38,7 +48,8 @@ public class AlertsService {
      * @return a list of alerts for the given user
      */
     public List<Alerts> findByUser(User user) {
-        return alertsRepository.findByUser(user);
+        User user1 = userRepository.findById(user.getId()).orElse(null);
+        return alertsRepository.findByUser(user1);
     }
 
     /**
@@ -118,6 +129,7 @@ public class AlertsService {
      * conditions are met, it sends an email notification to the user.
      */
     public void checkAlerts() {
+        System.out.println("Start checking alerts");
         List<Alerts> alerts = alertsRepository.findAll();
 
         for (Alerts alert : alerts) {
@@ -142,47 +154,90 @@ public class AlertsService {
     /**
      * Creates a new alert for the given user.
      *
-     * @param user the user to create the alert for
      * @param alert the alert to create
      * @return the created alert
      */
-    public Alerts createAlert(User user, Alerts alert) {
+    public Alerts createAlert(Alerts alert) {
+        User user = userRepository.findById(alert.getUser().getId()).orElse(null);
+
         if (user == null) {
-            throw new IllegalArgumentException("L'utilisateur ne peut pas être null.");
+            throw new IllegalArgumentException("L'utilisateur n'existe pas.");
         }
 
-        if (alert.getCryptoCurrency() == null ||
-                (alert.getPriceThreshold() == null && alert.getVariationThreshold() == null)) {
-            throw new IllegalArgumentException("L'alerte doit avoir une crypto-monnaie et au moins un seuil défini.");
+        CryptoCurrency cryptoCurrency = cryptoCurrencyRepository.findById(alert.getCryptoCurrency().getId()).orElse(null);
+
+        if (cryptoCurrency == null) {
+            throw new IllegalArgumentException("La crypto-monnaie n'existe pas.");
         }
 
-        List<Alerts> existingAlerts = findByUser(user);
+        if ((alert.getPriceThreshold() == null || alert.getVariationThreshold() == null)) {
+            throw new IllegalArgumentException("L'alerte doit avoir un seuil défini pour le prix ou la variation.");
+        }
 
-        for (Alerts existingAlert : existingAlerts) {
-            if (existingAlert.getCryptoCurrency().equals(alert.getCryptoCurrency()) &&
-                    Objects.equals(existingAlert.getPriceThreshold(), alert.getPriceThreshold()) &&
-                    Objects.equals(existingAlert.getVariationThreshold(), alert.getVariationThreshold())) {
-                throw new IllegalStateException("Une alerte similaire existe déjà pour cet utilisateur.");
-            }
+        if (checkIfAlertExistsForUser(alert, user)) {
+            throw new IllegalArgumentException("Vous avez une alerte similaire pour cette crypto-monnaie.");
         }
 
         if (checkNombreAlerts(user)) {
             throw new IllegalStateException("Vous avez atteint le nombre maximum d'alertes., Passez à un abonnement Premium.");
         }
 
-        alert.setUser(user);
-        alert.setName(alert.getName());
-        alert.setCryptoCurrency(alert.getCryptoCurrency());
-        alert.setPriceThreshold(alert.getPriceThreshold());
-        alert.setVariationThreshold(alert.getVariationThreshold());
-
-        System.out.println("creation is done");
-        return alertsRepository.save(alert);
+        Alerts newAlert = createAlertService(alert, user, cryptoCurrency);
+        return alertsRepository.save(newAlert);
     }
 
+
+    /**
+     * Checks if an alert similar to the given alert already exists for the given user.
+     *
+     * @param alert the alert to check
+     * @param user the user to check for
+     * @return true if an alert similar to the given alert already exists for the given user, false otherwise
+     */
+    private boolean checkIfAlertExistsForUser(Alerts alert, User user) {
+        List<Alerts> existingAlerts = findByUser(user);
+        for (Alerts existingAlert : existingAlerts) {
+            if (Objects.equals(existingAlert.getName(), alert.getName()) &&
+                    existingAlert.getCryptoCurrency().equals(alert.getCryptoCurrency()) &&
+                    Objects.equals(existingAlert.getPriceThreshold(), alert.getPriceThreshold()) &&
+                    Objects.equals(existingAlert.getVariationThreshold(), alert.getVariationThreshold())) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    /**
+     * Creates a new alert.
+     *
+     * @param alert the alert to be created
+     * @return the created alert
+     */
+    private Alerts createAlertService(Alerts alert, User user, CryptoCurrency cryptoCurrency) {
+        Alerts newAlert = new Alerts();
+
+        newAlert.setUser(user);
+        newAlert.setName(alert.getName());
+        newAlert.setCryptoCurrency(cryptoCurrency);
+        newAlert.setPriceThreshold(alert.getPriceThreshold());
+        newAlert.setVariationThreshold(alert.getVariationThreshold());
+
+        System.out.println("creation is done");
+        System.out.println("new alert: " + newAlert);
+
+        return newAlert;
+    }
+
+    /**
+     * Checks if the given user has reached the maximum number of alerts.
+     *
+     * @param user the user to check
+     * @return true if the user has reached the maximum number of alerts, false otherwise
+     */
     public boolean checkNombreAlerts(User user) {
         List<Alerts> alerts = findByUser(user);
-        return alerts.size() == 10;
+        return alerts.size() == 10 && user.getStatut().equals("normal");
     }
 
     /**
@@ -197,14 +252,21 @@ public class AlertsService {
         Alerts existingAlert = alertsRepository.findById(alertId)
                 .orElseThrow(() -> new RuntimeException("Alerte introuvable"));
 
-        if (!existingAlert.getUser().equals(user)) {
+        User user1 = userRepository.findById(user.getId()).orElse(null);
+        User existingUser = existingAlert.getUser();
+
+        if (!existingUser.equals(user1)) {
             throw new IllegalStateException("Vous n'êtes pas autorisé à modifier cette alerte.");
         }
 
+        System.out.println("update is done");
+        return alertsRepository.save(updateAlertService(existingAlert, updatedAlert));
+    }
+
+    private Alerts updateAlertService(Alerts existingAlert, Alerts updatedAlert) {
         existingAlert.setName(updatedAlert.getName());
         existingAlert.setPriceThreshold(updatedAlert.getPriceThreshold());
         existingAlert.setVariationThreshold(updatedAlert.getVariationThreshold());
-        existingAlert.setCryptoCurrency(updatedAlert.getCryptoCurrency());
 
         System.out.println("update is done");
         return alertsRepository.save(existingAlert);
@@ -223,15 +285,20 @@ public class AlertsService {
         Alerts alert = alertsRepository.findById(alertId)
                 .orElseThrow(() -> new RuntimeException("Alerte introuvable"));
 
-        if (!alert.getUser().equals(user)) {
+        User user1 = userRepository.findById(user.getId()).orElse(null);
+
+        if (user1 == null) {
+            throw new IllegalArgumentException("L'utilisateur n'existe pas.");
+        }
+
+        User existingUser = alert.getUser();
+
+        if (!existingUser.equals(user1)) {
             throw new IllegalStateException("Vous n'êtes pas autorisé à supprimer cette alerte.");
         }
 
         System.out.println("delete is done");
         alertsRepository.delete(alert);
     }
-
-
-
 }
 

@@ -7,7 +7,7 @@ import jakarta.persistence.*;
  * Author: Mouhamadou Ahibou DIALLO
  */
 @Entity
-@Table(name = "alerts")
+@Table(name = "alert")
 public class Alerts {
 
     /**
@@ -20,30 +20,33 @@ public class Alerts {
     /**
      * The user associated with the Alerts object.
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     /**
      * The market data associated with the Alerts object.
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "crypto_id", nullable = false)
     private CryptoCurrency cryptoCurrency;
 
     /**
      * The name associated with the Alerts object.
      */
+    @Column(nullable = false, name = "name")
     private String name;
 
     /**
      * The price threshold associated with the Alerts object.
      */
+    @Column(nullable = false, name = "price_threshold")
     private Double priceThreshold;
 
     /**
      * The variation threshold associated with the Alerts object.
      */
+    @Column(nullable = false, name = "variation_threshold")
     private Double variationThreshold;
 
     /**
@@ -175,5 +178,22 @@ public class Alerts {
      */
     public void setVariationThreshold(Double variationThreshold) {
         this.variationThreshold = variationThreshold;
+    }
+
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return a string representation of the object
+     */
+    @Override
+    public String toString() {
+        return "Alerts{" +
+                "id=" + id +
+                ", user=" + user +
+                ", cryptoCurrency=" + cryptoCurrency +
+                ", name='" + name + '\'' +
+                ", priceThreshold=" + priceThreshold +
+                ", variationThreshold=" + variationThreshold +
+                '}';
     }
 }
