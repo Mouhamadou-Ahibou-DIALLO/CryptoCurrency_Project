@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AlertsController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.controller</a> &gt; <span class="el_source">AlertsController.java</span></div><h1>AlertsController.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.controller;
+
+import com.cryptocurrency.data.model.Alerts;
+import com.cryptocurrency.data.model.User;
+import com.cryptocurrency.data.repository.UserRepository;
+import com.cryptocurrency.data.service.AlertCreatedService;
+import com.cryptocurrency.data.service.AlertUpdateService;
+import com.cryptocurrency.data.service.AlertsService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * The AlertsController class is a Spring REST controller for managing alerts.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
+<span class="fc" id="L23">@RestController</span>
+@RequestMapping(&quot;/api/alerts&quot;)
+@CrossOrigin(origins = &quot;http://localhost:3000&quot;)
+<span class="fc" id="L26">public class AlertsController {</span>
+
+    /**
+     * The alertsService field is a Spring service for managing alerts.
+     */
+    @Autowired
+    private AlertsService alertsService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    /**
+     * Gets all alerts for a given user.
+     *
+     * @param userId the id of the user whose alerts are to be retrieved
+     * @return a list of alerts for the given user
+     */
+    @GetMapping(&quot;/{userId}&quot;)
+    public ResponseEntity&lt;List&lt;Alerts&gt;&gt; getAlertsByUser(@PathVariable Long userId) {
+<span class="nc" id="L45">        User user = userRepository.findById(userId).orElse(null);</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        assert user != null;</span>
+<span class="nc" id="L47">        List&lt;Alerts&gt; alerts = alertsService.findByUser(user);</span>
+<span class="nc" id="L48">        System.out.println(&quot;liste de alerts dans alertController: &quot;);</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (alerts.isEmpty()) {</span>
+<span class="nc" id="L50">            System.out.println(&quot;liste vide&quot;);</span>
+<span class="nc" id="L51">            return ResponseEntity.noContent().build();</span>
+        }
+<span class="nc" id="L53">        return ResponseEntity.ok(alerts);</span>
+    }
+
+    /**
+     * Creates a new alert for the given user.
+     * @param alert  the alert to be created
+     * @return the created alert
+     */
+    @PostMapping(&quot;/create&quot;)
+    public ResponseEntity&lt;?&gt; createAlert(@RequestBody AlertCreatedService alert) {
+        try {
+<span class="nc" id="L64">            Alerts createdAlert = alertsService.createAlert(alert);</span>
+<span class="nc" id="L65">            String nameAlert = createdAlert.getName();</span>
+<span class="nc" id="L66">            Map&lt;String, Alerts&gt; response = new HashMap&lt;&gt;();</span>
+
+<span class="nc" id="L68">            System.out.println(&quot;done creating alert: &quot;);</span>
+<span class="nc" id="L69">            response.put(nameAlert, createdAlert);</span>
+<span class="nc" id="L70">            return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
+
+<span class="nc" id="L72">        } catch (IllegalArgumentException e) {</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">            if (e.getMessage().contains(&quot;Passez à un abonnement Premium&quot;)) {</span>
+<span class="nc" id="L74">                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(&quot;error&quot;, e.getMessage()));</span>
+            }
+<span class="nc" id="L76">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(&quot;error&quot;, e.getMessage()));</span>
+        }
+    }
+
+    /**
+     * Updates an existing alert with the given ID.
+     *
+     * @param id   the ID of the alert to be updated
+     * @param updatedAlert the updated alert object
+     * @return the updated alert
+     */
+    @PutMapping(&quot;/update/{id}&quot;)
+    public ResponseEntity&lt;?&gt; updateAlert(@PathVariable Long id, @RequestBody AlertUpdateService updatedAlert) {
+<span class="nc" id="L89">        Alerts alerts = alertsService.findById(id);</span>
+        try {
+<span class="nc" id="L91">            User user = userRepository.findById(alerts.getUser().getId()).orElse(null);</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">            if (user == null) {</span>
+<span class="nc" id="L93">                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(&quot;L'utilisateur ne peut pas être null.&quot;);</span>
+            }
+
+<span class="nc" id="L96">            Alerts updated = alertsService.updateAlert(id, user, updatedAlert);</span>
+<span class="nc" id="L97">            String nameAlert = updated.getName();</span>
+
+<span class="nc" id="L99">            Map&lt;String, Alerts&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L100">            response.put(nameAlert, updated);</span>
+<span class="nc" id="L101">            System.out.println(&quot;done updating alert: &quot;);</span>
+
+<span class="nc" id="L103">            return ResponseEntity.status(HttpStatus.OK).body(response);</span>
+<span class="nc" id="L104">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L105">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());</span>
+        }
+    }
+
+    /**
+     * Deletes an alert with the given ID.
+     *
+     * @param id the ID of the alert to be deleted
+     * @param userId the ID of the user who is deleting the alert
+     * @return a response entity indicating the deletion was successful
+     */
+    @DeleteMapping(&quot;/delete/{id}&quot;)
+    public ResponseEntity&lt;?&gt; deleteAlert(@PathVariable Long id, @RequestParam Long userId) {
+        try {
+<span class="nc" id="L119">            User user = userRepository.findById(userId).orElse(null);</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">            if (user == null) {</span>
+<span class="nc" id="L121">                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(&quot;L'utilisateur ne peut pas être null.&quot;);</span>
+            }
+
+<span class="nc" id="L124">            alertsService.deleteAlert(id, user);</span>
+<span class="nc" id="L125">            Map&lt;String, Long&gt; response = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L126">            response.put(&quot;alertId&quot;, id);</span>
+<span class="nc" id="L127">            response.put(&quot;userId&quot;, user.getId());</span>
+
+<span class="nc" id="L129">            System.out.println(&quot;done deleting alert: &quot;);</span>
+<span class="nc" id="L130">            return ResponseEntity.status(HttpStatus.OK).body(response);</span>
+<span class="nc" id="L131">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L132">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

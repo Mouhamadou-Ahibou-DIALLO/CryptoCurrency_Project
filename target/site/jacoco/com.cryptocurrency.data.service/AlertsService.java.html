@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AlertsService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.service</a> &gt; <span class="el_source">AlertsService.java</span></div><h1>AlertsService.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.service;
+
+import com.cryptocurrency.data.model.Alerts;
+import com.cryptocurrency.data.model.CryptoCurrency;
+import com.cryptocurrency.data.model.User;
+import com.cryptocurrency.data.repository.AlertsRepository;
+
+import com.cryptocurrency.data.repository.CryptoCurrencyRepository;
+import com.cryptocurrency.data.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+/**
+ * The service for Alerts objects.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
+@Service
+@Transactional
+<span class="fc" id="L24">public class AlertsService {</span>
+
+    /**
+     * The repository for Alerts objects.
+     */
+    @Autowired
+    private AlertsRepository alertsRepository;
+
+    @Autowired
+    private CryptoCurrencyRepository cryptoCurrencyRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    /**
+     * The service for Email objects.
+     */
+    @Autowired
+    private EmailService emailService;
+
+    /**
+     * Find all alerts for a given user.
+     *
+     * @param user the User object to find alerts for
+     * @return a list of alerts for the given user
+     */
+    public List&lt;Alerts&gt; findByUser(User user) {
+//        User user1 = userRepository.findById(user.getId()).orElse(null);
+<span class="fc" id="L52">        return alertsRepository.findByUser(user);</span>
+    }
+
+    /**
+     * Find all alerts for a given price threshold.
+     *
+     * @param priceThreshold the price threshold to find alerts for
+     * @return a list of alerts for the given price threshold
+     */
+    public List&lt;Alerts&gt; findByPriceThreshold(Double priceThreshold) {
+<span class="fc" id="L62">        return alertsRepository.findByPriceThreshold(priceThreshold);</span>
+    }
+
+    /**
+     * Find all alerts for a given variation threshold.
+     *
+     * @param variationThreshold the variation threshold to find alerts for
+     * @return a list of alerts for the given variation threshold
+     */
+    public List&lt;Alerts&gt; findByVariationThreshold(Double variationThreshold) {
+<span class="fc" id="L72">        return alertsRepository.findByVariationThreshold(variationThreshold);</span>
+    }
+
+    /**
+     * Returns a list of all alerts in the database.
+     *
+     * @return a list of all alerts in the database
+     */
+    public List&lt;Alerts&gt; findAll() {
+<span class="fc" id="L81">        return alertsRepository.findAll();</span>
+    }
+
+    /**
+     * Find an alert by its ID.
+     *
+     * @param id the ID of the alert to find
+     * @return the alert with the given ID, or null if none is found
+     */
+    public Alerts findById(Long id) {
+<span class="fc" id="L91">        Optional&lt;Alerts&gt; result = alertsRepository.findById(id);</span>
+<span class="fc" id="L92">        return result.orElse(null);</span>
+    }
+
+    /**
+     * Saves an alert to the database.
+     *
+     * @param alerts the alert to save
+     * @return the saved alert
+     */
+    public Alerts save(Alerts alerts) {
+<span class="fc" id="L102">        return alertsRepository.save(alerts);</span>
+    }
+
+    /**
+     * Deletes an alert by its ID.
+     *
+     * @param id the ID of the alert to be deleted
+     */
+    public void deleteById(Long id) {
+<span class="fc" id="L111">        alertsRepository.deleteById(id);</span>
+<span class="fc" id="L112">    }</span>
+
+    /**
+     * Deletes all alerts associated with the specified user.
+     *
+     * @param user the user whose alerts are to be deleted
+     */
+    public void deleteByUser(User user) {
+<span class="fc" id="L120">        alertsRepository.deleteByUser(user);</span>
+<span class="fc" id="L121">    }</span>
+
+    /**
+     * Checks all alerts in the database and sends notifications to users if the current
+     * price of the cryptocurrency exceeds their specified price threshold or if the price
+     * change percentage exceeds their specified variation threshold.
+     * This method retrieves all alerts, iterates through each alert, and checks the
+     * current price and change percentage of the associated cryptocurrency. If the
+     * conditions are met, it sends an email notification to the user.
+     */
+    public void checkAlerts() {
+<span class="fc" id="L132">        System.out.println(&quot;Start checking alerts&quot;);</span>
+<span class="nc" id="L133">        List&lt;Alerts&gt; alerts = alertsRepository.findAll();</span>
+
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        for (Alerts alert : alerts) {</span>
+<span class="nc" id="L136">            List&lt;Alerts&gt; alertsUser = findByUser(alert.getUser());</span>
+<span class="nc" id="L137">            CryptoCurrency cryptoCurrency = alert.getCryptoCurrency();</span>
+
+<span class="nc bnc" id="L139" title="All 2 branches missed.">            for (Alerts alertUser : alertsUser) {</span>
+<span class="nc" id="L140">                Double currentPrice = cryptoCurrency.getPrice();</span>
+<span class="nc" id="L141">                Double changePercentage = cryptoCurrency.getChange();</span>
+
+<span class="nc bnc" id="L143" title="All 2 branches missed.">                if (currentPrice &gt; alertUser.getPriceThreshold()) {</span>
+<span class="nc" id="L144">                    emailService.sendNotification(alertUser, currentPrice);</span>
+                }
+
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                if (Math.abs(changePercentage) &gt; alertUser.getVariationThreshold()) {</span>
+<span class="nc" id="L148">                    emailService.sendNotification(alertUser, changePercentage);</span>
+                }
+<span class="nc" id="L150">            }</span>
+<span class="nc" id="L151">        }</span>
+<span class="nc" id="L152">    }</span>
+
+    /**
+     * Creates a new alert for the given user.
+     *
+     * @param alert the alert to create
+     * @return the created alert
+     */
+    public Alerts createAlert(AlertCreatedService alert) {
+<span class="nc" id="L161">        User user = userRepository.findById(alert.getUser().getId()).orElse(null);</span>
+
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L164">            throw new IllegalArgumentException(&quot;L'utilisateur n'existe pas.&quot;);</span>
+        }
+
+<span class="nc" id="L167">        CryptoCurrency cryptoCurrency = cryptoCurrencyRepository.findById(alert.getCryptoCurrency().getId()).orElse(null);</span>
+
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (cryptoCurrency == null) {</span>
+<span class="nc" id="L170">            throw new IllegalArgumentException(&quot;La crypto-monnaie n'existe pas.&quot;);</span>
+        }
+
+<span class="nc bnc" id="L173" title="All 4 branches missed.">        if ((alert.getPriceThreshold() == null || alert.getVariationThreshold() == null)) {</span>
+<span class="nc" id="L174">            throw new IllegalArgumentException(&quot;L'alerte doit avoir un seuil défini pour le prix ou la variation.&quot;);</span>
+        }
+
+<span class="nc bnc" id="L177" title="All 2 branches missed.">        if (checkIfAlertExistsForUser(alert, user)) {</span>
+<span class="nc" id="L178">            throw new IllegalArgumentException(&quot;Vous avez une alerte similaire pour cette crypto-monnaie.&quot;);</span>
+        }
+
+<span class="nc bnc" id="L181" title="All 2 branches missed.">        if (checkNombreAlerts(user)) {</span>
+<span class="nc" id="L182">            throw new IllegalStateException(&quot;Vous avez atteint le nombre maximum d'alertes., Passez à un abonnement Premium.&quot;);</span>
+        }
+
+<span class="nc" id="L185">        Alerts newAlert = createAlertService(alert, user, cryptoCurrency);</span>
+<span class="nc" id="L186">        return alertsRepository.save(newAlert);</span>
+    }
+
+
+    /**
+     * Checks if an alert similar to the given alert already exists for the given user.
+     *
+     * @param alert the alert to check
+     * @param user the user to check for
+     * @return true if an alert similar to the given alert already exists for the given user, false otherwise
+     */
+    private boolean checkIfAlertExistsForUser(AlertCreatedService alert, User user) {
+<span class="nc" id="L198">        List&lt;Alerts&gt; existingAlerts = findByUser(user);</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        for (Alerts existingAlert : existingAlerts) {</span>
+<span class="nc bnc" id="L200" title="All 2 branches missed.">            if (Objects.equals(existingAlert.getName(), alert.getName()) &amp;&amp;</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">                    existingAlert.getCryptoCurrency().equals(alert.getCryptoCurrency()) &amp;&amp;</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">                    Objects.equals(existingAlert.getPriceThreshold(), alert.getPriceThreshold()) &amp;&amp;</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">                    Objects.equals(existingAlert.getVariationThreshold(), alert.getVariationThreshold())) {</span>
+<span class="nc" id="L204">                return true;</span>
+            }
+<span class="nc" id="L206">        }</span>
+<span class="nc" id="L207">        return false;</span>
+
+    }
+
+    /**
+     * Creates a new alert.
+     *
+     * @param alert the alert to be created
+     * @return the created alert
+     */
+    private Alerts createAlertService(AlertCreatedService alert, User user, CryptoCurrency cryptoCurrency) {
+<span class="nc" id="L218">        Alerts newAlert = new Alerts();</span>
+
+<span class="nc" id="L220">        newAlert.setUser(user);</span>
+<span class="nc" id="L221">        newAlert.setName(alert.getName());</span>
+<span class="nc" id="L222">        newAlert.setCryptoCurrency(cryptoCurrency);</span>
+<span class="nc" id="L223">        newAlert.setPriceThreshold(alert.getPriceThreshold());</span>
+<span class="nc" id="L224">        newAlert.setVariationThreshold(alert.getVariationThreshold());</span>
+
+<span class="nc" id="L226">        System.out.println(&quot;creation is done&quot;);</span>
+<span class="nc" id="L227">        System.out.println(&quot;new alert: &quot; + newAlert);</span>
+
+<span class="nc" id="L229">        return newAlert;</span>
+    }
+
+    /**
+     * Checks if the given user has reached the maximum number of alerts.
+     *
+     * @param user the user to check
+     * @return true if the user has reached the maximum number of alerts, false otherwise
+     */
+    public boolean checkNombreAlerts(User user) {
+<span class="nc" id="L239">        List&lt;Alerts&gt; alerts = findByUser(user);</span>
+<span class="nc bnc" id="L240" title="All 4 branches missed.">        return alerts.size() == 10 &amp;&amp; user.getStatut().equals(&quot;normal&quot;);</span>
+    }
+
+    /**
+     * Updates an existing alert for the given user.
+     *
+     * @param alertId the ID of the alert to update
+     * @param user the user who owns the alert
+     * @param updatedAlert the updated alert object
+     * @return the updated alert
+     */
+    public Alerts updateAlert(Long alertId, User user, AlertUpdateService updatedAlert) {
+<span class="nc" id="L252">        Alerts existingAlert = alertsRepository.findById(alertId)</span>
+<span class="nc" id="L253">                .orElseThrow(() -&gt; new RuntimeException(&quot;Alerte introuvable&quot;));</span>
+
+<span class="nc" id="L255">        User user1 = userRepository.findById(user.getId()).orElse(null);</span>
+<span class="nc" id="L256">        User existingUser = existingAlert.getUser();</span>
+
+<span class="nc bnc" id="L258" title="All 2 branches missed.">        if (!existingUser.equals(user1)) {</span>
+<span class="nc" id="L259">            throw new IllegalStateException(&quot;Vous n'êtes pas autorisé à modifier cette alerte.&quot;);</span>
+        }
+
+<span class="nc" id="L262">        System.out.println(&quot;update is done&quot;);</span>
+<span class="nc" id="L263">        return alertsRepository.save(updateAlertService(existingAlert, updatedAlert));</span>
+    }
+
+    private Alerts updateAlertService(Alerts existingAlert, AlertUpdateService updatedAlert) {
+<span class="nc" id="L267">        existingAlert.setName(updatedAlert.getName());</span>
+<span class="nc" id="L268">        existingAlert.setPriceThreshold(updatedAlert.getPriceThreshold());</span>
+<span class="nc" id="L269">        existingAlert.setVariationThreshold(updatedAlert.getVariationThreshold());</span>
+
+<span class="nc" id="L271">        System.out.println(&quot;update is done&quot;);</span>
+<span class="nc" id="L272">        return alertsRepository.save(existingAlert);</span>
+    }
+
+    /**
+     * Deletes an alert with the given ID for the given user.
+     *
+     * @param alertId the ID of the alert to delete
+     * @param user the user who owns the alert
+     *
+     * @throws RuntimeException if the alert is not found
+     * @throws IllegalStateException if the user is not authorized to delete the alert
+     */
+    public void deleteAlert(Long alertId, User user) {
+<span class="nc" id="L285">        Alerts alert = alertsRepository.findById(alertId)</span>
+<span class="nc" id="L286">                .orElseThrow(() -&gt; new RuntimeException(&quot;Alerte introuvable&quot;));</span>
+
+<span class="nc" id="L288">        User user1 = userRepository.findById(user.getId()).orElse(null);</span>
+
+<span class="nc bnc" id="L290" title="All 2 branches missed.">        if (user1 == null) {</span>
+<span class="nc" id="L291">            throw new IllegalArgumentException(&quot;L'utilisateur n'existe pas.&quot;);</span>
+        }
+
+<span class="nc" id="L294">        User existingUser = alert.getUser();</span>
+
+<span class="nc bnc" id="L296" title="All 2 branches missed.">        if (!existingUser.equals(user1)) {</span>
+<span class="nc" id="L297">            throw new IllegalStateException(&quot;Vous n'êtes pas autorisé à supprimer cette alerte.&quot;);</span>
+        }
+
+<span class="nc" id="L300">        System.out.println(&quot;delete is done&quot;);</span>
+<span class="nc" id="L301">        alertsRepository.delete(alert);</span>
+<span class="nc" id="L302">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

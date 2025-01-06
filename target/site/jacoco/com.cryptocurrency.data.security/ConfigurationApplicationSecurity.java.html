@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfigurationApplicationSecurity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.security</a> &gt; <span class="el_source">ConfigurationApplicationSecurity.java</span></div><h1>ConfigurationApplicationSecurity.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.User;
+
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+
+import static org.springframework.http.HttpMethod.*;
+
+/**
+ * The ConfigurationApplicationSecurity class is a Spring configuration class for configuring application security.
+ * It provides a security filter chain with the following configuration:
+ * Author: Mouhamadou Ahibou DIALLO
+ */
+@Configuration
+@EnableWebSecurity
+<span class="fc" id="L29">public class ConfigurationApplicationSecurity {</span>
+
+    /**
+     * This method creates a security filter chain with the following configuration:
+     * &lt;ul&gt;
+     *     &lt;li&gt;Disable CSRF protection&lt;/li&gt;
+     *     &lt;li&gt;Permit all POST requests to &quot;/api/users/create&quot;, &quot;/api/users/login&quot;, and &quot;/api/users/verify-token&quot; endpoints&lt;/li&gt;
+     *     &lt;li&gt;Require authentication for all other requests&lt;/li&gt;
+     *     &lt;li&gt;Disable HTTP basic authentication&lt;/li&gt;
+     * &lt;/ul&gt;
+     * @param httpSecurity the HttpSecurity object to be configured
+     * @return a SecurityFilterChain with the specified configuration
+     * @throws Exception if an error occurs while building the security filter chain
+     */
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+<span class="fc" id="L45">        return</span>
+                httpSecurity
+<span class="fc" id="L47">                        .csrf(AbstractHttpConfigurer::disable)</span>
+<span class="fc" id="L48">                        .authorizeHttpRequests(auth -&gt; auth</span>
+<span class="fc" id="L49">                                .requestMatchers(POST, &quot;/api/users/create&quot;).permitAll()</span>
+<span class="fc" id="L50">                                .requestMatchers(POST, &quot;/api/users/login&quot;).permitAll()</span>
+<span class="fc" id="L51">                                .requestMatchers(POST, &quot;/api/users/verify-token&quot;).permitAll()</span>
+<span class="fc" id="L52">                                .requestMatchers(POST, &quot;api/users/logout&quot;).permitAll()</span>
+<span class="fc" id="L53">                                .requestMatchers(GET, &quot;/api/users&quot;).permitAll()</span>
+<span class="fc" id="L54">                                .requestMatchers(PUT, &quot;api/users/update&quot;).permitAll()</span>
+<span class="fc" id="L55">                                .requestMatchers(DELETE, &quot;api/users/delete/{id}&quot;).permitAll()</span>
+<span class="fc" id="L56">                                .requestMatchers(PUT, &quot;api/users/update-token/{id}&quot;).permitAll()</span>
+<span class="fc" id="L57">                                .requestMatchers(POST, &quot;/api/users/forgot-password&quot;).permitAll()</span>
+<span class="fc" id="L58">                                .requestMatchers(POST, &quot;/api/users/reset-password&quot;).permitAll()</span>
+<span class="fc" id="L59">                                .requestMatchers(GET, &quot;/api/users/{id}&quot;).permitAll()</span>
+<span class="fc" id="L60">                                .requestMatchers(POST, &quot;api/alerts/create&quot;).permitAll()</span>
+<span class="fc" id="L61">                                .requestMatchers(DELETE, &quot;api/alerts/delete/{id}&quot;).permitAll()</span>
+<span class="fc" id="L62">                                .requestMatchers(PUT, &quot;api/alerts/update/{id}&quot;).permitAll()</span>
+<span class="fc" id="L63">                                .requestMatchers(POST, &quot;api/users/downgrade-to-standard&quot;).permitAll()</span>
+<span class="fc" id="L64">                                .requestMatchers(POST, &quot;api/users/upgrade-to-premium&quot;).permitAll()</span>
+<span class="fc" id="L65">                                .requestMatchers(POST, &quot;api/portfolio/create&quot;).permitAll()</span>
+<span class="fc" id="L66">                                .requestMatchers(DELETE, &quot;api/portfolio/delete/{id}&quot;).permitAll()</span>
+<span class="fc" id="L67">                                .requestMatchers(PUT, &quot;api/portfolio/update/{id}&quot;).permitAll()</span>
+<span class="fc" id="L68">                                .anyRequest().authenticated()</span>
+                        )
+<span class="fc" id="L70">                        .httpBasic(Customizer.withDefaults())</span>
+<span class="fc" id="L71">                        .build();</span>
+    }
+
+    /**
+     * Creates a PasswordEncoder bean for encoding user passwords.
+     * &lt;p&gt;
+     * The BCryptPasswordEncoder is used by default to encode user passwords.
+     * &lt;/p&gt;
+     * @return a PasswordEncoder bean for encoding user passwords
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+<span class="fc" id="L83">        return new BCryptPasswordEncoder();</span>
+    }
+
+    /**
+     * Creates a UserDetailsService bean for retrieving user details.
+     * &lt;p&gt;
+     * In this case, an InMemoryUserDetailsManager is used to store user details in memory.
+     * &lt;p&gt;
+     * The user &quot;momo&quot; with the password &quot;*******&quot; is created with the role &quot;USER&quot;.
+     * &lt;/p&gt;
+     * @return a UserDetailsService bean for retrieving user details
+     */
+    @Bean
+    public UserDetailsService userDetailsService() {
+<span class="fc" id="L97">        return new InMemoryUserDetailsManager(</span>
+<span class="fc" id="L98">                User.withUsername(&quot;momo&quot;)</span>
+<span class="fc" id="L99">                        .password(passwordEncoder().encode(&quot;Avignon2024@?&quot;))</span>
+<span class="fc" id="L100">                        .roles(&quot;USER&quot;)</span>
+<span class="fc" id="L101">                        .build()</span>
+        );
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

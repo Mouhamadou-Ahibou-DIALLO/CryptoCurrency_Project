@@ -3,6 +3,7 @@ import { Line } from "react-chartjs-2";
 import "./ChartConfig";
 import {useParams} from "react-router-dom";
 import "../static/css/dashboard.css";
+import {Chart} from "chart.js";
 
 const Dashboard = () => {
     const {id} = useParams()
@@ -31,6 +32,9 @@ const Dashboard = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [oldPassword, setOldPassword] = useState("");
+
+    const [showModal, setShowModal] = useState(false);
+    const [breakContrat, setBreakContrat] = useState(false);
 
     const username = "momo";
     const password = "Avignon2024@?";
@@ -170,8 +174,8 @@ const Dashboard = () => {
                 label: "Prédiction Régression Linéaire",
                 data: linearRegressionPrediction || [],
                 fill: false,
-                borderColor: "rgba(153, 102, 255, 1)",
-                borderDash: [10, 5],
+                borderColor: "rgba(255, 159, 64, 1)",
+                borderDash: [5, 5],
             },
             // {
             //     label: "Prédiction Erreur de Margin",
@@ -179,12 +183,17 @@ const Dashboard = () => {
             //     fill: false,
             //     borderColor: "rgba(255, 159, 64, 1)",
             //     borderDash: [15, 5],
+            //     tension: 0.4,
             // },
         ],
     };
 
     const chartOptions = {
         responsive: true,
+        // animation: {
+        //     duration: 1000,
+        //     easing: 'easeInOutQuad',
+        // },
         plugins: {
             legend: {
                 position: "top",
@@ -199,6 +208,28 @@ const Dashboard = () => {
             },
         },
     };
+
+    // const myChart = new Chart(document.getElementById('myChart'), {
+    //     type: 'line',
+    //     data: chartData,
+    //     options: chartOptions,
+    // });
+    //
+    // const updateChartData = (newPriceHistory, newMovingAveragePrediction, newLinearRegressionPrediction, marginError) => {
+    //     myChart.data.labels = newPriceHistory.map((entry) => new Date(entry.timestamp).toLocaleString());
+    //     myChart.data.datasets[0].data = newPriceHistory.map((entry) => entry.price);
+    //     myChart.data.datasets[1].data = newMovingAveragePrediction || [];
+    //     myChart.data.datasets[2].data = newLinearRegressionPrediction || [];
+    //     myChart.data.datasets[3].data = marginError || [];
+    //
+    //     myChart.update(undefined);
+    // };
+    //
+    // const fetchNewData = () => {
+    //     updateChartData(priceHistory, movingAveragePrediction, linearRegressionPrediction, marginError);
+    // };
+    //
+    // setInterval(fetchNewData, 30000);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -337,6 +368,73 @@ const Dashboard = () => {
         }
     };
 
+    const handlePremiumUpgrade = () => {
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+    };
+
+    const handleBreakContrat = () => {
+        setBreakContrat(true);
+    }
+
+    const handleContinueContrat = () => {
+        setBreakContrat(false);
+    }
+
+    const upgradeToPremium = () => {
+        fetch('/api/users/upgrade-to-premium', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({userId: id}),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert('Votre statut a été mis à jour à Premium !');
+                    closeModal();
+                    window.location.href = `/Dashboard/${id}`;
+                } else {
+                    alert('Erreur lors de la mise à jour de votre statut.');
+                }
+            })
+            .catch((error) => {
+                console.error('Erreur:', error);
+                alert('Une erreur est survenue. Veuillez réessayer.');
+            });
+    };
+
+    const handlePagePortefeuille = () => {
+        window.location.href = `/Porfolio/${id}`;
+    };
+
+    const handleContrat = () => {
+        fetch('/api/users/downgrade-to-standard', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({userId: id}),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert('Votre statut a été mis à jour à normal !');
+                    handleContinueContrat();
+                    window.location.href = `/Dashboard/${id}`;
+                } else {
+                    alert('Erreur lors de la mise à jour de votre statut.');
+                }
+            })
+            .catch((error) => {
+                console.error('Erreur:', error);
+                alert('Une erreur est survenue. Veuillez réessayer.');
+            });
+    };
 
     if (loading) return <div>Chargement des données...</div>;
 
@@ -345,8 +443,16 @@ const Dashboard = () => {
             <header className="dashboard-header">
                 <h1>La cryptomonnaie de l'avenir</h1>
                 <div className="header-buttons">
+                    {userData.statut === 'normal' && (
+                        <button className="btn-upgrade-premium-dashboard" onClick={handlePremiumUpgrade}>Passer à un abonnement premium</button>
+                    )}
+                    {userData.statut === 'premium' && (
+                        <button className="btn-portefeuille-dashboard" onClick={handlePagePortefeuille}>Gérer votre portefeuille virtuel</button>
+                    )}
+                    {userData.statut === 'premium' && (
+                        <button className="btn-break-contrat-dashboard" onClick={handleBreakContrat}>Annuler votre contrat prémium</button>
+                    )}
                     <button onClick={handleShowAlerts}>Page pour les alertes</button>
-                    <button>Notifications</button>
                     <button onClick={handleProfileClick}>Profil utilisateur</button>
                     <button onClick={handleLogout}>Déconnexion</button>
                 </div>
@@ -374,7 +480,7 @@ const Dashboard = () => {
                         </select>
                 </div>
                     {selectedCrypto && (
-                        <div className="crypto-details">
+                        <div className="crypto-details-dashboard">
                             <h2>Détails de {selectedCrypto.name}</h2>
                             <ul>
                                 <li><strong>Symbole:</strong> {selectedCrypto.symbol}</li>
@@ -399,7 +505,7 @@ const Dashboard = () => {
                                     Mettre à jour
                                 </button>
                             </div>
-                            <div className="chart-container">
+                            <div className="chart-container-dashboard">
                                 <Line data={chartData} options={chartOptions} />
                             </div>
                         </div>
@@ -533,6 +639,41 @@ const Dashboard = () => {
                                 <button onClick={handleSubmit}>Sauvegarder</button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {breakContrat && (
+                <div className="popup">
+                    <div className="popup-content">
+                        <h2>Confirmer l'annulation de votre contrat'</h2>
+                        <p>Êtes-vous sûr de vouloir supprimer votre contrat premium ?</p>
+                        <button onClick={handleContrat}>Oui</button>
+                        <button onClick={() => setBreakContrat(false)}>Non</button>
+                    </div>
+                </div>
+            )}
+
+            {showModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>Devenez Premium</h2>
+                        <p>En passant à un abonnement Premium, vous pourrez :</p>
+                        <ul>
+                            <li>Créer plus de 10 alertes</li>
+                            <li>Obtenir un portefeuille actif</li>
+                        </ul>
+                        <p>Le prix de l'abonnement est de 9,99€ par mois. Pas cher et durable.</p>
+                        <p>Voulez-vous passer à Premium ? Saisissez votre carte de débit pour confirmer. ------>>>>>>></p>
+                        <p>
+                            N'ayez aucun peur, vous pouvez annuler votre abonnement en tout temps.
+                            En plus, cette offre est <strong>gratuite pendant 1 mois</strong>. Votre carte ne sera
+                            débitée qu'après 30 jours.
+                        </p>
+                        <div className="modal-actions">
+                            <button onClick={upgradeToPremium}>Oui, je veux passer à Premium</button>
+                            <button onClick={closeModal}>Non, merci</button>
+                        </div>
                     </div>
                 </div>
             )}

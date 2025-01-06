@@ -12,6 +12,7 @@ function Register() {
     const [errors, setErrors] = useState({});
     const [showPopup, setShowPopup] = useState(false);
     const [token, setToken] = useState("");
+    const [id, setId] = useState("");
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -72,6 +73,7 @@ function Register() {
 
             if (response.ok) {
                 setToken(data.token);
+                setId(data.id);
                 setShowPopup(true);
                 setFormData({ username: "", email: "", passwordHash: "", confirmPassword: "" });
                 setErrors({});
@@ -85,7 +87,7 @@ function Register() {
 
     const closePopup = () => {
         setShowPopup(false);
-        window.location.href = "/Login";
+        window.location.href = `/Dasboard/${id}`;
     };
 
     return (
@@ -154,7 +156,7 @@ function Register() {
             </form>
 
             {showPopup && (
-                <div className="popup">
+                <div className="popup_register">
                     <div className="popup-content">
                         <h3>Inscription réussie !</h3>
                         <p>

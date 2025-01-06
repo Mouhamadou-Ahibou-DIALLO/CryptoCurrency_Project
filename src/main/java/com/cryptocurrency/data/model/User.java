@@ -53,6 +53,12 @@ public class User {
     private List<Alerts> alerts;
 
     /**
+     * The transactions associated with the User object.
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
+
+    /**
      * Default constructor for the User object.
      */
     public User() {}

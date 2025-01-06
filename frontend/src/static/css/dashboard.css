@@ -17,6 +17,7 @@
     right: 0;
     width: 98.5%;
     z-index: 1000;
+    height: 50px;
 }
 
 .dashboard-header h1 {
@@ -38,6 +39,23 @@
 
 .header-buttons button:hover {
     background-color: #218838;
+}
+
+.btn-upgrade-premium-dashboard {
+    right: 4750px;
+    top: 18px;
+}
+
+.btn-break-contrat-dashboard {
+    position: fixed;
+    right: 475px;
+    top: 18px;
+}
+
+.btn-portefeuille-dashboard {
+    position: fixed;
+    right: 730px;
+    top: 18px;
 }
 
 main {
@@ -78,7 +96,7 @@ main {
     border-radius: 5px;
 }
 
-.crypto-details {
+.crypto-details-dashboard {
     margin-top: 20px;
     padding: 20px;
     border: 1px solid #ddd;
@@ -86,27 +104,27 @@ main {
     background-color: white;
 }
 
-.crypto-details h2 {
+.crypto-details-dashboard h2 {
     font-size: 1.5em;
     margin-bottom: 15px;
     color: #007bff;
 }
 
-.crypto-details ul {
+.crypto-details-dashboard ul {
     list-style: none;
     padding: 0;
 }
 
-.crypto-details ul li {
+.crypto-details-dashboard ul li {
     margin: 5px 0;
     font-size: 1em;
 }
 
-.crypto-details ul li strong {
+.crypto-details-dashboard ul li strong {
     color: #333;
 }
 
-.crypto-details input[type="datetime-local"] {
+.crypto-details-dashboard input[type="datetime-local"] {
     margin-right: 10px;
     padding: 5px;
     border: 1px solid #ddd;
@@ -114,7 +132,7 @@ main {
     font-size: 1em;
 }
 
-.crypto-details button {
+.crypto-details-dashboard button {
     padding: 10px 20px;
     background-color: #007bff;
     color: white;
@@ -124,16 +142,17 @@ main {
     font-size: 0.9em;
 }
 
-.crypto-details button:hover {
+.crypto-details-dashboard button:hover {
     background-color: #0056b3;
 }
 
-.chart-container {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+.chart-container-dashboard {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .profile-options {
@@ -232,7 +251,6 @@ main {
     gap: 10px;
 }
 
-/* Bouton pour ouvrir le popup */
 .btn-edit-profile {
     background-color: #007bff;
     color: white;
@@ -248,7 +266,6 @@ main {
     background-color: #0056b3;
 }
 
-/* Overlay de fond du popup */
 .popup-overlay {
     position: fixed;
     top: 0;
@@ -262,7 +279,6 @@ main {
     z-index: 1000;
 }
 
-/* Conteneur du popup */
 .popup-container {
     background-color: white;
     width: 90%;
@@ -273,14 +289,12 @@ main {
     position: relative;
 }
 
-/* Titre du popup */
 .popup-container h2 {
     margin-top: 0;
     font-size: 24px;
     text-align: center;
 }
 
-/* Formulaire */
 .form-group {
     margin-bottom: 15px;
 }
@@ -299,7 +313,6 @@ main {
     font-size: 16px;
 }
 
-/* Actions (boutons) */
 .form-actions {
     display: flex;
     justify-content: space-between;
@@ -324,4 +337,98 @@ main {
 
 .form-actions button:hover {
     opacity: 0.8;
+}
+
+
+.popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.popup-content h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.popup-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.popup-content input,
+.popup-content select {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.popup-content button {
+    background-color: #0077cc;
+    color: #fff;
+    border: none;
+    padding: 12px 15px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.popup-content button:hover {
+    background-color: #005fa3;
+}
+
+.popup-content .cancel-button {
+    background-color: #dc3545;
+}
+
+.popup-content .cancel-button:hover {
+    background-color: #c82333;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 400px;
+}
+
+.modal-actions button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-actions button:first-child {
+    background: #4caf50;
+    color: white;
+}
+
+.modal-actions button:last-child {
+    background: #f44336;
+    color: white;
 }

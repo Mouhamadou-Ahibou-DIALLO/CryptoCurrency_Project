@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CryptoPerformance.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.model</a> &gt; <span class="el_source">CryptoPerformance.java</span></div><h1>CryptoPerformance.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.model;
+
+/**
+ * This class represents a CryptoPerformance object.
+ * @author Mouhamadou Ahibou DIALLO
+ */
+public class CryptoPerformance {
+
+    /**
+     * The id of the crypto currency.
+     */
+    private Long cryptoId;
+
+    /**
+     * The amount invested in the crypto currency.
+     */
+    private double investedAmount;
+
+    /**
+     * The current value of the crypto currency.
+     */
+    private double currentValue;
+
+    /**
+     * The gain or loss of the crypto currency.
+     */
+    private double gainOrLoss;
+
+    /**
+     * Constructor of the CryptoPerformance class.
+     * @param cryptoId The id of the crypto currency.
+     * @param investedAmount The amount invested in the crypto currency.
+     * @param currentValue The current value of the crypto currency.
+     * @param gainOrLoss The gain or loss of the crypto currency.
+     */
+<span class="fc" id="L36">    public CryptoPerformance(Long cryptoId, double investedAmount, double currentValue, double gainOrLoss) {</span>
+<span class="fc" id="L37">        this.cryptoId = cryptoId;</span>
+<span class="fc" id="L38">        this.investedAmount = investedAmount;</span>
+<span class="fc" id="L39">        this.currentValue = currentValue;</span>
+<span class="fc" id="L40">        this.gainOrLoss = gainOrLoss;</span>
+<span class="fc" id="L41">    }</span>
+
+    /**
+     * Returns the ID of the crypto currency.
+     *
+     * @return The crypto currency ID.
+     */
+    public Long getCryptoId() {
+<span class="fc" id="L49">        return cryptoId;</span>
+    }
+
+    /**
+     * Sets the ID of the crypto currency.
+     *
+     * @param cryptoId The crypto currency ID to set.
+     */
+    public void setCryptoId(Long cryptoId) {
+<span class="fc" id="L58">        this.cryptoId = cryptoId;</span>
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * Returns the amount invested in the crypto currency.
+     *
+     * @return The amount invested in the crypto currency.
+     */
+    public double getInvestedAmount() {
+<span class="fc" id="L67">        return investedAmount;</span>
+    }
+
+    /**
+     * Sets the amount invested in the crypto currency.
+     *
+     * @param investedAmount The amount invested to set.
+     */
+    public void setInvestedAmount(double investedAmount) {
+<span class="fc" id="L76">        this.investedAmount = investedAmount;</span>
+<span class="fc" id="L77">    }</span>
+
+    /**
+     * Returns the current value of the crypto currency.
+     *
+     * @return The current value of the crypto currency.
+     */
+    public double getCurrentValue() {
+<span class="fc" id="L85">        return currentValue;</span>
+    }
+
+    /**
+     * Sets the current value of the crypto currency.
+     *
+     * @param currentValue The current value of the crypto currency to set.
+     */
+    public void setCurrentValue(double currentValue) {
+<span class="fc" id="L94">        this.currentValue = currentValue;</span>
+<span class="fc" id="L95">    }</span>
+
+    /**
+     * Returns the gain or loss of the crypto currency.
+     *
+     * @return The gain or loss of the crypto currency.
+     */
+    public double getGainOrLoss() {
+<span class="fc" id="L103">        return gainOrLoss;</span>
+    }
+
+    /**
+     * Sets the gain or loss of the crypto currency.
+     *
+     * @param gainOrLoss The gain or loss to set for the crypto currency.
+     */
+    public void setGainOrLoss(double gainOrLoss) {
+<span class="fc" id="L112">        this.gainOrLoss = gainOrLoss;</span>
+<span class="fc" id="L113">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

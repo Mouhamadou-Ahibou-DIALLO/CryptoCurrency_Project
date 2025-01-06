@@ -84,6 +84,12 @@ public class CryptoCurrency {
     private List<Alerts> alerts;
 
     /**
+     * The transactions associated with the CryptoCurrency.
+     */
+    @OneToMany(mappedBy = "cryptoCurrency", cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
+
+    /**
      * Constructor for the CryptoCurrency class.
      *
      * @param id The ID of the CryptoCurrency.

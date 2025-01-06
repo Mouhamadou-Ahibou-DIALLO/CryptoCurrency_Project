@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Transaction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.model</a> &gt; <span class="el_source">Transaction.java</span></div><h1>Transaction.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+/**
+ * This class represents a Transaction object.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
+@Entity
+@Table(name = &quot;transactions&quot;)
+public class Transaction {
+
+    /*
+     * The id is a Long that represents the unique identifier for the Transaction object.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    /*
+     * The user is a User object that represents the user involved in the transaction.
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = &quot;user_id&quot;, nullable = false)
+    private User user;
+
+    /*
+     * The cryptoCurrency is a CryptoCurrency object that represents the cryptocurrency
+     * involved in the transaction.
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = &quot;crypto_id&quot;, nullable = false)
+    private CryptoCurrency cryptoCurrency;
+
+    private double amountInvested;
+
+    /*
+     * The price at transaction is a double that represents the price of the cryptocurrency
+     * at the time of the transaction.
+     */
+    private double priceAtTransaction;
+
+    /*
+     * The quantity is a double that represents the amount of the cryptocurrency
+     * that was involved in the transaction.
+     */
+    private double quantity;
+
+    /*
+     * The transaction date is a LocalDateTime object that represents the date and time
+     * when the Transaction object was created.
+     */
+    private LocalDateTime transactionDate;
+
+
+    /*
+     * The constructor is used to create a Transaction object.
+     * @param id The ID of the Transaction object.
+     * @param user The User object associated with the Transaction object.
+     * @param cryptoCurrency The CryptoCurrency object associated with the Transaction object.
+     * @param amountInvested The amount invested in the Transaction object.
+     * @param priceAtTransaction The price of the cryptocurrency at the time of the transaction.
+     * @param quantity The quantity of the cryptocurrency involved in the transaction.
+     * @param transactionDate The transaction date of the Transaction object.
+     */
+<span class="fc" id="L67">    public Transaction(Long id, User user, CryptoCurrency cryptoCurrency, double amountInvested, double priceAtTransaction, double quantity, LocalDateTime transactionDate) {</span>
+<span class="fc" id="L68">        this.id = id;</span>
+<span class="fc" id="L69">        this.user = user;</span>
+<span class="fc" id="L70">        this.cryptoCurrency = cryptoCurrency;</span>
+<span class="fc" id="L71">        this.amountInvested = amountInvested;</span>
+<span class="fc" id="L72">        this.priceAtTransaction = priceAtTransaction;</span>
+<span class="fc" id="L73">        this.quantity = quantity;</span>
+<span class="fc" id="L74">        this.transactionDate = transactionDate;</span>
+<span class="fc" id="L75">    }</span>
+
+    /*
+     * The default constructor is used to create an empty Transaction object.
+     */
+<span class="fc" id="L80">    public Transaction() {}</span>
+
+    /**
+     * Returns the ID of the Transaction object.
+     * The ID is a unique identifier for the Transaction object.
+     * @return The ID of the Transaction object.
+     */
+<span class="fc" id="L87">    public Long getId() { return id; }</span>
+
+    /**
+     * Sets the ID of the Transaction object.
+     * The ID is a unique identifier for the Transaction object.
+     * @param id The ID to set for the Transaction object.
+     */
+<span class="fc" id="L94">    public void setId(Long id) { this.id = id; }</span>
+
+    /**
+     * Returns the User object associated with the Transaction object.
+     * The User object contains the information about the user who made the transaction.
+     * @return The User object associated with the Transaction object.
+     */
+<span class="fc" id="L101">    public User getUser() { return user; }</span>
+
+    /**
+     * Sets the User object associated with the Transaction object.
+     * The User object contains the information about the user who made the transaction.
+     * @param user The User object to associate with the Transaction object.
+     */
+<span class="nc" id="L108">    public void setUser(User user) { this.user = user; }</span>
+
+    /**
+     * Returns the CryptoCurrency object associated with the Transaction object.
+     * The CryptoCurrency object contains the information about the crypto currency
+     * in which the transaction was made.
+     * @return The CryptoCurrency object associated with the Transaction object.
+     */
+<span class="fc" id="L116">    public CryptoCurrency getCryptoCurrency() { return cryptoCurrency; }</span>
+
+    /**
+     * Sets the CryptoCurrency object associated with the Transaction object.
+     * The CryptoCurrency object contains the information about the crypto currency
+     * in which the transaction was made.
+     * @param cryptoCurrency The CryptoCurrency object to associate with the Transaction object.
+     */
+<span class="nc" id="L124">    public void setCryptoCurrency(CryptoCurrency cryptoCurrency) { this.cryptoCurrency = cryptoCurrency; }</span>
+
+    /**
+     * Returns the amount invested in the transaction.
+     * The amount invested is the total value of the transaction.
+     * @return The amount invested in the transaction.
+     */
+<span class="fc" id="L131">    public double getAmountInvested() { return amountInvested; }</span>
+
+    /**
+     * Sets the amount invested in the transaction.
+     * The amount invested is the total value of the transaction.
+     * @param amountInvested The amount invested in the transaction.
+     */
+<span class="fc" id="L138">    public void setAmountInvested(double amountInvested) { this.amountInvested = amountInvested; }</span>
+
+    /**
+     * Returns the price of the cryptocurrency at the time of the transaction.
+     * The price at transaction is the cost per unit of the cryptocurrency
+     * when the transaction was executed.
+     *
+     * @return The price of the cryptocurrency at the time of the transaction.
+     */
+<span class="fc" id="L147">    public double getPriceAtTransaction() { return priceAtTransaction; }</span>
+
+    /**
+     * Sets the price of the cryptocurrency at the time of the transaction.
+     * The price at transaction is the cost per unit of the cryptocurrency
+     * when the transaction was executed.
+     *
+     * @param priceAtTransaction The price of the cryptocurrency to set at
+     *                           the time of the transaction.
+     */
+<span class="fc" id="L157">    public void setPriceAtTransaction(double priceAtTransaction) { this.priceAtTransaction = priceAtTransaction; }</span>
+
+    /**
+     * Returns the quantity of the cryptocurrency involved in the transaction.
+     * The quantity is the amount of the cryptocurrency that was involved in the transaction,
+     * and is calculated by dividing the amount invested by the price of the cryptocurrency
+     * at the time of the transaction.
+     *
+     * @return The quantity of the cryptocurrency involved in the transaction.
+     */
+<span class="fc" id="L167">    public double getQuantity() { return quantity; }</span>
+
+    /**
+     * Sets the quantity of the cryptocurrency involved in the transaction.
+     *
+     * @param quantity The quantity of the cryptocurrency to set.
+     */
+<span class="fc" id="L174">    public void setQuantity(double quantity) { this.quantity = quantity; }</span>
+
+    /**
+     * Returns the transaction date of the Transaction object.
+     * The transaction date is a LocalDateTime object that represents the date and time
+     * when the Transaction object was created.
+     *
+     * @return The transaction date of the Transaction object.
+     */
+<span class="nc" id="L183">    public LocalDateTime getTransactionDate() { return transactionDate; }</span>
+
+    /**
+     * Sets the transaction date of the Transaction object.
+     * The transaction date is a LocalDateTime object that represents the date and time
+     * when the Transaction object was created.
+     *
+     * @param transactionDate The transaction date to set for the Transaction object.
+     */
+<span class="nc" id="L192">    public void setTransactionDate(LocalDateTime transactionDate) { this.transactionDate = transactionDate; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

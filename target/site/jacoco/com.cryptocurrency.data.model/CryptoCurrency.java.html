@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CryptoCurrency.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.model</a> &gt; <span class="el_source">CryptoCurrency.java</span></div><h1>CryptoCurrency.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+
+/**
+ * This class represents a CryptoCurrency object.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
+@Entity
+@Table(name = &quot;crypto_currency&quot;)
+public class CryptoCurrency {
+
+    /**
+     * The ID of the CryptoCurrency.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    /**
+     * The name of the CryptoCurrency.
+     */
+    @Column(nullable = false, unique = true)
+    private String name;
+
+    /**
+     * The symbol of the CryptoCurrency.
+     */
+    private String symbol;
+
+    /**
+     * The market cap rank of the CryptoCurrency.
+     */
+    @Column(nullable = false, unique = true)
+    private int rank;
+
+    /**
+     * The supply of the CryptoCurrency.
+     */
+    private Double supply;
+
+    /**
+     * The maximum supply of the CryptoCurrency.
+     */
+    private Double maxSupply;
+
+    /**
+     * The market capitalization of the CryptoCurrency in USD.
+     */
+    private Double market;
+
+    /**
+     * The 24-hour trading volume of the CryptoCurrency in USD.
+     */
+    private Double volume;
+
+    /**
+     * The price of the CryptoCurrency in USD.
+     */
+    private Double price;
+
+    /**
+     * The change in price of the CryptoCurrency in USD over the last 24 hours.
+     */
+    private Double change;
+
+    /**
+     * The volume-weighted average price of the CryptoCurrency in USD over the last 24 hours.
+     */
+    private Double vwap;
+
+    /**
+     * The timestamp of the last update of the CryptoCurrency.
+     */
+    @Column(nullable = false)
+    private LocalDateTime timestamp;
+
+    /**
+     * The alerts associated with the CryptoCurrency.
+     */
+    @OneToMany(mappedBy = &quot;cryptoCurrency&quot;, cascade = CascadeType.ALL)
+    private List&lt;Alerts&gt; alerts;
+
+    /**
+     * The transactions associated with the CryptoCurrency.
+     */
+    @OneToMany(mappedBy = &quot;cryptoCurrency&quot;, cascade = CascadeType.ALL)
+    private List&lt;Transaction&gt; transactions;
+
+    /**
+     * Constructor for the CryptoCurrency class.
+     *
+     * @param id The ID of the CryptoCurrency.
+     * @param name The name of the CryptoCurrency.
+     * @param symbol The symbol of the CryptoCurrency.
+     * @param rank The market cap rank of the CryptoCurrency.
+     */
+<span class="fc" id="L100">    public CryptoCurrency(Long id, String name, String symbol, int rank) {</span>
+<span class="fc" id="L101">        this.id = id;</span>
+<span class="fc" id="L102">        this.name = name;</span>
+<span class="fc" id="L103">        this.symbol = symbol;</span>
+<span class="fc" id="L104">        this.rank = rank;</span>
+<span class="fc" id="L105">    }</span>
+
+    /**
+     * Constructor for the CryptoCurrency class.
+     *
+     * @param id The ID of the CryptoCurrency.
+     * @param name The name of the CryptoCurrency.
+     * @param symbol The symbol of the CryptoCurrency.
+     * @param rank The market cap rank of the CryptoCurrency.
+     * @param supply The supply of the CryptoCurrency.
+     * @param maxSupply The maximum supply of the CryptoCurrency.
+     * @param market The market capitalization of the CryptoCurrency in USD.
+     * @param volume The 24-hour trading volume of the CryptoCurrency in USD.
+     * @param price The price of the CryptoCurrency in USD.
+     * @param change The change in price of the CryptoCurrency in USD over the last 24 hours.
+     * @param vwap The volume-weighted average price of the CryptoCurrency in USD over the last 24 hours.
+     * @param timestamp The timestamp of the CryptoCurrency.
+     */
+    public CryptoCurrency(Long id, String name, String symbol, int rank, Double supply,
+                          Double maxSupply, Double market, Double volume, Double price,
+<span class="fc" id="L125">                          Double change, Double vwap, LocalDateTime timestamp) {</span>
+<span class="fc" id="L126">        this.id = id;</span>
+<span class="fc" id="L127">        this.name = name;</span>
+<span class="fc" id="L128">        this.symbol = symbol;</span>
+<span class="fc" id="L129">        this.rank = rank;</span>
+<span class="fc" id="L130">        this.supply = supply;</span>
+<span class="fc" id="L131">        this.maxSupply = maxSupply;</span>
+<span class="fc" id="L132">        this.market = market;</span>
+<span class="fc" id="L133">        this.volume = volume;</span>
+<span class="fc" id="L134">        this.price = price;</span>
+<span class="fc" id="L135">        this.change = change;</span>
+<span class="fc" id="L136">        this.vwap = vwap;</span>
+<span class="fc" id="L137">        this.timestamp = timestamp;</span>
+<span class="fc" id="L138">    }</span>
+
+    /**
+     * Default constructor for the CryptoCurrency class.
+     */
+<span class="fc" id="L143">    public CryptoCurrency() {}</span>
+
+    /**
+     * Sets the ID of the CryptoCurrency.
+     *
+     * @param id The ID of the CryptoCurrency.
+     */
+    public void setId(Long id) {
+<span class="fc" id="L151">        this.id = id;</span>
+<span class="fc" id="L152">    }</span>
+
+    /**
+     * Returns the ID of the CryptoCurrency.
+     *
+     * @return The ID of the CryptoCurrency.
+     */
+    public Long getId() {
+<span class="fc" id="L160">        return id;</span>
+    }
+
+    /**
+     * Returns the name of the CryptoCurrency.
+     *
+     * @return The name of the CryptoCurrency.
+     */
+    public String getName() {
+<span class="fc" id="L169">        return name;</span>
+    }
+
+    /**
+     * Sets the name of the CryptoCurrency.
+     *
+     * @param name The name of the CryptoCurrency.
+     */
+    public void setName(String name) {
+<span class="fc" id="L178">        this.name = name;</span>
+<span class="fc" id="L179">    }</span>
+
+    /**
+     * Returns the symbol of the CryptoCurrency.
+     *
+     * @return The symbol of the CryptoCurrency.
+     */
+    public String getSymbol() {
+<span class="fc" id="L187">        return symbol;</span>
+    }
+
+    /**
+     * Sets the symbol of the CryptoCurrency.
+     *
+     * @param symbol The symbol of the CryptoCurrency.
+     */
+    public void setSymbol(String symbol) {
+<span class="fc" id="L196">        this.symbol = symbol;</span>
+<span class="fc" id="L197">    }</span>
+
+    /**
+     * Returns the market capitalization rank of the CryptoCurrency.
+     *
+     * @return The market capitalization rank of the CryptoCurrency.
+     */
+    public int getRank() {
+<span class="fc" id="L205">        return rank;</span>
+    }
+
+    /**
+     * Sets the market capitalization rank of the CryptoCurrency.
+     *
+     * @param marketCapRank The market capitalization rank to set.
+     */
+    public void setRank(int marketCapRank) {
+<span class="fc" id="L214">        this.rank = marketCapRank;</span>
+<span class="fc" id="L215">    }</span>
+
+    /**
+     * Returns the total supply of the CryptoCurrency.
+     *
+     * @return The total supply of the CryptoCurrency.
+     */
+    public Double getSupply() {
+<span class="fc" id="L223">        return supply;</span>
+    }
+
+    /**
+     * Sets the total supply of the CryptoCurrency.
+     *
+     * @param supply The total supply to set.
+     */
+    public void setSupply(Double supply) {
+<span class="fc" id="L232">        this.supply = supply;</span>
+<span class="fc" id="L233">    }</span>
+
+    /**
+     * Returns the maximum supply of the CryptoCurrency.
+     *
+     * @return The maximum supply of the CryptoCurrency.
+     */
+    public Double getMaxSupply() {
+<span class="fc" id="L241">        return maxSupply;</span>
+    }
+
+    /**
+     * Sets the maximum supply of the CryptoCurrency.
+     *
+     * @param maxSupply The maximum supply to set.
+     */
+    public void setMaxSupply(Double maxSupply) {
+<span class="fc" id="L250">        this.maxSupply = maxSupply;</span>
+<span class="fc" id="L251">    }</span>
+
+    /**
+     * Returns the market capitalization of the CryptoCurrency in USD.
+     *
+     * @return The market capitalization of the CryptoCurrency in USD.
+     */
+    public Double getMarket() {
+<span class="fc" id="L259">        return market;</span>
+    }
+
+    /**
+     * Sets the market capitalization of the CryptoCurrency in USD.
+     *
+     * @param marketCapUsd The market capitalization value to set in USD.
+     */
+    public void setMarket(Double marketCapUsd) {
+<span class="fc" id="L268">        this.market = marketCapUsd;</span>
+<span class="fc" id="L269">    }</span>
+
+    /**
+     * Returns the 24-hour trading volume of the CryptoCurrency in USD.
+     *
+     * @return The 24-hour trading volume in USD.
+     */
+    public Double getVolume() {
+<span class="fc" id="L277">        return volume;</span>
+    }
+
+    /**
+     * Sets the 24-hour trading volume of the CryptoCurrency in USD.
+     *
+     * @param volumeUsd24Hr The 24-hour trading volume to set in USD.
+     */
+    public void setVolume(Double volumeUsd24Hr) {
+<span class="fc" id="L286">        this.volume = volumeUsd24Hr;</span>
+<span class="fc" id="L287">    }</span>
+
+    /**
+     * Returns the current price of the CryptoCurrency in USD.
+     *
+     * @return The current price in USD.
+     */
+    public Double getPrice() {
+<span class="fc" id="L295">        return price;</span>
+    }
+
+    /**
+     * Sets the current price of the CryptoCurrency in USD.
+     *
+     * @param priceUsd The current price to set in USD.
+     */
+    public void setPrice(Double priceUsd) {
+<span class="fc" id="L304">        this.price = priceUsd;</span>
+<span class="fc" id="L305">    }</span>
+
+    /**
+     * Returns the percentage change in the CryptoCurrency's price over the
+     * last 24 hours.
+     *
+     * @return The percentage change in the CryptoCurrency's price over the
+     * last 24 hours.
+     */
+    public Double getChange() {
+<span class="fc" id="L315">        return change;</span>
+    }
+
+    /**
+     * Sets the percentage change in the CryptoCurrency's price over the
+     * last 24 hours.
+     *
+     * @param changePercent24Hr The percentage change in the CryptoCurrency's
+     * price over the last 24 hours.
+     */
+    public void setChange(Double changePercent24Hr) {
+<span class="fc" id="L326">        this.change = changePercent24Hr;</span>
+<span class="fc" id="L327">    }</span>
+
+    /**
+     * Returns the volume weighted average price of the CryptoCurrency over the
+     * last 24 hours.
+     *
+     * @return The volume weighted average price of the CryptoCurrency over the
+     * last 24 hours.
+     */
+    public Double getVwap() {
+<span class="fc" id="L337">        return vwap;</span>
+    }
+
+    /**
+     * Sets the volume weighted average price of the CryptoCurrency over the
+     * last 24 hours.
+     *
+     * @param vwap24Hr The volume weighted average price of the CryptoCurrency
+     * over the last 24 hours.
+     */
+    public void setVwap(Double vwap24Hr) {
+<span class="fc" id="L348">        this.vwap = vwap24Hr;</span>
+<span class="fc" id="L349">    }</span>
+
+    /**
+     * Returns the timestamp of the CryptoCurrency object.
+     *
+     * @return The timestamp of the CryptoCurrency object.
+     */
+    public LocalDateTime getTimestamp() {
+<span class="nc" id="L357">        return timestamp;</span>
+    }
+
+    /**
+     * Sets the timestamp of the CryptoCurrency object.
+     *
+     * @param timestamp The timestamp to set for the CryptoCurrency object.
+     */
+    public void setTimestamp(LocalDateTime timestamp) {
+<span class="nc" id="L366">        this.timestamp = timestamp;</span>
+<span class="nc" id="L367">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

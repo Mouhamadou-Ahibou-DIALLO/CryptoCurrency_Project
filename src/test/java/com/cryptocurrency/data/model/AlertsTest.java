@@ -73,11 +73,30 @@ public class AlertsTest {
         alerts.setCryptoCurrency(currency);
         alerts.setPriceThreshold(2.0);
         alerts.setVariationThreshold(2.0);
+        alerts.setName("Alert 2");
 
         assertEquals(2L, alerts.getId(), "The id of the alerts should be 2L");
         assertEquals(user, alerts.getUser(), "The user of the alerts should be the user object");
         assertEquals(currency, alerts.getCryptoCurrency(), "The market data of the alerts should be the marketData object");
         assertEquals(2.0, alerts.getPriceThreshold(), "The price threshold of the alerts should be 2.0");
         assertEquals(2.0, alerts.getVariationThreshold(), "The variation threshold of the alerts should be 2.0");
+        assertEquals("Alert 2", alerts.getName(), "The name of the alerts should be Alert 2");
+    }
+
+    /**
+     * The testToString method tests the toString() method of the Alerts class.
+     * This test verifies that the toString() method returns a string representation of the Alerts object.
+     */
+    @Test
+    public void testToString() {
+        String expected = "Alerts{" +
+                "id=" + alerts.getId() +
+                ", user=" + alerts.getUser() +
+                ", cryptoCurrency=" + alerts.getCryptoCurrency() +
+                ", name='" + alerts.getName() + '\'' +
+                ", priceThreshold=" + alerts.getPriceThreshold() +
+                ", variationThreshold=" + alerts.getVariationThreshold() +
+                '}';
+        assertEquals(expected, alerts.toString());
     }
 }

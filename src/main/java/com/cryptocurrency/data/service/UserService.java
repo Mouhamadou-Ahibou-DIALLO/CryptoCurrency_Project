@@ -142,6 +142,8 @@ public class UserService {
         user.setTokenHash(encodedToken);
         System.out.println("tokenHash: ");
 
+        user.setStatut("normal");
+
         System.out.println("user created: ");
         User savedUser = this.save(user);
 

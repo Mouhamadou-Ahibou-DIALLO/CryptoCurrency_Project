@@ -33,6 +33,12 @@ public class UserController {
     private UserService userService;
 
     /**
+     * The emailService field is a Spring service for sending emails.
+     */
+    @Autowired
+    private EmailService emailService;
+
+    /**
      * Creates a new user with the given details.
      *
      * @param user The user object containing the details.
@@ -59,6 +65,7 @@ public class UserController {
 
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                     "message", "User created successfully.",
+                    "id", createdUser.getId(),
                     "token", createdUser.getTokenHash()
             ));
         } catch (IllegalArgumentException e) {
@@ -241,7 +248,6 @@ public class UserController {
 
         String token = user.getTokenHash();
 
-        EmailService emailService = new EmailService();
         String resetLink = "http://172.20.10.2:3000/reset-password?token=" + token;
         emailService.sendEmail(email, "Réinitialisation de mot de passe",
                 "Cliquez sur ce lien pour réinitialiser votre mot de passe : " + resetLink);

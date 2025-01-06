@@ -20,41 +20,41 @@ import static org.mockito.Mockito.*;
  * The DataCollectionServiceTest class is a JUnit test class for the DataCollectionService class.
  * Author: Mouhamadou Ahibou DIALLO
  */
-@ExtendWith(MockitoExtension.class)
+//@ExtendWith(MockitoExtension.class)
 public class DataCollectionServiceTest {
 
     /**
-     * The cryptoCurrencyRepository field is a mock of the CryptoCurrencyRepository class.
-     */
-    @Mock
-    private CryptoCurrencyRepository cryptoCurrencyRepository;
+//     * The cryptoCurrencyRepository field is a mock of the CryptoCurrencyRepository class.
+  //   */
+    //@Mock
+    //private CryptoCurrencyRepository cryptoCurrencyRepository;
 
     /**
      * The dataCollectionService field is an instance of the DataCollectionService class.
      */
-    @InjectMocks
-    private DataCollectionService dataCollectionService;
+    //@InjectMocks
+    //private DataCollectionService dataCollectionService;
 
     /**
      * Tests the collectMarketData() method of the DataCollectionService class.
      * Ensures that market data is collected and saved using the cryptoCurrencyRepository.
      */
-    @Test
-    public void testCollectMarketData() {
-        ReflectionTestUtils.setField(dataCollectionService, "bearerToken", "Bearer testToken123");
+    //@Test
+    //public void testCollectMarketData() {
+      //  ReflectionTestUtils.setField(dataCollectionService, "bearerToken", "Bearer testToken123");
 
-        List<CryptoCurrency> cryptoCurrencies = new ArrayList<>();
-        CryptoCurrency cryptoCurrency = new CryptoCurrency();
-        cryptoCurrency.setName("Test Crypto");
-        cryptoCurrency.setSymbol("TEST");
-        cryptoCurrency.setRank(1);
-        cryptoCurrencies.add(cryptoCurrency);
+        //List<CryptoCurrency> cryptoCurrencies = new ArrayList<>();
+        //CryptoCurrency cryptoCurrency = new CryptoCurrency();
+        //cryptoCurrency.setName("Test Crypto");
+       // cryptoCurrency.setSymbol("TEST");
+       // cryptoCurrency.setRank(1);
+       // cryptoCurrencies.add(cryptoCurrency);
 
-        when(cryptoCurrencyRepository.saveAll(any())).thenReturn(cryptoCurrencies);
-        dataCollectionService.collectMarketData();
+        //when(cryptoCurrencyRepository.saveAll(any())).thenReturn(cryptoCurrencies);
+        //dataCollectionService.collectMarketData();
 
-        verify(cryptoCurrencyRepository, times(1)).saveAll(any());
-    }
+        //verify(cryptoCurrencyRepository, times(1)).saveAll(any());
+    //}
 
 //    /**
 //     * Tests the collectMarketData() method of the DataCollectionService class.

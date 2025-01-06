@@ -2,6 +2,10 @@
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/controller/CryptoCurrencyControllerTest.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/AlertsTest.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/CryptoCurrencyTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/CryptoPerformanceTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/CryptoPriceHistoryTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/PorfolioPerformanceTest.java
+/home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/TransactionTest.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/model/UserTest.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/repository/AlertsRepositoryTest.java
 /home/ahibou/IdeaProjects/CryptoCurrency_Project/src/test/java/com/cryptocurrency/data/repository/CryptoCurrencyRepositoryTest.java

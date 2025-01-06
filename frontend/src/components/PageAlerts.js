@@ -66,6 +66,10 @@ const PageAlerts = () => {
             }
         };
 
+        setInterval(() => {
+            fetchData();
+        }, 60000);
+
         fetchData();
     }, [id]);
 
@@ -246,7 +250,7 @@ const PageAlerts = () => {
     };
 
     const handlePagePortefeuille = () => {
-        window.location.href = `/PagePortefeuille/${id}`;
+        window.location.href = `/Porfolio/${id}`;
     };
 
     const handleContrat = () => {
@@ -347,7 +351,7 @@ const PageAlerts = () => {
             )}
 
             {breakContrat && (
-                <div className="popup">
+                <div className="popup-contrat">
                     <div className="popup-content">
                         <h2>Confirmer l'annulation de votre contrat'</h2>
                         <p>Êtes-vous sûr de vouloir supprimer votre contrat premium ?</p>

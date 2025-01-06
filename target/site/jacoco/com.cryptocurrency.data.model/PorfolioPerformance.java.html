@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PorfolioPerformance.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.model</a> &gt; <span class="el_source">PorfolioPerformance.java</span></div><h1>PorfolioPerformance.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.model;
+
+import java.util.List;
+
+/**
+ * Class PorfolioPerformance to store the performance of a user's portfolio.
+ * @author Mouhamadou Ahibou DIALLO
+ */
+public class PorfolioPerformance {
+
+    /**
+     * The total amount invested in the portfolio.
+     */
+    private double totalInvested;
+
+    /**
+     * The total current value of the portfolio.
+     */
+    private double totalCurrentValue;
+
+    /**
+     * The total gain or loss of the portfolio.
+     */
+    private double totalGainOrLoss;
+
+    /**
+     * A list of CryptoPerformance objects representing the performance of each cryptocurrency in the portfolio.
+     */
+    private List&lt;CryptoPerformance&gt; cryptoPerformances;
+
+    /**
+     * Returns a list of CryptoPerformance objects representing the performance of each cryptocurrency in the portfolio.
+     * @return A list of CryptoPerformance objects.
+     */
+    public List&lt;CryptoPerformance&gt; getCryptoPerformances() {
+<span class="fc" id="L36">        return cryptoPerformances;</span>
+    }
+
+    /**
+     * Constructor for the PorfolioPerformance class.
+     * @param totalInvested The total amount invested in the portfolio.
+     * @param totalCurrentValue The total current value of the portfolio.
+     * @param totalGainOrLoss The total gain or loss of the portfolio.
+     * @param cryptoPerformances A list of CryptoPerformance objects representing the performance of each cryptocurrency in the portfolio.
+     */
+<span class="fc" id="L46">    public PorfolioPerformance(double totalInvested, double totalCurrentValue, double totalGainOrLoss, List&lt;CryptoPerformance&gt; cryptoPerformances) {</span>
+<span class="fc" id="L47">        this.totalInvested = totalInvested;</span>
+<span class="fc" id="L48">        this.totalCurrentValue = totalCurrentValue;</span>
+<span class="fc" id="L49">        this.totalGainOrLoss = totalGainOrLoss;</span>
+<span class="fc" id="L50">        this.cryptoPerformances = cryptoPerformances;</span>
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * Sets the list of CryptoPerformance objects representing the performance of each cryptocurrency in the portfolio.
+     *
+     * @param cryptoPerformances A list of CryptoPerformance objects to set for the portfolio.
+     */
+    public void setCryptoPerformances(List&lt;CryptoPerformance&gt; cryptoPerformances) {
+<span class="fc" id="L59">        this.cryptoPerformances = cryptoPerformances;</span>
+<span class="fc" id="L60">    }</span>
+
+    /**
+     * Returns the total amount invested in the portfolio.
+     *
+     * @return The total invested amount.
+     */
+    public double getTotalInvested() {
+<span class="fc" id="L68">        return totalInvested;</span>
+    }
+
+    /**
+     * Sets the total amount invested in the portfolio.
+     *
+     * @param totalInvested The total amount invested in the portfolio.
+     */
+    public void setTotalInvested(double totalInvested) {
+<span class="fc" id="L77">        this.totalInvested = totalInvested;</span>
+<span class="fc" id="L78">    }</span>
+
+    /**
+     * Returns the total current value of the portfolio.
+     * @return The total current value of the portfolio.
+     */
+    public double getTotalCurrentValue() {
+<span class="fc" id="L85">        return totalCurrentValue;</span>
+    }
+
+    /**
+     * Sets the total current value of the portfolio.
+     * @param totalCurrentValue The total current value of the portfolio.
+     */
+    public void setTotalCurrentValue(double totalCurrentValue) {
+<span class="fc" id="L93">        this.totalCurrentValue = totalCurrentValue;</span>
+<span class="fc" id="L94">    }</span>
+
+    /**
+     * Returns the total gain or loss of the portfolio.
+     * @return The total gain or loss of the portfolio.
+     */
+    public double getTotalGainOrLoss() {
+<span class="fc" id="L101">        return totalGainOrLoss;</span>
+    }
+
+    /**
+     * Sets the total gain or loss of the portfolio.
+     * @param totalGainOrLoss The total gain or loss of the portfolio.
+     */
+    public void setTotalGainOrLoss(double totalGainOrLoss) {
+<span class="fc" id="L109">        this.totalGainOrLoss = totalGainOrLoss;</span>
+<span class="fc" id="L110">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

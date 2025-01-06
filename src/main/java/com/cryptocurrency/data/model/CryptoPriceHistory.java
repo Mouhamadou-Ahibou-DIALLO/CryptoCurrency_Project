@@ -76,6 +76,13 @@ public class CryptoPriceHistory {
         this.price = price;
     }
 
+    /**
+     * Returns a string representation of the CryptoPriceHistory object.
+     * The string includes the timestamp and price of the CryptoCurrency
+     * at the given timestamp.
+     *
+     * @return A string representation of the CryptoPriceHistory object.
+     */
     public String toString() {
         return "CryptoPriceHistory{" +
                 "timestamp=" + timestamp +

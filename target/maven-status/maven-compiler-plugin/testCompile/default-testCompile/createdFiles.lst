@@ -2,13 +2,17 @@ com/cryptocurrency/data/repository/UserRepositoryTest.class
 com/cryptocurrency/data/service/TokenRequestServiceTest.class
 com/cryptocurrency/data/service/UserServiceTest.class
 com/cryptocurrency/data/service/AlertsServiceTest.class
+com/cryptocurrency/data/model/CryptoPerformanceTest.class
 com/cryptocurrency/data/CryptoCurrencyProjectApplicationTest.class
+com/cryptocurrency/data/model/CryptoPriceHistoryTest.class
 com/cryptocurrency/data/repository/AlertsRepositoryTest.class
 com/cryptocurrency/data/service/LoginRequestServiceTest.class
 com/cryptocurrency/data/model/CryptoCurrencyTest.class
+com/cryptocurrency/data/model/TransactionTest.class
 com/cryptocurrency/data/service/DataCollectionServiceTest.class
 com/cryptocurrency/data/service/EmailServiceTest.class
 com/cryptocurrency/data/repository/CryptoCurrencyRepositoryTest.class
+com/cryptocurrency/data/model/PorfolioPerformanceTest.class
 com/cryptocurrency/data/model/AlertsTest.class
 com/cryptocurrency/data/controller/CryptoCurrencyControllerTest.class
 com/cryptocurrency/data/model/UserTest.class

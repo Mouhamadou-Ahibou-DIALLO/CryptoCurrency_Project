@@ -5,10 +5,7 @@ import com.cryptocurrency.data.service.DataCollectionService;
 import com.cryptocurrency.data.service.PredictionService;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,6 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/predictions")
+@CrossOrigin(origins = "http://localhost:3000")
 public class PredictionController {
 
     /**
@@ -56,11 +54,6 @@ public class PredictionController {
     public ResponseEntity<List<CryptoPriceHistory>> getMovingAverage(@RequestParam String name, @RequestParam String start, @RequestParam String end) {
         List<CryptoPriceHistory> cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);
         List<CryptoPriceHistory> predictedPrices = PredictionService.calculateMovingAverages(cryptoPriceHistoryList);
-
-        if (cryptoPriceHistoryList == null) {
-            System.out.println("No data found for key: ");
-            return ResponseEntity.notFound().build();
-        }
 
         List<CryptoPriceHistory> filteredHistory = getCryptoPriceHistory(name, predictedPrices, start, end);
 
@@ -110,7 +103,6 @@ public class PredictionController {
         LocalDateTime endDate = LocalDateTime.parse(end, formatter);
 
         System.out.println("Key name: graphe prédictions");
-        //System.out.println("CryptoPriceHistoryList: " + DataCollectionService.getCryptoPriceHistoryMap().get(name) + " graphe prédictions");
 
         return cryptoPriceHistoryList.stream()
                 .filter(entry -> !entry.getTimestamp().isBefore(startDate) && !entry.getTimestamp().isAfter(endDate))

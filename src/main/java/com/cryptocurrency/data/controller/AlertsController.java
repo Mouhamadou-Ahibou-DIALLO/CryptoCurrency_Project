@@ -3,6 +3,8 @@ package com.cryptocurrency.data.controller;
 import com.cryptocurrency.data.model.Alerts;
 import com.cryptocurrency.data.model.User;
 import com.cryptocurrency.data.repository.UserRepository;
+import com.cryptocurrency.data.service.AlertCreatedService;
+import com.cryptocurrency.data.service.AlertUpdateService;
 import com.cryptocurrency.data.service.AlertsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +59,7 @@ public class AlertsController {
      * @return the created alert
      */
     @PostMapping("/create")
-    public ResponseEntity<?> createAlert(@RequestBody Alerts alert) {
+    public ResponseEntity<?> createAlert(@RequestBody AlertCreatedService alert) {
         try {
             Alerts createdAlert = alertsService.createAlert(alert);
             String nameAlert = createdAlert.getName();
@@ -83,9 +85,10 @@ public class AlertsController {
      * @return the updated alert
      */
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateAlert(@PathVariable Long id, @RequestBody Alerts updatedAlert) {
+    public ResponseEntity<?> updateAlert(@PathVariable Long id, @RequestBody AlertUpdateService updatedAlert) {
+        Alerts alerts = alertsService.findById(id);
         try {
-            User user = userRepository.findById(updatedAlert.getUser().getId()).orElse(null);
+            User user = userRepository.findById(alerts.getUser().getId()).orElse(null);
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("L'utilisateur ne peut pas être null.");
             }

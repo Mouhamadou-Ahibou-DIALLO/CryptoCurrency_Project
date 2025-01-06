@@ -9,6 +9,7 @@ import About from "./components/About";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
 import PageAlerts from "./components/PageAlerts";
+import Porfolio from "./components/Porfolio";
 
 const App = () => {
     return (
@@ -17,6 +18,7 @@ const App = () => {
                     <Route path="/About" element={<About />} />
                     <Route path="/Register" element={<Register />} />
                     <Route path="/Login" element={<Login />} />
+                    <Route path="/Porfolio/:id" element={<Porfolio />} />
                     <Route path="/PageAlerts/:id" element={<PageAlerts />} />
                     <Route path="/Dashboard/:id" element={<Dashboard />} />
                     <Route path="/ForgotPassword" element={<ForgotPassword />} />

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PredictionController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.controller</a> &gt; <span class="el_source">PredictionController.java</span></div><h1>PredictionController.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.controller;
+
+import com.cryptocurrency.data.model.CryptoPriceHistory;
+import com.cryptocurrency.data.service.DataCollectionService;
+import com.cryptocurrency.data.service.PredictionService;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping(&quot;/api/predictions&quot;)
+@CrossOrigin(origins = &quot;http://localhost:3000&quot;)
+<span class="fc" id="L18">public class PredictionController {</span>
+
+    /**
+     * Returns a list of price history entries for the given cryptocurrency name,
+     * filtered by the given start and end dates.
+     *
+     * @param name The name of the cryptocurrency to retrieve price history for.
+     * @param start The start date of the period to retrieve price history for.
+     * @param end The end date of the period to retrieve price history for.
+     * @return A ResponseEntity containing the filtered list of price history entries.
+     */
+    @GetMapping(&quot;/linear-regression&quot;)
+    public ResponseEntity&lt;List&lt;CryptoPriceHistory&gt;&gt; getLinearRegression(@RequestParam String name, @RequestParam String start, @RequestParam String end) {
+<span class="nc" id="L31">        List&lt;CryptoPriceHistory&gt; cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);</span>
+<span class="nc" id="L32">        List&lt;CryptoPriceHistory&gt; predictedPrices = PredictionService.predictNextPricesUsingLinearRegression(cryptoPriceHistoryList);</span>
+
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        if (cryptoPriceHistoryList.isEmpty()) {</span>
+<span class="nc" id="L35">            System.out.println(&quot;Data exists but list is empty for key: &quot;);</span>
+<span class="nc" id="L36">            return ResponseEntity.notFound().build();</span>
+        }
+
+<span class="nc" id="L39">        List&lt;CryptoPriceHistory&gt; filteredHistory = getCryptoPriceHistory(name, predictedPrices, start, end);</span>
+
+<span class="nc" id="L41">        return ResponseEntity.ok(filteredHistory);</span>
+    }
+
+    /**
+     * Returns a list of predicted prices for the given cryptocurrency name,
+     * calculated using the moving average model, and filtered by the given start and end dates.
+     *
+     * @param name The name of the cryptocurrency to retrieve price history for.
+     * @param start The start date of the period to retrieve price history for.
+     * @param end The end date of the period to retrieve price history for.
+     * @return A ResponseEntity containing the filtered list of price history entries.
+     */
+    @GetMapping(&quot;/moving-average&quot;)
+    public ResponseEntity&lt;List&lt;CryptoPriceHistory&gt;&gt; getMovingAverage(@RequestParam String name, @RequestParam String start, @RequestParam String end) {
+<span class="nc" id="L55">        List&lt;CryptoPriceHistory&gt; cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);</span>
+<span class="nc" id="L56">        List&lt;CryptoPriceHistory&gt; predictedPrices = PredictionService.calculateMovingAverages(cryptoPriceHistoryList);</span>
+
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (cryptoPriceHistoryList == null) {</span>
+<span class="nc" id="L59">            System.out.println(&quot;No data found for key: &quot;);</span>
+<span class="nc" id="L60">            return ResponseEntity.notFound().build();</span>
+        }
+
+<span class="nc" id="L63">        List&lt;CryptoPriceHistory&gt; filteredHistory = getCryptoPriceHistory(name, predictedPrices, start, end);</span>
+
+<span class="nc" id="L65">        return ResponseEntity.ok(filteredHistory);</span>
+    }
+
+    /**
+     * Returns a list of predicted prices for the given cryptocurrency name,
+     * calculated using the linear regression model, and filtered by the given start and end dates.
+     * The list also includes the error margins for each predicted price.
+     *
+     * @param name The name of the cryptocurrency to retrieve price history for.
+     * @param start The start date of the period to retrieve price history for.
+     * @param end The end date of the period to retrieve price history for.
+     * @return A ResponseEntity containing the filtered list of price history entries,
+     *         including the predicted prices and their error margins.
+     */
+    @GetMapping(&quot;/marging-error&quot;)
+    public ResponseEntity&lt;List&lt;CryptoPriceHistory&gt;&gt; getMargingError(@RequestParam String name, @RequestParam String start, @RequestParam String end) {
+<span class="nc" id="L81">        List&lt;CryptoPriceHistory&gt; cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);</span>
+<span class="nc" id="L82">        List&lt;CryptoPriceHistory&gt; predictedPrices = PredictionService.predictNextPricesUsingLinearRegression(cryptoPriceHistoryList);</span>
+<span class="nc" id="L83">        List&lt;CryptoPriceHistory&gt; margingError = PredictionService.calculateErrorMargins(cryptoPriceHistoryList, predictedPrices);</span>
+
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (cryptoPriceHistoryList.isEmpty()) {</span>
+<span class="nc" id="L86">            System.out.println(&quot;Data exists but list is empty for key: &quot;);</span>
+<span class="nc" id="L87">            return ResponseEntity.notFound().build();</span>
+        }
+
+<span class="nc" id="L90">        List&lt;CryptoPriceHistory&gt; filteredHistory = getCryptoPriceHistory(name, margingError, start, end);</span>
+
+<span class="nc" id="L92">        return ResponseEntity.ok(filteredHistory);</span>
+    }
+
+    /**
+     * Filters the given list of CryptoPriceHistory entries for a specific cryptocurrency
+     * to include only those between the specified start and end dates.
+     *
+     * @param name The name of the cryptocurrency whose price history is being filtered.
+     * @param cryptoPriceHistoryList The list of CryptoPriceHistory entries to filter.
+     * @param start The start date of the period to filter entries, in ISO 8601 format.
+     * @param end The end date of the period to filter entries, in ISO 8601 format.
+     * @return A list of CryptoPriceHistory entries within the specified date range.
+     */
+    private List&lt;CryptoPriceHistory&gt; getCryptoPriceHistory(String name, List&lt;CryptoPriceHistory&gt; cryptoPriceHistoryList, String start, String end) {
+<span class="nc" id="L106">        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;</span>
+<span class="nc" id="L107">        LocalDateTime startDate = LocalDateTime.parse(start, formatter);</span>
+<span class="nc" id="L108">        LocalDateTime endDate = LocalDateTime.parse(end, formatter);</span>
+
+<span class="nc" id="L110">        System.out.println(&quot;Key name: graphe prédictions&quot;);</span>
+        //System.out.println(&quot;CryptoPriceHistoryList: &quot; + DataCollectionService.getCryptoPriceHistoryMap().get(name) + &quot; graphe prédictions&quot;);
+
+<span class="nc" id="L113">        return cryptoPriceHistoryList.stream()</span>
+<span class="nc bnc" id="L114" title="All 4 branches missed.">                .filter(entry -&gt; !entry.getTimestamp().isBefore(startDate) &amp;&amp; !entry.getTimestamp().isAfter(endDate))</span>
+<span class="nc" id="L115">                .collect(Collectors.toList());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

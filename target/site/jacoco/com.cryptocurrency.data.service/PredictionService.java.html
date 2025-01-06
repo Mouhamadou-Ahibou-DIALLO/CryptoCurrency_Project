@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PredictionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.service</a> &gt; <span class="el_source">PredictionService.java</span></div><h1>PredictionService.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.service;
+
+import com.cryptocurrency.data.model.CryptoPriceHistory;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * The PredictionService class provides methods for making predictions and calculating error margins.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
+@Service
+<span class="fc" id="L15">public class PredictionService {</span>
+
+    /**
+     * Calculates the moving averages of the given cryptocurrency over the given period.
+     * This method retrieves the historical price data for the specified cryptocurrency
+     * and applies a moving average model to calculate the moving averages.
+     *
+     * @param priceHistory A list of CryptoPriceHistory objects containing
+     *                     historical price data. Must contain at least two data points.
+     * @return A list of up to 10 moving averages for the cryptocurrency.
+     * @throws IllegalArgumentException If the list contains fewer than two data points.
+     */
+    public static List&lt;CryptoPriceHistory&gt; calculateMovingAverages(List&lt;CryptoPriceHistory&gt; priceHistory) {
+<span class="nc" id="L28">        System.out.println(&quot;calculate moving averages&quot;);</span>
+<span class="nc" id="L29">        List&lt;CryptoPriceHistory&gt; movingAverages = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L31">        Collections.shuffle(priceHistory);</span>
+<span class="nc" id="L32">        List&lt;CryptoPriceHistory&gt; randomSubList = priceHistory.subList(0, Math.min(5, priceHistory.size()));</span>
+
+<span class="nc bnc" id="L34" title="All 2 branches missed.">        for (int i = 0; i &lt; randomSubList.size(); i++) {</span>
+<span class="nc" id="L35">            double sum = 0;</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">            for (int j = 0; j &lt;= i; j++) {</span>
+<span class="nc" id="L37">                sum += randomSubList.get(j).getPrice();</span>
+            }
+<span class="nc" id="L39">            movingAverages.add(new CryptoPriceHistory(randomSubList.get(i).getTimestamp(), sum / (i + 1)));</span>
+        }
+
+<span class="nc" id="L42">        return movingAverages;</span>
+    }
+
+    /**
+     * Predicts the next 5 prices of a cryptocurrency using linear regression.
+     *
+     * This method retrieves the historical price data for the specified cryptocurrency
+     * and applies a linear regression model to predict the next 5 prices.
+     *
+     * @param priceHistory A list of CryptoPriceHistory objects containing
+     *                     historical price data. Must contain at least two data points.
+     * @return A list of up to 10 predicted prices for the cryptocurrency.
+     * @throws IllegalArgumentException If the list contains fewer than two data points.
+     */
+    public static List&lt;CryptoPriceHistory&gt; predictNextPricesUsingLinearRegression(List&lt;CryptoPriceHistory&gt; priceHistory) {
+<span class="nc" id="L57">        System.out.println(&quot;predict next prices using linear regression&quot;);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (priceHistory.size() &lt; 2) {</span>
+<span class="nc" id="L59">            throw new IllegalArgumentException(&quot;Not enough data points for regression.&quot;);</span>
+        }
+
+<span class="nc" id="L62">        Collections.shuffle(priceHistory);</span>
+<span class="nc" id="L63">        List&lt;CryptoPriceHistory&gt; randomSubList = priceHistory.subList(0, Math.min(5, priceHistory.size()));</span>
+
+<span class="nc" id="L65">        int n = randomSubList.size();</span>
+<span class="nc" id="L66">        double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;</span>
+
+<span class="nc bnc" id="L68" title="All 2 branches missed.">        for (int i = 0; i &lt; n; i++) {</span>
+<span class="nc" id="L69">            double x = i + 1;</span>
+<span class="nc" id="L70">            double y = randomSubList.get(i).getPrice();</span>
+
+<span class="nc" id="L72">            sumX += x;</span>
+<span class="nc" id="L73">            sumY += y;</span>
+<span class="nc" id="L74">            sumXY += x * y;</span>
+<span class="nc" id="L75">            sumX2 += x * x;</span>
+        }
+<span class="nc" id="L77">        double slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);</span>
+<span class="nc" id="L78">        double intercept = (sumY - slope * sumX) / n;</span>
+
+<span class="nc" id="L80">        List&lt;CryptoPriceHistory&gt; predictedPrices = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        for (int i = 1; i &lt;= 5; i++) {</span>
+<span class="nc" id="L82">            predictedPrices.add(new CryptoPriceHistory(priceHistory.get(n - 1).getTimestamp().plusDays(i), slope * (n + i) + intercept));</span>
+        }
+
+<span class="nc" id="L85">        return predictedPrices;</span>
+    }
+
+    /**
+     * Calculates the error margins between actual and predicted prices of a cryptocurrency.
+     *
+     * This method shuffles the provided lists of actual and predicted prices and calculates
+     * the error margins for up to 10 data points. The error margin is the absolute percentage
+     * difference between the actual and predicted price.
+     *
+     * @param actualPrices A list of CryptoPriceHistory objects representing actual historical prices.
+     * @param predictedPrices A list of CryptoPriceHistory objects representing predicted prices.
+     * @return A list of CryptoPriceHistory objects where each contains the timestamp of the actual
+     *         price and the error margin expressed as a percentage.
+     */
+    public static List&lt;CryptoPriceHistory&gt; calculateErrorMargins(List&lt;CryptoPriceHistory&gt; actualPrices, List&lt;CryptoPriceHistory&gt; predictedPrices) {
+<span class="nc" id="L101">        System.out.println(&quot;clacule error margins&quot;);</span>
+<span class="nc" id="L102">        Collections.shuffle(actualPrices);</span>
+<span class="nc" id="L103">        Collections.shuffle(predictedPrices);</span>
+
+<span class="nc" id="L105">        List&lt;CryptoPriceHistory&gt; errorMargins = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        for (int i = 0; i &lt; Math.min(actualPrices.size(), 5); i++) {</span>
+<span class="nc" id="L107">            double actualPrice = actualPrices.get(i).getPrice();</span>
+<span class="nc" id="L108">            double predictedPrice = predictedPrices.get(i).getPrice();</span>
+
+<span class="nc" id="L110">            double margin = Math.abs((predictedPrice - actualPrice) / actualPrice) * 100;</span>
+<span class="nc" id="L111">            errorMargins.add(new CryptoPriceHistory(actualPrices.get(i).getTimestamp(), margin));</span>
+        }
+
+<span class="nc" id="L114">        return errorMargins;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

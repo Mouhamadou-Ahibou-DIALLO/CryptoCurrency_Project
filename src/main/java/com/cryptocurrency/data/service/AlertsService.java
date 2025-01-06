@@ -50,6 +50,7 @@ public class AlertsService {
     public List<Alerts> findByUser(User user) {
         User user1 = userRepository.findById(user.getId()).orElse(null);
         return alertsRepository.findByUser(user1);
+        //return alertsRepository.findByUser(user);
     }
 
     /**
@@ -157,7 +158,7 @@ public class AlertsService {
      * @param alert the alert to create
      * @return the created alert
      */
-    public Alerts createAlert(Alerts alert) {
+    public Alerts createAlert(AlertCreatedService alert) {
         User user = userRepository.findById(alert.getUser().getId()).orElse(null);
 
         if (user == null) {
@@ -194,7 +195,7 @@ public class AlertsService {
      * @param user the user to check for
      * @return true if an alert similar to the given alert already exists for the given user, false otherwise
      */
-    private boolean checkIfAlertExistsForUser(Alerts alert, User user) {
+    private boolean checkIfAlertExistsForUser(AlertCreatedService alert, User user) {
         List<Alerts> existingAlerts = findByUser(user);
         for (Alerts existingAlert : existingAlerts) {
             if (Objects.equals(existingAlert.getName(), alert.getName()) &&
@@ -214,7 +215,7 @@ public class AlertsService {
      * @param alert the alert to be created
      * @return the created alert
      */
-    private Alerts createAlertService(Alerts alert, User user, CryptoCurrency cryptoCurrency) {
+    private Alerts createAlertService(AlertCreatedService alert, User user, CryptoCurrency cryptoCurrency) {
         Alerts newAlert = new Alerts();
 
         newAlert.setUser(user);
@@ -248,7 +249,7 @@ public class AlertsService {
      * @param updatedAlert the updated alert object
      * @return the updated alert
      */
-    public Alerts updateAlert(Long alertId, User user, Alerts updatedAlert) {
+    public Alerts updateAlert(Long alertId, User user, AlertUpdateService updatedAlert) {
         Alerts existingAlert = alertsRepository.findById(alertId)
                 .orElseThrow(() -> new RuntimeException("Alerte introuvable"));
 
@@ -263,7 +264,7 @@ public class AlertsService {
         return alertsRepository.save(updateAlertService(existingAlert, updatedAlert));
     }
 
-    private Alerts updateAlertService(Alerts existingAlert, Alerts updatedAlert) {
+    private Alerts updateAlertService(Alerts existingAlert, AlertUpdateService updatedAlert) {
         existingAlert.setName(updatedAlert.getName());
         existingAlert.setPriceThreshold(updatedAlert.getPriceThreshold());
         existingAlert.setVariationThreshold(updatedAlert.getVariationThreshold());

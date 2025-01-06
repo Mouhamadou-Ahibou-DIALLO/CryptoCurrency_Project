@@ -5,6 +5,7 @@ import com.cryptocurrency.data.model.CryptoCurrency;
 import com.cryptocurrency.data.model.User;
 import com.cryptocurrency.data.repository.AlertsRepository;
 
+import com.cryptocurrency.data.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +31,9 @@ public class AlertsServiceTest {
      */
     @Mock
     private AlertsRepository alertsRepository;
+
+    @Mock
+    private UserRepository userRepository;
 
     /**
      * The alertsService field is an instance of the AlertsService class.
@@ -74,6 +78,7 @@ public class AlertsServiceTest {
     @Test
     public void testFindByUser() {
         when(alertsRepository.findByUser(user)).thenReturn(List.of(alerts1, alerts2));
+        //when(userRepository.findById(user.getId())).thenReturn(user);
         List<Alerts> result = alertsService.findByUser(user);
 
         assertEquals(2, result.size());

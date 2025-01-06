@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { Line } from "react-chartjs-2";
 import "../static/css/detailsCrypto.css";
 import "./ChartConfig";
+import {Chart} from "chart.js";
 
 const CryptoDetails = () => {
     const { id } = useParams();
@@ -57,6 +58,7 @@ const CryptoDetails = () => {
         const username = "momo";
         const password = "Avignon2024@?";
         const credentials = btoa(`${username}:${password}`);
+
         fetch(`/api/cryptocurrencies/${crypto.name}/price-history?start=${startDate}&end=${endDate}`, {
             headers: {
                 Authorization: `Basic ${credentials}`,
@@ -91,15 +93,46 @@ const CryptoDetails = () => {
 
     const options = {
         responsive: true,
+        // animation: {
+        //     duration: 1000,
+        //     easing: 'easeInOutQuad',
+        // },
+
         plugins: {
             legend: {
                 position: "top",
             },
+            // tooltip: {
+            //     callbacks: {
+            //         label: (tooltipItem) => {
+            //             const value = tooltipItem.raw;
+            //             return value ? `${tooltipItem.dataset.label}: $${value.toFixed(2)}` : null;
+            //         },
+            //     },
+            // }
         },
     };
 
+    // const myChart = new Chart(document.getElementById('myChart'), {
+    //     type: 'line',
+    //     data: chartData,
+    //     options: options,
+    // });
+    //
+    // const updateChartData = (newPriceHistory) => {
+    //     myChart.data.labels = newPriceHistory.map((entry) => new Date(entry.timestamp).toLocaleString());
+    //     myChart.data.datasets[0].data = newPriceHistory.map((entry) => entry.price);
+    //     myChart.update(undefined);
+    // };
+    //
+    // const fetchNewData = () => {
+    //     updateChartData(priceHistory);
+    // };
+    //
+    // setInterval(fetchNewData, 60000);
+
     return (
-        <div className="crypto-details">
+        <div>
             <header className="header-details">
                 <h1>La cryptomonnaie de l'avenir</h1>
                 <div className="button-container">
@@ -112,36 +145,38 @@ const CryptoDetails = () => {
                 </div>
             </header>
             <Link to="/">Retour à la liste</Link>
-            <h1>Détails de {crypto.name}</h1>
-            <ul>
-                <li><strong>Nom:</strong> {crypto.name}</li>
-                <li><strong>Symbole:</strong> {crypto.symbol}</li>
-                <li><strong>Rang:</strong> {crypto.rank}</li>
-                <li><strong>Prix ($):</strong> {crypto.price?.toFixed(2) || "N/A"}</li>
-                <li><strong>Volume d'échange ($):</strong> {crypto.volume?.toFixed(2) || "N/A"}</li>
-                <li><strong>Market Cap ($):</strong> {crypto.market?.toFixed(2) || "N/A"}</li>
-            </ul>
-            <div>
-                <h2>Historique des données</h2>
-                <div className="date-filters">
-                    <input
-                        type="datetime-local"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                    />
-                    <input
-                        type="datetime-local"
-                        value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
-                    />
-                    <button onClick={fetchPriceHistory}>Rafraîchir</button>
-                </div>
-                <div className="chart-container">
-                    <Line data={chartData} options={options} />
+            <div className="crypto-details-container">
+                <h1>Détails de {crypto.name}</h1>
+                <ul>
+                    <li><strong>Nom:</strong> {crypto.name}</li>
+                    <li><strong>Symbole:</strong> {crypto.symbol}</li>
+                    <li><strong>Rang:</strong> {crypto.rank}</li>
+                    <li><strong>Prix ($):</strong> {crypto.price?.toFixed(2) || "N/A"}</li>
+                    <li><strong>Volume d'échange ($):</strong> {crypto.volume?.toFixed(2) || "N/A"}</li>
+                    <li><strong>Market Cap ($):</strong> {crypto.market?.toFixed(2) || "N/A"}</li>
+                </ul>
+                <div>
+                    <h2>Historique des données</h2>
+                    <div className="date-filters">
+                        <input
+                            type="datetime-local"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                        />
+                        <input
+                            type="datetime-local"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                        />
+                        <button onClick={fetchPriceHistory}>Rafraîchir</button>
+                    </div>
+                    <div className="chart-container">
+                        <Line data={chartData} options={options}/>
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
 
-export default CryptoDetails;
+            export default CryptoDetails;

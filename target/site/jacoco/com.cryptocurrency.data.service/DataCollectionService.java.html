@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataCollectionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.service</a> &gt; <span class="el_source">DataCollectionService.java</span></div><h1>DataCollectionService.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.service;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.cryptocurrency.data.model.CryptoPriceHistory;
+import com.cryptocurrency.data.model.CryptoCurrency;
+import com.cryptocurrency.data.repository.CryptoCurrencyRepository;
+
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.*;
+
+/**
+ * The service for data collection.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
+@Service
+public class DataCollectionService {
+
+    /**
+     * The repository for CryptoCurrency objects.
+     * */
+    @Autowired
+    private final CryptoCurrencyRepository cryptoCurrencyRepository;
+
+    /**
+     * A map of all the CryptoPriceHistory objects in the database.
+     * Each key is the name of a cryptocurrency, and the value is a list of
+     * CryptoPriceHistory objects for that currency.
+     * */
+<span class="fc" id="L51">    private static Map&lt;String, List&lt;CryptoPriceHistory&gt;&gt; cryptoPriceHistoryMap = new HashMap&lt;&gt;();</span>
+
+    /**
+     * The logger for the service.
+     * */
+<span class="fc" id="L56">    private static final Logger logger = LoggerFactory.getLogger(DataCollectionService.class);</span>
+
+    /**
+     * The limit for the number of lines in the table.
+     * */
+    private static final int LIMIT_LINE = 20;
+
+    /**
+     * The bearer token for the CoinCap API.
+     * */
+    @Value(&quot;${api.coincap.bearer-token}&quot;)
+    private String bearerToken;
+
+    /**
+     * The path to the data file.
+     * */
+    private static final String DATA_FILE_NAME = &quot;crypto_price_history.json&quot;;
+
+    /**
+     * Constructs a new instance of the DataCollectionService class.
+     *
+     * @param cryptoCurrencyRepository The repository for CryptoCurrency objects.
+     */
+<span class="fc" id="L79">    public DataCollectionService(CryptoCurrencyRepository cryptoCurrencyRepository) {</span>
+<span class="fc" id="L80">        this.cryptoCurrencyRepository = cryptoCurrencyRepository;</span>
+<span class="fc" id="L81">    }</span>
+
+    /**
+     * Chargement des données du fichier JSON au démarrage.
+     */
+    @PostConstruct
+    public void loadCryptoPriceHistory() {
+        try {
+<span class="fc" id="L89">            ClassLoader classLoader = getClass().getClassLoader();</span>
+<span class="fc" id="L90">            File file = new File(Objects.requireNonNull(classLoader.getResource(DATA_FILE_NAME)).getFile());</span>
+
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">            if (file.exists()) {</span>
+<span class="fc" id="L93">                ObjectMapper objectMapper = new ObjectMapper();</span>
+<span class="fc" id="L94">                objectMapper.registerModule(new JavaTimeModule());</span>
+<span class="fc" id="L95">                objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);</span>
+
+<span class="fc" id="L97">                TypeReference&lt;Map&lt;String, List&lt;CryptoPriceHistory&gt;&gt;&gt; typeReference = new TypeReference&lt;&gt;() {};</span>
+<span class="fc" id="L98">                cryptoPriceHistoryMap = objectMapper.readValue(file, typeReference);</span>
+<span class="fc" id="L99">                System.out.println(&quot;Les données ont été chargées avec succès.&quot;);</span>
+<span class="fc" id="L100">            } else {</span>
+<span class="nc" id="L101">                System.out.println(&quot;Fichier non trouvé, un fichier vide sera créé.&quot;);</span>
+            }
+<span class="nc" id="L103">        } catch (Exception e) {</span>
+<span class="nc" id="L104">            e.printStackTrace();</span>
+<span class="fc" id="L105">        }</span>
+<span class="fc" id="L106">    }</span>
+
+    /**
+     * Saves the crypto price history data to a file when the application is stopped.
+     * The data is saved in JSON format to a file named &quot;crypto_price_history.json&quot;
+     * in the &quot;src/main/resources&quot; directory.
+     * */
+    @PreDestroy
+    public void saveCryptoPriceHistory() {
+        try {
+<span class="nc" id="L116">            ObjectMapper objectMapper = new ObjectMapper();</span>
+<span class="nc" id="L117">            objectMapper.registerModule(new JavaTimeModule());</span>
+<span class="nc" id="L118">            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);</span>
+
+<span class="nc" id="L120">            Path path = Paths.get(&quot;src/main/resources/&quot; + DATA_FILE_NAME);</span>
+
+<span class="nc" id="L122">            objectMapper.writeValue(path.toFile(), cryptoPriceHistoryMap);</span>
+<span class="nc" id="L123">            System.out.println(&quot;Les données ont été sauvegardées avec succès.&quot;);</span>
+<span class="nc" id="L124">        } catch (Exception e) {</span>
+<span class="nc" id="L125">            e.printStackTrace();</span>
+<span class="nc" id="L126">        }</span>
+<span class="nc" id="L127">    }</span>
+
+    /**
+     * Adds a new entry for each list of cryptocurrencies to the price history table in the database.
+     * Only existing cryptocurrencies in the database are added.
+     *
+     * @param cryptoCurrencyList a list of CryptoCurrency objects
+     */
+    public void addCryptoForPriceHistory(List&lt;CryptoCurrency&gt; cryptoCurrencyList) {
+<span class="nc" id="L136">        System.out.println(&quot;start adding cryptoCurrency for price history dans DataCollectionService&quot;);</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        for (CryptoCurrency crypto : cryptoCurrencyList) {</span>
+<span class="nc" id="L138">            String name = crypto.getName();</span>
+<span class="nc" id="L139">            LocalDateTime timestamp = LocalDateTime.now();</span>
+<span class="nc" id="L140">            Double price = crypto.getPrice();</span>
+
+<span class="nc" id="L142">            cryptoPriceHistoryMap.putIfAbsent(name, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L143">            CryptoPriceHistory cryptoPriceHistory = new CryptoPriceHistory(timestamp, price);</span>
+<span class="nc" id="L144">            cryptoPriceHistoryMap.get(name).add(cryptoPriceHistory);</span>
+<span class="nc" id="L145">            System.out.println(&quot;Ajout dans la boucle is OKay for price history dans DataCollectionService&quot;);</span>
+<span class="nc" id="L146">        }</span>
+<span class="nc" id="L147">        System.out.println(&quot;Collect for price history is done ...&quot;);</span>
+<span class="nc" id="L148">    }</span>
+
+
+    /**
+     * This method is scheduled to run every 60 seconds and collects market data from the CoinCap API.
+     * The collected data is then saved to the database.
+     */
+    @Scheduled(fixedRate = 6000000)
+    public void collectMarketData() {
+<span class="nc" id="L157">        logger.info(&quot;Starting data collection ......&quot;);</span>
+
+<span class="nc" id="L159">        String apiUrl = &quot;https://api.coincap.io/v2/assets&quot;;</span>
+
+        try {
+<span class="nc" id="L162">            OkHttpClient client = new OkHttpClient();</span>
+<span class="nc" id="L163">            Request request = new Request.Builder()</span>
+<span class="nc" id="L164">                    .url(apiUrl)</span>
+<span class="nc" id="L165">                    .header(&quot;Authorization&quot;, bearerToken)</span>
+<span class="nc" id="L166">                    .build();</span>
+
+<span class="nc" id="L168">            Response response = client.newCall(request).execute();</span>
+
+<span class="nc bnc" id="L170" title="All 2 branches missed.">            if (response.isSuccessful()) {</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">                assert response.body() != null;</span>
+<span class="nc" id="L172">                String responseBody = response.body().string();</span>
+                //List&lt;CryptoCurrency&gt; cryptoCurrencyList = parseMarketData(responseBody);
+
+                //enforceTableLimitBeforeInsert();
+
+                //cryptoCurrencyRepository.saveAll(cryptoCurrencyList);
+
+<span class="nc" id="L179">                System.out.println(&quot;Ajout des historiques de prix ...&quot;);</span>
+                //addCryptoForPriceHistory(cryptoCurrencyList);
+<span class="nc" id="L181">                System.out.println(&quot;Ajout terminé.&quot;);</span>
+
+<span class="nc" id="L183">                logger.info(&quot;20 new lines inserée dans la table CryptoCurrency ...........&quot;);</span>
+            }
+
+<span class="nc" id="L186">        } catch (Exception e) {</span>
+<span class="nc" id="L187">            logger.error(&quot;An error occurred during data collection: &quot;, e);</span>
+<span class="nc" id="L188">        }</span>
+
+<span class="nc" id="L190">        logger.info(&quot;Fin de la collection de donnée&quot;);</span>
+<span class="nc" id="L191">    }</span>
+
+    /**
+     * Parses the market data from the CoinCap API response.
+     *
+     * @param jsonResponse The JSON response from the CoinCap API.
+     * @return A list of CryptoCurrency objects parsed from the API response.
+     */
+    private List&lt;CryptoCurrency&gt; parseMarketData(String jsonResponse) {
+<span class="nc" id="L200">        List&lt;CryptoCurrency&gt; cryptoCurrencyList = new ArrayList&lt;&gt;();</span>
+        try {
+<span class="nc" id="L202">            ObjectMapper objectMapper = new ObjectMapper();</span>
+<span class="nc" id="L203">            JsonNode rootNode = objectMapper.readTree(jsonResponse);</span>
+<span class="nc" id="L204">            JsonNode dataNode = rootNode.path(&quot;data&quot;);</span>
+
+<span class="nc" id="L206">            int count = 0;</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">            if (dataNode.isArray()) {</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">                for (JsonNode node : dataNode) {</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">                    if (count &gt;= LIMIT_LINE) break;</span>
+
+<span class="nc" id="L211">                    String name = node.path(&quot;name&quot;).asText();</span>
+<span class="nc" id="L212">                    String symbol = node.path(&quot;symbol&quot;).asText();</span>
+<span class="nc" id="L213">                    int rank = node.path(&quot;rank&quot;).asInt();</span>
+<span class="nc" id="L214">                    double supply = node.path(&quot;supply&quot;).asDouble();</span>
+<span class="nc" id="L215">                    double maxSupply = node.path(&quot;maxSupply&quot;).asDouble();</span>
+<span class="nc" id="L216">                    double market = node.path(&quot;marketCapUsd&quot;).asDouble();</span>
+<span class="nc" id="L217">                    double volume = node.path(&quot;volumeUsd24Hr&quot;).asDouble();</span>
+<span class="nc" id="L218">                    double price = node.path(&quot;priceUsd&quot;).asDouble();</span>
+<span class="nc" id="L219">                    double change = node.path(&quot;changePercent24Hr&quot;).asDouble();</span>
+<span class="nc" id="L220">                    double vwap = node.path(&quot;vwap24Hr&quot;).asDouble();;</span>
+
+<span class="nc" id="L222">                    CryptoCurrency cryptocurrency = new CryptoCurrency();</span>
+<span class="nc" id="L223">                    cryptocurrency.setName(name);</span>
+<span class="nc" id="L224">                    cryptocurrency.setSymbol(symbol);</span>
+<span class="nc" id="L225">                    cryptocurrency.setRank(rank);</span>
+<span class="nc" id="L226">                    cryptocurrency.setSupply(supply);</span>
+<span class="nc" id="L227">                    cryptocurrency.setMaxSupply(maxSupply);</span>
+<span class="nc" id="L228">                    cryptocurrency.setMarket(market);</span>
+<span class="nc" id="L229">                    cryptocurrency.setVolume(volume);</span>
+<span class="nc" id="L230">                    cryptocurrency.setPrice(price);</span>
+<span class="nc" id="L231">                    cryptocurrency.setChange(change);</span>
+<span class="nc" id="L232">                    cryptocurrency.setVwap(vwap);</span>
+<span class="nc" id="L233">                    cryptocurrency.setTimestamp(LocalDateTime.now());</span>
+
+<span class="nc" id="L235">                    cryptoCurrencyList.add(cryptocurrency);</span>
+<span class="nc" id="L236">                    count++;</span>
+<span class="nc" id="L237">                }</span>
+            }
+<span class="nc" id="L239">        } catch (Exception e) {</span>
+<span class="nc" id="L240">            logger.error(&quot;Erreur lors du parsing des données: &quot;, e);</span>
+<span class="nc" id="L241">        }</span>
+<span class="nc" id="L242">        return cryptoCurrencyList;</span>
+    }
+
+    /**
+     * Enforces the limit on the number of rows in the CryptoCurrency table.
+     * Deletes the oldest rows if the total exceeds the limit BEFORE inserting new data.
+     */
+    private void enforceTableLimitBeforeInsert() {
+<span class="nc" id="L250">        logger.info(&quot;supprimer les anciennes 20 lignes&quot;);</span>
+<span class="nc" id="L251">        List&lt;CryptoCurrency&gt; cryptoCurrencyList = cryptoCurrencyRepository.findAll();</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">        if (cryptoCurrencyList.size() == LIMIT_LINE) {</span>
+<span class="nc" id="L253">            System.out.println(cryptoCurrencyList.size() + &quot; taille&quot;);</span>
+<span class="nc" id="L254">            logger.info(&quot;{} taille &quot;, cryptoCurrencyList.size());</span>
+<span class="nc" id="L255">            cryptoCurrencyRepository.deleteAll();</span>
+        }
+<span class="nc" id="L257">    }</span>
+
+    /**
+     * Returns a map of all the CryptoPriceHistory objects in the database.
+     * Each key is the name of a cryptocurrency, and the value is a list of
+     * CryptoPriceHistory objects for that currency.
+     *
+     * @return A map of all the CryptoPriceHistory objects in the database.
+     */
+    public static Map&lt;String, List&lt;CryptoPriceHistory&gt;&gt; getCryptoPriceHistoryMap() {
+<span class="nc" id="L267">        System.out.println(&quot;get is okay for price history&quot;);</span>
+<span class="nc" id="L268">        return cryptoPriceHistoryMap;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

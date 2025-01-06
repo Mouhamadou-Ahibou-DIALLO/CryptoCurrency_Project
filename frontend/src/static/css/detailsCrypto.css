@@ -46,7 +46,7 @@
     text-decoration: none;
 }
 
-.crypto-details {
+.crypto-details-container {
     width: 80%;
     max-width: 800px;
     margin: 20px auto;
@@ -75,7 +75,7 @@
     margin: 0;
 }
 
-.crypto-details ul li {
+.crypto-details-container ul li {
     margin-bottom: 15px;
     font-size: 1rem;
     color: #333;
@@ -86,14 +86,14 @@
     padding: 10px 0;
 }
 
-.crypto-details ul li strong {
+.crypto-details-container ul li strong {
     color: #007bff;
     font-weight: bold;
     text-transform: uppercase;
     margin-right: 10px;
 }
 
-.crypto-details a {
+.crypto-details-container a {
     display: inline-block;
     margin-bottom: 20px;
     color: #007bff;
@@ -103,32 +103,32 @@
     transition: color 0.3s ease;
 }
 
-.crypto-details a:hover {
+.crypto-details-container a:hover {
     color: #0056b3;
 }
 
-.crypto-details li span {
+.crypto-details-container li span {
     color: #555;
     text-align: right;
 }
 
 @media (max-width: 768px) {
-    .crypto-details {
+    .crypto-details-container {
         width: 95%;
         padding: 15px;
     }
 
-    .crypto-details h1 {
+    .crypto-details-container h1 {
         font-size: 1.5rem;
     }
 
-    .crypto-details ul li {
+    .crypto-details-container ul li {
         font-size: 0.9rem;
         flex-wrap: wrap;
         justify-content: flex-start;
     }
 
-    .crypto-details ul li strong {
+    .crypto-details-container ul li strong {
         width: 100%;
         margin-bottom: 5px;
     }
