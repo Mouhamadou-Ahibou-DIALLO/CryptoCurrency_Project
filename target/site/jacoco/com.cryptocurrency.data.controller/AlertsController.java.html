@@ -42,15 +42,15 @@ import java.util.Map;
      */
     @GetMapping(&quot;/{userId}&quot;)
     public ResponseEntity&lt;List&lt;Alerts&gt;&gt; getAlertsByUser(@PathVariable Long userId) {
-<span class="nc" id="L45">        User user = userRepository.findById(userId).orElse(null);</span>
-<span class="nc bnc" id="L46" title="All 2 branches missed.">        assert user != null;</span>
-<span class="nc" id="L47">        List&lt;Alerts&gt; alerts = alertsService.findByUser(user);</span>
-<span class="nc" id="L48">        System.out.println(&quot;liste de alerts dans alertController: &quot;);</span>
-<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (alerts.isEmpty()) {</span>
-<span class="nc" id="L50">            System.out.println(&quot;liste vide&quot;);</span>
-<span class="nc" id="L51">            return ResponseEntity.noContent().build();</span>
+<span class="fc" id="L45">        User user = userRepository.findById(userId).orElse(null);</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        assert user != null;</span>
+<span class="fc" id="L47">        List&lt;Alerts&gt; alerts = alertsService.findByUser(user);</span>
+<span class="fc" id="L48">        System.out.println(&quot;liste de alerts dans alertController: &quot;);</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if (alerts.isEmpty()) {</span>
+<span class="fc" id="L50">            System.out.println(&quot;liste vide&quot;);</span>
+<span class="fc" id="L51">            return ResponseEntity.noContent().build();</span>
         }
-<span class="nc" id="L53">        return ResponseEntity.ok(alerts);</span>
+<span class="fc" id="L53">        return ResponseEntity.ok(alerts);</span>
     }
 
     /**
@@ -61,13 +61,13 @@ import java.util.Map;
     @PostMapping(&quot;/create&quot;)
     public ResponseEntity&lt;?&gt; createAlert(@RequestBody AlertCreatedService alert) {
         try {
-<span class="nc" id="L64">            Alerts createdAlert = alertsService.createAlert(alert);</span>
-<span class="nc" id="L65">            String nameAlert = createdAlert.getName();</span>
-<span class="nc" id="L66">            Map&lt;String, Alerts&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L64">            Alerts createdAlert = alertsService.createAlert(alert);</span>
+<span class="fc" id="L65">            String nameAlert = createdAlert.getName();</span>
+<span class="fc" id="L66">            Map&lt;String, Alerts&gt; response = new HashMap&lt;&gt;();</span>
 
-<span class="nc" id="L68">            System.out.println(&quot;done creating alert: &quot;);</span>
-<span class="nc" id="L69">            response.put(nameAlert, createdAlert);</span>
-<span class="nc" id="L70">            return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
+<span class="fc" id="L68">            System.out.println(&quot;done creating alert: &quot;);</span>
+<span class="fc" id="L69">            response.put(nameAlert, createdAlert);</span>
+<span class="fc" id="L70">            return ResponseEntity.status(HttpStatus.CREATED).body(response);</span>
 
 <span class="nc" id="L72">        } catch (IllegalArgumentException e) {</span>
 <span class="nc bnc" id="L73" title="All 2 branches missed.">            if (e.getMessage().contains(&quot;Passez à un abonnement Premium&quot;)) {</span>
@@ -86,21 +86,21 @@ import java.util.Map;
      */
     @PutMapping(&quot;/update/{id}&quot;)
     public ResponseEntity&lt;?&gt; updateAlert(@PathVariable Long id, @RequestBody AlertUpdateService updatedAlert) {
-<span class="nc" id="L89">        Alerts alerts = alertsService.findById(id);</span>
+<span class="fc" id="L89">        Alerts alerts = alertsService.findById(id);</span>
         try {
-<span class="nc" id="L91">            User user = userRepository.findById(alerts.getUser().getId()).orElse(null);</span>
-<span class="nc bnc" id="L92" title="All 2 branches missed.">            if (user == null) {</span>
+<span class="fc" id="L91">            User user = userRepository.findById(alerts.getUser().getId()).orElse(null);</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">            if (user == null) {</span>
 <span class="nc" id="L93">                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(&quot;L'utilisateur ne peut pas être null.&quot;);</span>
             }
 
-<span class="nc" id="L96">            Alerts updated = alertsService.updateAlert(id, user, updatedAlert);</span>
-<span class="nc" id="L97">            String nameAlert = updated.getName();</span>
+<span class="fc" id="L96">            Alerts updated = alertsService.updateAlert(id, user, updatedAlert);</span>
+<span class="fc" id="L97">            String nameAlert = updated.getName();</span>
 
-<span class="nc" id="L99">            Map&lt;String, Alerts&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L100">            response.put(nameAlert, updated);</span>
-<span class="nc" id="L101">            System.out.println(&quot;done updating alert: &quot;);</span>
+<span class="fc" id="L99">            Map&lt;String, Alerts&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L100">            response.put(nameAlert, updated);</span>
+<span class="fc" id="L101">            System.out.println(&quot;done updating alert: &quot;);</span>
 
-<span class="nc" id="L103">            return ResponseEntity.status(HttpStatus.OK).body(response);</span>
+<span class="fc" id="L103">            return ResponseEntity.status(HttpStatus.OK).body(response);</span>
 <span class="nc" id="L104">        } catch (IllegalArgumentException e) {</span>
 <span class="nc" id="L105">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());</span>
         }
@@ -116,18 +116,18 @@ import java.util.Map;
     @DeleteMapping(&quot;/delete/{id}&quot;)
     public ResponseEntity&lt;?&gt; deleteAlert(@PathVariable Long id, @RequestParam Long userId) {
         try {
-<span class="nc" id="L119">            User user = userRepository.findById(userId).orElse(null);</span>
-<span class="nc bnc" id="L120" title="All 2 branches missed.">            if (user == null) {</span>
+<span class="fc" id="L119">            User user = userRepository.findById(userId).orElse(null);</span>
+<span class="pc bpc" id="L120" title="1 of 2 branches missed.">            if (user == null) {</span>
 <span class="nc" id="L121">                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(&quot;L'utilisateur ne peut pas être null.&quot;);</span>
             }
 
-<span class="nc" id="L124">            alertsService.deleteAlert(id, user);</span>
-<span class="nc" id="L125">            Map&lt;String, Long&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L126">            response.put(&quot;alertId&quot;, id);</span>
-<span class="nc" id="L127">            response.put(&quot;userId&quot;, user.getId());</span>
+<span class="fc" id="L124">            alertsService.deleteAlert(id, user);</span>
+<span class="fc" id="L125">            Map&lt;String, Long&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L126">            response.put(&quot;alertId&quot;, id);</span>
+<span class="fc" id="L127">            response.put(&quot;userId&quot;, user.getId());</span>
 
-<span class="nc" id="L129">            System.out.println(&quot;done deleting alert: &quot;);</span>
-<span class="nc" id="L130">            return ResponseEntity.status(HttpStatus.OK).body(response);</span>
+<span class="fc" id="L129">            System.out.println(&quot;done deleting alert: &quot;);</span>
+<span class="fc" id="L130">            return ResponseEntity.status(HttpStatus.OK).body(response);</span>
 <span class="nc" id="L131">        } catch (IllegalArgumentException e) {</span>
 <span class="nc" id="L132">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());</span>
         }

@@ -127,31 +127,26 @@ import java.util.Optional;
      * @return the created User object
      */
     public User createUser(User user) {
-<span class="nc" id="L130">        boolean verifyPassword = VerifyPasswordMatchesService.isValidPassword(user.getPasswordHash());</span>
-<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (!verifyPassword) {</span>
+<span class="fc" id="L130">        boolean verifyPassword = VerifyPasswordMatchesService.isValidPassword(user.getPasswordHash());</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        if (!verifyPassword) {</span>
 <span class="nc" id="L132">            throw new IllegalArgumentException(&quot;Le mot de passe doit comporter au moins 8 caractères et comprendre des lettres, des majuscules, des chiffres et des caractères spéciaux.&quot;);</span>
         }
 
-<span class="nc" id="L135">        String encodedPassword = EncodedPassword.encode(user.getPasswordHash());</span>
-<span class="nc" id="L136">        user.setPasswordHash(encodedPassword);</span>
-<span class="nc" id="L137">        System.out.println(&quot;getPasswordHash: &quot;);</span>
+<span class="fc" id="L135">        String encodedPassword = EncodedPassword.encode(user.getPasswordHash());</span>
+<span class="fc" id="L136">        user.setPasswordHash(encodedPassword);</span>
 
-<span class="nc" id="L139">        String token = GenerateToken.generateToken();</span>
-<span class="nc" id="L140">        System.out.println(&quot;token: &quot;);</span>
-<span class="nc" id="L141">        String encodedToken = EncodedToken.encode(token);</span>
-<span class="nc" id="L142">        user.setTokenHash(encodedToken);</span>
-<span class="nc" id="L143">        System.out.println(&quot;tokenHash: &quot;);</span>
+<span class="fc" id="L138">        String token = GenerateToken.generateToken();</span>
+<span class="fc" id="L139">        String encodedToken = EncodedToken.encode(token);</span>
+<span class="fc" id="L140">        user.setTokenHash(encodedToken);</span>
+<span class="fc" id="L141">        user.setStatut(&quot;normal&quot;);</span>
 
-<span class="nc" id="L145">        user.setStatut(&quot;normal&quot;);</span>
-
-<span class="nc" id="L147">        System.out.println(&quot;user created: &quot;);</span>
-<span class="nc" id="L148">        User savedUser = this.save(user);</span>
-
-<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (savedUser == null) {</span>
-<span class="nc" id="L151">            throw new IllegalArgumentException(&quot;L'utilisateur n'a pas pu être sauvegardé.&quot;);</span>
+<span class="fc" id="L143">        User savedUser = this.save(user);</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">        if (savedUser == null) {</span>
+<span class="nc" id="L145">            throw new IllegalArgumentException(&quot;L'utilisateur n'a pas pu être sauvegardé.&quot;);</span>
         }
 
-<span class="nc" id="L154">        return savedUser;</span>
+<span class="fc" id="L148">        System.out.println(&quot;user created&quot;);</span>
+<span class="fc" id="L149">        return savedUser;</span>
     }
 
     /**
@@ -161,8 +156,8 @@ import java.util.Optional;
      * @return true if a user with the given email is found, false otherwise
      */
     public boolean emailExists(String email) {
-<span class="nc" id="L164">        Optional&lt;User&gt; user = userRepository.findByEmail(email);</span>
-<span class="nc" id="L165">        return user.isPresent();</span>
+<span class="fc" id="L159">        Optional&lt;User&gt; user = userRepository.findByEmail(email);</span>
+<span class="fc" id="L160">        return user.isPresent();</span>
     }
 
     /**
@@ -172,8 +167,8 @@ import java.util.Optional;
      * @return true if a user with the given username is found, false otherwise
      */
     public boolean userNameExists(String username) {
-<span class="nc" id="L175">        Optional&lt;User&gt; user = userRepository.findByUsername(username);</span>
-<span class="nc" id="L176">        return user.isPresent();</span>
+<span class="fc" id="L170">        Optional&lt;User&gt; user = userRepository.findByUsername(username);</span>
+<span class="fc" id="L171">        return user.isPresent();</span>
     }
 
     /**
@@ -184,29 +179,22 @@ import java.util.Optional;
      * @return the updated User object
      */
     public User updateUser(Long id, User userDetails) {
-<span class="nc" id="L187">        User user = userRepository.findById(id)</span>
-<span class="nc" id="L188">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
-<span class="nc" id="L189">        System.out.println(&quot;user first step for update: &quot;);</span>
+<span class="fc" id="L182">        User user = userRepository.findById(id)</span>
+<span class="pc" id="L183">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
 
-<span class="nc" id="L191">        boolean verifyPassword = VerifyPasswordMatchesService.isValidPassword(userDetails.getPasswordHash());</span>
-<span class="nc bnc" id="L192" title="All 2 branches missed.">        if (!verifyPassword) {</span>
-<span class="nc" id="L193">            throw new IllegalArgumentException(&quot;Le mot de passe doit comporter au moins 8 caractères et comprendre des lettres, des majuscules, des chiffres et des caractères spéciaux.&quot;);</span>
+<span class="fc" id="L185">        boolean verifyPassword = VerifyPasswordMatchesService.isValidPassword(userDetails.getPasswordHash());</span>
+<span class="pc bpc" id="L186" title="1 of 2 branches missed.">        if (!verifyPassword) {</span>
+<span class="nc" id="L187">            throw new IllegalArgumentException(&quot;Le mot de passe doit comporter au moins 8 caractères et comprendre des lettres, des majuscules, des chiffres et des caractères spéciaux.&quot;);</span>
         }
-        
-<span class="nc" id="L196">        System.out.println(&quot;password user for update: &quot;);</span>
 
-<span class="nc" id="L198">        user.setUsername(userDetails.getUsername());</span>
-<span class="nc" id="L199">        System.out.println(&quot;username updating user: &quot;);</span>
-<span class="nc" id="L200">        user.setEmail(userDetails.getEmail());</span>
-<span class="nc" id="L201">        System.out.println(&quot;email updating user: &quot;);</span>
+<span class="fc" id="L190">        user.setUsername(userDetails.getUsername());</span>
+<span class="fc" id="L191">        user.setEmail(userDetails.getEmail());</span>
 
-<span class="nc" id="L203">        String encodedPassword = EncodedPassword.encode(userDetails.getPasswordHash());</span>
-        //String newToken = EncodedToken.encode(userDetails.getTokenHash());
-<span class="nc" id="L205">        user.setPasswordHash(encodedPassword);</span>
-        //user.setTokenHash(newToken);
-<span class="nc" id="L207">        System.out.println(&quot;done updating user: &quot;);</span>
+<span class="fc" id="L193">        String encodedPassword = EncodedPassword.encode(userDetails.getPasswordHash());</span>
+<span class="fc" id="L194">        user.setPasswordHash(encodedPassword);</span>
 
-<span class="nc" id="L209">        return this.save(user);</span>
+<span class="fc" id="L196">        System.out.println(&quot;done updating user&quot;);</span>
+<span class="fc" id="L197">        return this.save(user);</span>
     }
 
     /**
@@ -217,14 +205,14 @@ import java.util.Optional;
      * @throws RuntimeException if no user is found with the given email
      */
     public User updateToken(Long id) {
-<span class="nc" id="L220">        User user = userRepository.findById(id)</span>
-<span class="nc" id="L221">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
+<span class="fc" id="L208">        User user = userRepository.findById(id)</span>
+<span class="pc" id="L209">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
 
-<span class="nc" id="L223">        String token = GenerateToken.generateToken();</span>
-<span class="nc" id="L224">        String newToken = EncodedToken.encode(token);</span>
-<span class="nc" id="L225">        user.setTokenHash(newToken);</span>
-<span class="nc" id="L226">        System.out.println(&quot;done updating user: &quot;);</span>
-<span class="nc" id="L227">        return this.save(user);</span>
+<span class="fc" id="L211">        String token = GenerateToken.generateToken();</span>
+<span class="fc" id="L212">        String newToken = EncodedToken.encode(token);</span>
+<span class="fc" id="L213">        user.setTokenHash(newToken);</span>
+<span class="fc" id="L214">        System.out.println(&quot;done updating token user&quot;);</span>
+<span class="fc" id="L215">        return this.save(user);</span>
     }
 
     /**
@@ -235,7 +223,7 @@ import java.util.Optional;
      * @return an Optional containing the User object if found, or an empty Optional if no user matches the given criteria
      */
     public Optional&lt;User&gt; findByEmailAndPasswordHash(String email, String passwordHash) {
-<span class="nc" id="L238">        return userRepository.findByEmailAndPasswordHash(email, passwordHash);</span>
+<span class="fc" id="L226">        return userRepository.findByEmailAndPasswordHash(email, passwordHash);</span>
     }
 
     /**
@@ -246,35 +234,29 @@ import java.util.Optional;
      * @return the token hash of the user
      */
     public String authenticateUser(String email, String password) {
-<span class="nc" id="L249">        System.out.println(&quot;email: &quot; + email);</span>
-<span class="nc" id="L250">        User user = userRepository.findByEmail(email)</span>
-<span class="nc" id="L251">                .orElseThrow(() -&gt; new RuntimeException(&quot;Invalid email&quot;));</span>
+<span class="fc" id="L237">        User user = userRepository.findByEmail(email)</span>
+<span class="pc" id="L238">                .orElseThrow(() -&gt; new RuntimeException(&quot;Invalid email&quot;));</span>
 
-<span class="nc bnc" id="L253" title="All 2 branches missed.">        if (user != null) {</span>
-<span class="nc" id="L254">            System.out.println(&quot;user: &quot;);</span>
-<span class="nc" id="L255">            System.out.println(&quot;password: &quot;);</span>
-<span class="nc" id="L256">            String encodedPassword = user.getPasswordHash();</span>
-<span class="nc" id="L257">            boolean isRightPassword = EncodedPassword.isRightPassword(password, encodedPassword);</span>
+<span class="pc bpc" id="L240" title="1 of 2 branches missed.">        if (user != null) {</span>
+<span class="fc" id="L241">            String encodedPassword = user.getPasswordHash();</span>
+<span class="fc" id="L242">            boolean isRightPassword = EncodedPassword.isRightPassword(password, encodedPassword);</span>
 
-<span class="nc bnc" id="L259" title="All 2 branches missed.">            if (isRightPassword) {</span>
-<span class="nc" id="L260">                Optional&lt;User&gt; userValid = this.findByEmailAndPasswordHash(email, encodedPassword);</span>
-<span class="nc bnc" id="L261" title="All 2 branches missed.">                if (userValid.isPresent()) {</span>
-<span class="nc" id="L262">                    System.out.println(&quot;Login successful&quot;);</span>
-<span class="nc" id="L263">                    return user.getTokenHash();</span>
+<span class="pc bpc" id="L244" title="1 of 2 branches missed.">            if (isRightPassword) {</span>
+<span class="fc" id="L245">                Optional&lt;User&gt; userValid = this.findByEmailAndPasswordHash(email, encodedPassword);</span>
+<span class="pc bpc" id="L246" title="1 of 2 branches missed.">                if (userValid.isPresent()) {</span>
+<span class="fc" id="L247">                    System.out.println(&quot;Login successful&quot;);</span>
+<span class="fc" id="L248">                    return user.getTokenHash();</span>
                 }
                 else {
-<span class="nc" id="L266">                    System.out.println(&quot;Login failed&quot;);</span>
-<span class="nc" id="L267">                    throw new RuntimeException(&quot;Login failed&quot;);</span>
+<span class="nc" id="L251">                    throw new RuntimeException(&quot;Login failed&quot;);</span>
                 }
             }
             else {
-<span class="nc" id="L271">                System.out.println(&quot;Mot de pass incorrect&quot;);</span>
-<span class="nc" id="L272">                throw new RuntimeException(&quot;Mot de pass incorrect&quot;);</span>
+<span class="nc" id="L255">                throw new RuntimeException(&quot;Mot de pass incorrect&quot;);</span>
             }
         }
 
-<span class="nc" id="L276">        System.out.println(&quot;not found user&quot;);</span>
-<span class="nc" id="L277">        throw new RuntimeException(&quot;not found user&quot;);</span>
+<span class="nc" id="L259">        throw new RuntimeException(&quot;not found user&quot;);</span>
     }
 
     /**
@@ -285,7 +267,7 @@ import java.util.Optional;
      * @return an Optional containing the User object if found, or an empty Optional if no user matches the given criteria
      */
     public Optional&lt;User&gt; findByEmailAndTokenHash(String email, String tokenHash) {
-<span class="nc" id="L288">        return userRepository.findByEmailAndTokenHash(email, tokenHash);</span>
+<span class="fc" id="L270">        return userRepository.findByEmailAndTokenHash(email, tokenHash);</span>
     }
 
     /**
@@ -298,34 +280,22 @@ import java.util.Optional;
      * @throws RuntimeException if the user is not found
      */
     public boolean verifyToken(String email, String token) {
-<span class="nc" id="L301">        User user = userRepository.findByEmail(email)</span>
-<span class="nc" id="L302">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
+<span class="fc" id="L283">        User user = userRepository.findByEmail(email)</span>
+<span class="pc" id="L284">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
 
-<span class="nc bnc" id="L304" title="All 2 branches missed.">        if (user != null) {</span>
-<span class="nc" id="L305">            System.out.println(&quot;user: &quot;);</span>
-<span class="nc" id="L306">            String encodedToken = user.getTokenHash();</span>
-<span class="nc" id="L307">            System.out.println(&quot;token: &quot;);</span>
-<span class="nc" id="L308">            System.out.println(&quot;encodedToken: &quot;);</span>
+<span class="pc bpc" id="L286" title="1 of 2 branches missed.">        if (user != null) {</span>
+<span class="fc" id="L287">            String encodedToken = user.getTokenHash();</span>
 
-<span class="nc bnc" id="L310" title="All 2 branches missed.">            if (Objects.equals(token, encodedToken)) {</span>
-<span class="nc" id="L311">                Optional&lt;User&gt; userValid = this.findByEmailAndTokenHash(email, encodedToken);</span>
-<span class="nc bnc" id="L312" title="All 2 branches missed.">                if (userValid.isPresent()) {</span>
-<span class="nc" id="L313">                    System.out.println(&quot;Token is valid&quot;);</span>
-<span class="nc" id="L314">                    return true;</span>
-                }
-                else {
-<span class="nc" id="L317">                    System.out.println(&quot;Token is not valid&quot;);</span>
-<span class="nc" id="L318">                    return false;</span>
-                }
+<span class="pc bpc" id="L289" title="1 of 2 branches missed.">            if (Objects.equals(token, encodedToken)) {</span>
+<span class="fc" id="L290">                Optional&lt;User&gt; userValid = this.findByEmailAndTokenHash(email, encodedToken);</span>
+<span class="fc" id="L291">                return userValid.isPresent();</span>
             }
             else {
-<span class="nc" id="L322">                System.out.println(&quot;Token is not valid&quot;);</span>
-<span class="nc" id="L323">                return false;</span>
+<span class="nc" id="L294">                return false;</span>
             }
         }
 
-<span class="nc" id="L327">        System.out.println(&quot;User not found&quot;);</span>
-<span class="nc" id="L328">        return false;</span>
+<span class="nc" id="L298">        return false;</span>
     }
 
 
@@ -335,35 +305,52 @@ import java.util.Optional;
      * @param email the email of the user to be logged out
      */
     public void logoutUser(String email) {
-<span class="nc" id="L338">        User user = userRepository.findByEmail(email)</span>
-<span class="nc" id="L339">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
+<span class="fc" id="L308">        User user = userRepository.findByEmail(email)</span>
+<span class="pc" id="L309">                .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
 
-<span class="nc" id="L341">        System.out.println(&quot;logout user done: &quot;);</span>
-<span class="nc" id="L342">        user.setEmail(null);</span>
-<span class="nc" id="L343">        user.setTokenHash(null);</span>
-<span class="nc" id="L344">    }</span>
+<span class="fc" id="L311">        user.setEmail(null);</span>
+<span class="fc" id="L312">        user.setTokenHash(null);</span>
+<span class="fc" id="L313">        System.out.println(&quot;logout user done&quot;);</span>
+<span class="fc" id="L314">    }</span>
 
+    /**
+     * Updates the status of a user to premium.
+     *
+     * @param userId the ID of the user whose status is to be updated
+     * @return true if the status was updated, false otherwise
+     */
     public boolean updateUserStatusToPremium(Long userId) {
-<span class="nc" id="L347">        String statut = &quot;premium&quot;;</span>
-<span class="nc" id="L348">        return updateUserStatut(userId, statut);</span>
+<span class="fc" id="L323">        return updateUserStatut(userId, &quot;premium&quot;);</span>
     }
 
+    /**
+     * Updates the status of a user to free.
+     *
+     * @param userId the ID of the user whose status is to be updated
+     * @return true if the status was updated, false otherwise
+     */
     public boolean updateUserStatusToFree(Long userId) {
-<span class="nc" id="L352">        String statut = &quot;normal&quot;;</span>
-<span class="nc" id="L353">        return updateUserStatut(userId, statut);</span>
+<span class="fc" id="L333">        return updateUserStatut(userId, &quot;normal&quot;);</span>
     }
 
+    /**
+     * Updates the status of a user if it differs from the current status.
+     *
+     * @param id the ID of the user whose status is to be updated
+     * @param statut the new status to set for the user
+     * @return true if the status was updated, false otherwise
+     */
     private boolean updateUserStatut(Long id, String statut) {
-<span class="nc" id="L357">        Optional&lt;User&gt; user = userRepository.findById(id);</span>
-<span class="nc bnc" id="L358" title="All 2 branches missed.">        if (user.isPresent()) {</span>
-<span class="nc bnc" id="L359" title="All 2 branches missed.">            if (!user.get().getStatut().equals(statut)) {</span>
-<span class="nc" id="L360">                User userSetStatut = user.get();</span>
-<span class="nc" id="L361">                userSetStatut.setStatut(statut);</span>
-<span class="nc" id="L362">                userRepository.save(userSetStatut);</span>
-<span class="nc" id="L363">                return true;</span>
+<span class="fc" id="L344">        Optional&lt;User&gt; user = userRepository.findById(id);</span>
+<span class="pc bpc" id="L345" title="1 of 2 branches missed.">        if (user.isPresent()) {</span>
+<span class="pc bpc" id="L346" title="1 of 2 branches missed.">            if (!user.get().getStatut().equals(statut)) {</span>
+<span class="fc" id="L347">                User userSetStatut = user.get();</span>
+<span class="fc" id="L348">                userSetStatut.setStatut(statut);</span>
+<span class="fc" id="L349">                userRepository.save(userSetStatut);</span>
+<span class="fc" id="L350">                return true;</span>
             }
         }
-<span class="nc" id="L366">        return false;</span>
+<span class="nc" id="L353">        return false;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

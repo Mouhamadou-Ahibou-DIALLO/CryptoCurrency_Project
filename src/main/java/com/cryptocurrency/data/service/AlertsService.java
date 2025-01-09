@@ -29,9 +29,15 @@ public class AlertsService {
     @Autowired
     private AlertsRepository alertsRepository;
 
+    /**
+     * The repository for CryptoCurrency objects.
+     */
     @Autowired
     private CryptoCurrencyRepository cryptoCurrencyRepository;
 
+    /**
+     * The repository for User objects.
+     */
     @Autowired
     private UserRepository userRepository;
 
@@ -42,6 +48,26 @@ public class AlertsService {
     private EmailService emailService;
 
     /**
+     * Default constructor for the AlertsService class.
+     */
+    public AlertsService() {}
+
+    /**
+     * Constructor for the AlertsService class.
+     *
+     * @param alertsRepository the repository for Alerts objects
+     * @param emailService the service for Email objects
+     * @param userRepository the repository for User objects
+     * @param cryptoCurrencyRepository the repository for CryptoCurrency objects
+     */
+    public AlertsService(AlertsRepository alertsRepository, EmailService emailService, UserRepository userRepository, CryptoCurrencyRepository cryptoCurrencyRepository) {
+        this.alertsRepository = alertsRepository;
+        this.emailService = emailService;
+        this.userRepository = userRepository;
+        this.cryptoCurrencyRepository = cryptoCurrencyRepository;
+    }
+
+    /**
      * Find all alerts for a given user.
      *
      * @param user the User object to find alerts for
@@ -49,8 +75,8 @@ public class AlertsService {
      */
     public List<Alerts> findByUser(User user) {
         User user1 = userRepository.findById(user.getId()).orElse(null);
-        return alertsRepository.findByUser(user1);
-        //return alertsRepository.findByUser(user);
+//        return alertsRepository.findByUser(user1);
+        return alertsRepository.findByUser(user);
     }
 
     /**
@@ -224,9 +250,6 @@ public class AlertsService {
         newAlert.setPriceThreshold(alert.getPriceThreshold());
         newAlert.setVariationThreshold(alert.getVariationThreshold());
 
-        System.out.println("creation is done");
-        System.out.println("new alert: " + newAlert);
-
         return newAlert;
     }
 
@@ -236,7 +259,7 @@ public class AlertsService {
      * @param user the user to check
      * @return true if the user has reached the maximum number of alerts, false otherwise
      */
-    public boolean checkNombreAlerts(User user) {
+    private boolean checkNombreAlerts(User user) {
         List<Alerts> alerts = findByUser(user);
         return alerts.size() == 10 && user.getStatut().equals("normal");
     }
@@ -264,13 +287,20 @@ public class AlertsService {
         return alertsRepository.save(updateAlertService(existingAlert, updatedAlert));
     }
 
+    /**
+     * Updates an existing alert.
+     *
+     * @param existingAlert the alert to be updated
+     * @param updatedAlert the updated alert object
+     * @return the updated alert
+     */
     private Alerts updateAlertService(Alerts existingAlert, AlertUpdateService updatedAlert) {
         existingAlert.setName(updatedAlert.getName());
         existingAlert.setPriceThreshold(updatedAlert.getPriceThreshold());
         existingAlert.setVariationThreshold(updatedAlert.getVariationThreshold());
 
         System.out.println("update is done");
-        return alertsRepository.save(existingAlert);
+        return existingAlert;
     }
 
     /**

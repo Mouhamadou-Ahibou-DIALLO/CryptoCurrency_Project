@@ -33,6 +33,12 @@ import java.util.Map;
     private UserService userService;
 
     /**
+     * The emailService field is a Spring service for sending emails.
+     */
+    @Autowired
+    private EmailService emailService;
+
+    /**
      * Creates a new user with the given details.
      *
      * @param user The user object containing the details.
@@ -40,31 +46,29 @@ import java.util.Map;
      */
     @PostMapping(&quot;/create&quot;)
     public ResponseEntity&lt;?&gt; createUser(@RequestBody User user) {
-<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (userService.emailExists(user.getEmail())) {</span>
-<span class="nc" id="L44">            System.out.println(&quot;cet email existe déja.&quot;);</span>
-<span class="nc" id="L45">            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;cet email existe déja.&quot;);</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if (userService.emailExists(user.getEmail())) {</span>
+<span class="fc" id="L50">            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;cet email existe déja.&quot;);</span>
         }
-<span class="nc bnc" id="L47" title="All 2 branches missed.">        if (userService.userNameExists(user.getUsername())) {</span>
-<span class="nc" id="L48">            System.out.println(&quot;ce nom d'utilisateur existe déja.&quot;);</span>
-<span class="nc" id="L49">            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;ce nom d'utilisateur existe déja.&quot;);</span>
+<span class="pc bpc" id="L52" title="1 of 2 branches missed.">        if (userService.userNameExists(user.getUsername())) {</span>
+<span class="nc" id="L53">            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;ce nom d'utilisateur existe déja.&quot;);</span>
         }
 
         try {
-<span class="nc" id="L53">            User createdUser = userService.createUser(user);</span>
-<span class="nc" id="L54">            System.out.println(&quot;user created: &quot;);</span>
-
-<span class="nc bnc" id="L56" title="All 2 branches missed.">            if (createdUser == null) {</span>
-<span class="nc" id="L57">                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Erreur lors de la création de l'utilisateur.&quot;);</span>
+<span class="fc" id="L57">            User createdUser = userService.createUser(user);</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">            if (createdUser == null) {</span>
+<span class="nc" id="L59">                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Erreur lors de la création de l'utilisateur.&quot;);</span>
             }
 
-<span class="nc" id="L60">            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(</span>
+<span class="fc" id="L62">            System.out.println(&quot;done user created&quot;);</span>
+<span class="fc" id="L63">            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(</span>
                     &quot;message&quot;, &quot;User created successfully.&quot;,
-<span class="nc" id="L62">                    &quot;token&quot;, createdUser.getTokenHash()</span>
+<span class="fc" id="L65">                    &quot;id&quot;, createdUser.getId(),</span>
+<span class="fc" id="L66">                    &quot;token&quot;, createdUser.getTokenHash()</span>
             ));
-<span class="nc" id="L64">        } catch (IllegalArgumentException e) {</span>
-<span class="nc" id="L65">            System.out.println(&quot;error: &quot; + e.getMessage());</span>
-<span class="nc" id="L66">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(</span>
-<span class="nc" id="L67">                    &quot;error&quot;, e.getMessage()</span>
+<span class="nc" id="L68">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L69">            System.out.println(&quot;error: &quot; + e.getMessage());</span>
+<span class="nc" id="L70">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(</span>
+<span class="nc" id="L71">                    &quot;error&quot;, e.getMessage()</span>
             ));
         }
     }
@@ -78,26 +82,21 @@ import java.util.Map;
      */
     @PutMapping(&quot;/update/{id}&quot;)
     public ResponseEntity&lt;?&gt; updateUser(@PathVariable Long id, @RequestBody User user) {
-<span class="nc" id="L81">    	System.out.println(&quot;start updating user in controller: &quot;);</span>
         try {
-<span class="nc" id="L83">            User updatedUser = userService.updateUser(id, user);</span>
-<span class="nc" id="L84">            System.out.println(&quot;user updated in controller: &quot;);</span>
-
-<span class="nc bnc" id="L86" title="All 2 branches missed.">            if (updatedUser == null) {</span>
-<span class="nc" id="L87">            	System.out.println(&quot;updatingUser in controller is null: &quot;);</span>
+<span class="fc" id="L86">            User updatedUser = userService.updateUser(id, user);</span>
+<span class="pc bpc" id="L87" title="1 of 2 branches missed.">            if (updatedUser == null) {</span>
 <span class="nc" id="L88">                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Erreur lors du update de l'utilisateur.&quot;);</span>
             }
-            
-<span class="nc" id="L91">            System.out.println(&quot;done updating user in controller: &quot;);</span>
+<span class="fc" id="L90">            System.out.println(&quot;done updating user in controller&quot;);</span>
 
-<span class="nc" id="L93">            return ResponseEntity.status(HttpStatus.OK).body(Map.of(</span>
+<span class="fc" id="L92">            return ResponseEntity.status(HttpStatus.OK).body(Map.of(</span>
                     &quot;message&quot;, &quot;User updated successfully.&quot;,
-<span class="nc" id="L95">                    &quot;token&quot;, updatedUser.getTokenHash()</span>
+<span class="fc" id="L94">                    &quot;token&quot;, updatedUser.getTokenHash()</span>
             ));
-<span class="nc" id="L97">        } catch (IllegalArgumentException e) {</span>
-<span class="nc" id="L98">            System.out.println(&quot;error: &quot; + e.getMessage());</span>
-<span class="nc" id="L99">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(</span>
-<span class="nc" id="L100">                    &quot;error&quot;, e.getMessage()</span>
+<span class="nc" id="L96">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L97">            System.out.println(&quot;error: &quot; + e.getMessage());</span>
+<span class="nc" id="L98">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(</span>
+<span class="nc" id="L99">                    &quot;error&quot;, e.getMessage()</span>
             ));
         }
     }
@@ -111,20 +110,20 @@ import java.util.Map;
     @PutMapping(&quot;/update-token/{id}&quot;)
     public ResponseEntity&lt;?&gt; updateToken(@PathVariable Long id) {
         try {
-<span class="nc" id="L114">            User updatedUser = userService.updateToken(id);</span>
+<span class="fc" id="L113">            User updatedUser = userService.updateToken(id);</span>
 
-<span class="nc bnc" id="L116" title="All 2 branches missed.">            if (updatedUser == null) {</span>
-<span class="nc" id="L117">                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Erreur lors du update de l'utilisateur.&quot;);</span>
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">            if (updatedUser == null) {</span>
+<span class="nc" id="L116">                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(&quot;Erreur lors du update de l'utilisateur.&quot;);</span>
             }
 
-<span class="nc" id="L120">            return ResponseEntity.status(HttpStatus.OK).body(Map.of(</span>
+<span class="fc" id="L119">            return ResponseEntity.status(HttpStatus.OK).body(Map.of(</span>
                     &quot;message&quot;, &quot;User updated successfully.&quot;,
-<span class="nc" id="L122">                    &quot;token&quot;, updatedUser.getTokenHash()</span>
+<span class="fc" id="L121">                    &quot;token&quot;, updatedUser.getTokenHash()</span>
             ));
-<span class="nc" id="L124">        } catch (IllegalArgumentException e) {</span>
-<span class="nc" id="L125">            System.out.println(&quot;error: &quot; + e.getMessage());</span>
-<span class="nc" id="L126">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(</span>
-<span class="nc" id="L127">                    &quot;error&quot;, e.getMessage()</span>
+<span class="nc" id="L123">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L124">            System.out.println(&quot;error: &quot; + e.getMessage());</span>
+<span class="nc" id="L125">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(</span>
+<span class="nc" id="L126">                    &quot;error&quot;, e.getMessage()</span>
             ));
         }
     }
@@ -138,10 +137,10 @@ import java.util.Map;
     @PostMapping(&quot;/login&quot;)
     public ResponseEntity&lt;String&gt; loginUser(@RequestBody LoginRequestService loginRequest) {
         try {
-<span class="nc" id="L141">            String token = userService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());</span>
-<span class="nc" id="L142">            return ResponseEntity.ok(&quot;Login successful. Token: &quot; + token);</span>
-<span class="nc" id="L143">        } catch (RuntimeException e) {</span>
-<span class="nc" id="L144">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());</span>
+<span class="fc" id="L140">            String token = userService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());</span>
+<span class="fc" id="L141">            return ResponseEntity.ok(&quot;Login successful. Token: &quot; + token);</span>
+<span class="nc" id="L142">        } catch (RuntimeException e) {</span>
+<span class="nc" id="L143">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());</span>
         }
     }
 
@@ -153,8 +152,8 @@ import java.util.Map;
      */
     @DeleteMapping(&quot;/delete/{id}&quot;)
     public ResponseEntity&lt;String&gt; deleteUser(@PathVariable Long id) {
-<span class="nc" id="L156">        userService.deleteById(id);</span>
-<span class="nc" id="L157">        return ResponseEntity.ok(&quot;User deleted successfully&quot;);</span>
+<span class="fc" id="L155">        userService.deleteById(id);</span>
+<span class="fc" id="L156">        return ResponseEntity.ok(&quot;User deleted successfully&quot;);</span>
     }
 
     /**
@@ -165,11 +164,11 @@ import java.util.Map;
      */
     @GetMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;User&gt; getUserById(@PathVariable Long id) {
-<span class="nc" id="L168">        User user = userService.findById(id);</span>
-<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (user == null) {</span>
-<span class="nc" id="L170">            return ResponseEntity.notFound().build();</span>
+<span class="fc" id="L167">        User user = userService.findById(id);</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (user == null) {</span>
+<span class="fc" id="L169">            return ResponseEntity.notFound().build();</span>
         }
-<span class="nc" id="L172">        return ResponseEntity.ok(user);</span>
+<span class="fc" id="L171">        return ResponseEntity.ok(user);</span>
     }
 
     /**
@@ -179,8 +178,8 @@ import java.util.Map;
      */
     @GetMapping
     public ResponseEntity&lt;List&lt;User&gt;&gt; getAllUsers() {
-<span class="nc" id="L182">        List&lt;User&gt; users = userService.findAll();</span>
-<span class="nc" id="L183">        return ResponseEntity.ok(users);</span>
+<span class="fc" id="L181">        List&lt;User&gt; users = userService.findAll();</span>
+<span class="fc" id="L182">        return ResponseEntity.ok(users);</span>
     }
 
     /**
@@ -191,24 +190,24 @@ import java.util.Map;
      */
     @PostMapping(&quot;/verify-token&quot;)
     public ResponseEntity&lt;?&gt; verifyToken(@RequestBody TokenRequestService tokenRequest) {
-<span class="nc" id="L194">        boolean isValid = userService.verifyToken(tokenRequest.getEmail(), tokenRequest.getToken());</span>
-<span class="nc bnc" id="L195" title="All 2 branches missed.">        if (isValid) {</span>
-<span class="nc" id="L196">            User user = userService.findByEmail(tokenRequest.getEmail());</span>
+<span class="fc" id="L193">        boolean isValid = userService.verifyToken(tokenRequest.getEmail(), tokenRequest.getToken());</span>
+<span class="pc bpc" id="L194" title="1 of 2 branches missed.">        if (isValid) {</span>
+<span class="fc" id="L195">            User user = userService.findByEmail(tokenRequest.getEmail());</span>
 
-<span class="nc bnc" id="L198" title="All 2 branches missed.">            if (user != null) {</span>
-<span class="nc" id="L199">                Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc" id="L200">                response.put(&quot;id&quot;, user.getId());</span>
-<span class="nc" id="L201">                response.put(&quot;username&quot;, user.getUsername());</span>
-<span class="nc" id="L202">                response.put(&quot;passwordHash&quot;, user.getPasswordHash());</span>
-<span class="nc" id="L203">                response.put(&quot;email&quot;, user.getEmail());</span>
-<span class="nc" id="L204">                response.put(&quot;tokenHash&quot;, user.getTokenHash());</span>
+<span class="pc bpc" id="L197" title="1 of 2 branches missed.">            if (user != null) {</span>
+<span class="fc" id="L198">                Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L199">                response.put(&quot;id&quot;, user.getId());</span>
+<span class="fc" id="L200">                response.put(&quot;username&quot;, user.getUsername());</span>
+<span class="fc" id="L201">                response.put(&quot;passwordHash&quot;, user.getPasswordHash());</span>
+<span class="fc" id="L202">                response.put(&quot;email&quot;, user.getEmail());</span>
+<span class="fc" id="L203">                response.put(&quot;tokenHash&quot;, user.getTokenHash());</span>
 
-<span class="nc" id="L206">                return ResponseEntity.ok(response);</span>
+<span class="fc" id="L205">                return ResponseEntity.ok(response);</span>
             } else {
-<span class="nc" id="L208">                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Utilisateur non trouvé.&quot;);</span>
+<span class="nc" id="L207">                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Utilisateur non trouvé.&quot;);</span>
             }
         } else {
-<span class="nc" id="L211">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(&quot;Invalid token.&quot;);</span>
+<span class="nc" id="L210">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(&quot;Invalid token.&quot;);</span>
         }
     }
 
@@ -220,8 +219,8 @@ import java.util.Map;
      */
     @PostMapping(&quot;/logout&quot;)
     public ResponseEntity&lt;String&gt; logout(@RequestParam String email) {
-<span class="nc" id="L223">        userService.logoutUser(email);</span>
-<span class="nc" id="L224">        return ResponseEntity.ok(&quot;User logged out successfully&quot;);</span>
+<span class="fc" id="L222">        userService.logoutUser(email);</span>
+<span class="fc" id="L223">        return ResponseEntity.ok(&quot;User logged out successfully&quot;);</span>
     }
 
     /**
@@ -232,21 +231,20 @@ import java.util.Map;
      */
     @PostMapping(&quot;/forgot-password&quot;)
     public ResponseEntity&lt;?&gt; forgotPassword(@RequestBody Map&lt;String, String&gt; request) {
-<span class="nc" id="L235">        String email = request.get(&quot;email&quot;);</span>
-<span class="nc" id="L236">        User user = userService.findByEmail(email);</span>
+<span class="fc" id="L234">        String email = request.get(&quot;email&quot;);</span>
+<span class="fc" id="L235">        User user = userService.findByEmail(email);</span>
 
-<span class="nc bnc" id="L238" title="All 2 branches missed.">        if (user == null) {</span>
-<span class="nc" id="L239">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(&quot;error&quot;, &quot;Email non trouvé.&quot;));</span>
+<span class="fc bfc" id="L237" title="All 2 branches covered.">        if (user == null) {</span>
+<span class="fc" id="L238">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(&quot;error&quot;, &quot;Email non trouvé.&quot;));</span>
         }
 
-<span class="nc" id="L242">        String token = user.getTokenHash();</span>
+<span class="fc" id="L241">        String token = user.getTokenHash();</span>
 
-<span class="nc" id="L244">        EmailService emailService = new EmailService();</span>
-<span class="nc" id="L245">        String resetLink = &quot;http://172.20.10.2:3000/reset-password?token=&quot; + token;</span>
-<span class="nc" id="L246">        emailService.sendEmail(email, &quot;Réinitialisation de mot de passe&quot;,</span>
+<span class="fc" id="L243">        String resetLink = &quot;http://172.20.10.2:3000/reset-password?token=&quot; + token;</span>
+<span class="fc" id="L244">        emailService.sendEmail(email, &quot;Réinitialisation de mot de passe&quot;,</span>
                 &quot;Cliquez sur ce lien pour réinitialiser votre mot de passe : &quot; + resetLink);
 
-<span class="nc" id="L249">        return ResponseEntity.ok(Map.of(&quot;message&quot;, &quot;Un email de réinitialisation a été envoyé.&quot;));</span>
+<span class="fc" id="L247">        return ResponseEntity.ok(Map.of(&quot;message&quot;, &quot;Un email de réinitialisation a été envoyé.&quot;));</span>
     }
 
     /**
@@ -258,46 +256,46 @@ import java.util.Map;
      */
     @PostMapping(&quot;/reset-password&quot;)
     public ResponseEntity&lt;?&gt; resetPassword(@RequestBody Map&lt;String, String&gt; request) {
-<span class="nc" id="L261">        String token = request.get(&quot;token&quot;);</span>
-<span class="nc" id="L262">        String newPassword = request.get(&quot;passwordHash&quot;);</span>
+<span class="fc" id="L259">        String token = request.get(&quot;token&quot;);</span>
+<span class="fc" id="L260">        String newPassword = request.get(&quot;passwordHash&quot;);</span>
 
-<span class="nc" id="L264">        User user = userService.findByTokenHash(token);</span>
-<span class="nc bnc" id="L265" title="All 2 branches missed.">        if (user == null) {</span>
-<span class="nc" id="L266">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(&quot;error&quot;, &quot;Token invalide ou expiré.&quot;));</span>
+<span class="fc" id="L262">        User user = userService.findByTokenHash(token);</span>
+<span class="pc bpc" id="L263" title="1 of 2 branches missed.">        if (user == null) {</span>
+<span class="nc" id="L264">            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(&quot;error&quot;, &quot;Token invalide ou expiré.&quot;));</span>
         }
 
-<span class="nc" id="L269">        user.setPasswordHash(EncodedPassword.encode(newPassword));</span>
-<span class="nc" id="L270">        userService.save(user);</span>
+<span class="fc" id="L267">        user.setPasswordHash(EncodedPassword.encode(newPassword));</span>
+<span class="fc" id="L268">        userService.save(user);</span>
 
-<span class="nc" id="L272">        return ResponseEntity.ok(Map.of(&quot;message&quot;, &quot;Mot de passe réinitialisé avec succès.&quot;));</span>
+<span class="fc" id="L270">        return ResponseEntity.ok(Map.of(&quot;message&quot;, &quot;Mot de passe réinitialisé avec succès.&quot;));</span>
     }
 
     @PostMapping(&quot;/upgrade-to-premium&quot;)
     public ResponseEntity&lt;Map&lt;String, String&gt;&gt; upgradeToPremium(@RequestBody Map&lt;String, Long&gt; request) {
-<span class="nc" id="L277">        Long userId = request.get(&quot;userId&quot;);</span>
-<span class="nc" id="L278">        boolean success = userService.updateUserStatusToPremium(userId);</span>
+<span class="fc" id="L275">        Long userId = request.get(&quot;userId&quot;);</span>
+<span class="fc" id="L276">        boolean success = userService.updateUserStatusToPremium(userId);</span>
 
-<span class="nc" id="L280">        Map&lt;String, String&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc bnc" id="L281" title="All 2 branches missed.">        if (success) {</span>
-<span class="nc" id="L282">            response.put(&quot;success&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L278">        Map&lt;String, String&gt; response = new HashMap&lt;&gt;();</span>
+<span class="pc bpc" id="L279" title="1 of 2 branches missed.">        if (success) {</span>
+<span class="fc" id="L280">            response.put(&quot;success&quot;, &quot;true&quot;);</span>
         } else {
-<span class="nc" id="L284">            response.put(&quot;success&quot;, &quot;false&quot;);</span>
+<span class="nc" id="L282">            response.put(&quot;success&quot;, &quot;false&quot;);</span>
         }
-<span class="nc" id="L286">        return ResponseEntity.ok(response);</span>
+<span class="fc" id="L284">        return ResponseEntity.ok(response);</span>
     }
 
     @PostMapping(&quot;/downgrade-to-standard&quot;)
     public ResponseEntity&lt;Map&lt;String, String&gt;&gt; downgradeToStandard(@RequestBody Map&lt;String, Long&gt; request) {
-<span class="nc" id="L291">        Long userId = request.get(&quot;userId&quot;);</span>
-<span class="nc" id="L292">        boolean success = userService.updateUserStatusToFree(userId);</span>
+<span class="fc" id="L289">        Long userId = request.get(&quot;userId&quot;);</span>
+<span class="fc" id="L290">        boolean success = userService.updateUserStatusToFree(userId);</span>
 
-<span class="nc" id="L294">        Map&lt;String, String&gt; response = new HashMap&lt;&gt;();</span>
-<span class="nc bnc" id="L295" title="All 2 branches missed.">        if (success) {</span>
-<span class="nc" id="L296">            response.put(&quot;success&quot;, &quot;true&quot;);</span>
+<span class="fc" id="L292">        Map&lt;String, String&gt; response = new HashMap&lt;&gt;();</span>
+<span class="pc bpc" id="L293" title="1 of 2 branches missed.">        if (success) {</span>
+<span class="fc" id="L294">            response.put(&quot;success&quot;, &quot;true&quot;);</span>
         } else {
-<span class="nc" id="L298">            response.put(&quot;success&quot;, &quot;false&quot;);</span>
+<span class="nc" id="L296">            response.put(&quot;success&quot;, &quot;false&quot;);</span>
         }
-<span class="nc" id="L300">        return ResponseEntity.ok(response);</span>
+<span class="fc" id="L298">        return ResponseEntity.ok(response);</span>
     }
 }
 

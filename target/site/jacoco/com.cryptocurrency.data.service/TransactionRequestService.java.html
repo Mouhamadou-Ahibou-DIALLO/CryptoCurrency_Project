@@ -1,20 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransactionRequestService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.service</a> &gt; <span class="el_source">TransactionRequestService.java</span></div><h1>TransactionRequestService.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.service;
 
-<span class="nc" id="L3">public class TransactionRequestService {</span>
+/**
+ * This class represents a service for handling transaction requests.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
+<span class="fc" id="L7">public class TransactionRequestService {</span>
+
+    /**
+     * The ID of the user associated with this transaction request.
+     */
     private Long userId;
+
+    /**
+     * The ID of the crypto currency associated with this transaction request.
+     */
     private Long cryptoId;
+
+    /**
+     * The amount invested associated with this transaction request.
+     */
     private double amountInvested;
 
-<span class="nc" id="L8">    public Long getUserId() { return userId; }</span>
+    /**
+     * Returns the ID of the user associated with this transaction request.
+     *
+     * @return The user ID as a Long.
+     */
+<span class="fc" id="L29">    public Long getUserId() { return userId; }</span>
 
-<span class="nc" id="L10">    public void setUserId(Long userId) { this.userId = userId; }</span>
+    /**
+     * Sets the ID of the user associated with this transaction request.
+     *
+     * @param userId The user ID to set as a Long.
+     */
+<span class="fc" id="L36">    public void setUserId(Long userId) { this.userId = userId; }</span>
 
-<span class="nc" id="L12">    public Long getCryptoId() { return cryptoId; }</span>
+    /**
+     * Returns the ID of the crypto currency associated with this transaction request.
+     *
+     * @return The crypto currency ID as a Long.
+     */
+<span class="fc" id="L43">    public Long getCryptoId() { return cryptoId; }</span>
 
-<span class="nc" id="L14">    public void setCryptoId(Long cryptoId) { this.cryptoId = cryptoId; }</span>
+    /**
+     * Sets the ID of the crypto currency associated with this transaction request.
+     *
+     * @param cryptoId The crypto currency ID to set as a Long.
+     */
+<span class="fc" id="L50">    public void setCryptoId(Long cryptoId) { this.cryptoId = cryptoId; }</span>
 
-<span class="nc" id="L16">    public double getAmountInvested() { return amountInvested; }</span>
+    /**
+     * Returns the amount invested associated with this transaction request.
+     * The amount invested is the value of the transaction that was requested.
+     *
+     * @return The amount invested as a double.
+     */
+<span class="fc" id="L58">    public double getAmountInvested() { return amountInvested; }</span>
 
-<span class="nc" id="L18">    public void setAmountInvested(double amountInvested) { this.amountInvested = amountInvested; }</span>
+    /**
+     * Sets the amount invested associated with this transaction request.
+     * The amount invested is the value of the transaction that was requested.
+     * @param amountInvested The amount invested as a double.
+     */
+<span class="fc" id="L65">    public void setAmountInvested(double amountInvested) { this.amountInvested = amountInvested; }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

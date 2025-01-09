@@ -4,7 +4,6 @@ import com.cryptocurrency.data.model.CryptoPriceHistory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,20 +24,6 @@ public class PredictionService {
      * @throws IllegalArgumentException If the list contains fewer than two data points.
      */
     public static List<CryptoPriceHistory> calculateMovingAverages(List<CryptoPriceHistory> priceHistory) {
-//        System.out.println("calculate moving averages");
-//        List<CryptoPriceHistory> movingAverages = new ArrayList<>();
-//
-//        Collections.shuffle(priceHistory);
-//        List<CryptoPriceHistory> randomSubList = priceHistory.subList(0, Math.min(5, priceHistory.size()));
-//
-//        for (int i = 0; i < randomSubList.size(); i++) {
-//            double sum = 0;
-//            for (int j = 0; j <= i; j++) {
-//                sum += randomSubList.get(j).getPrice();
-//            }
-//            movingAverages.add(new CryptoPriceHistory(randomSubList.get(i).getTimestamp(), sum / (i + 1)));
-//        }
-
         int numberOfPoints = 10;
         System.out.println("Calculating moving averages for selected range");
 
@@ -77,36 +62,6 @@ public class PredictionService {
      * @throws IllegalArgumentException If the list contains fewer than two data points.
      */
     public static List<CryptoPriceHistory> predictNextPricesUsingLinearRegression(List<CryptoPriceHistory> priceHistory) {
-//        System.out.println("predict next prices using linear regression");
-//        if (priceHistory.size() < 2) {
-//            throw new IllegalArgumentException("Not enough data points for regression.");
-//        }
-//
-//        Collections.shuffle(priceHistory);
-//        List<CryptoPriceHistory> randomSubList = priceHistory.subList(0, Math.min(5, priceHistory.size()));
-//
-//        int n = randomSubList.size();
-//        double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
-//
-//        for (int i = 0; i < n; i++) {
-//            double x = i + 1;
-//            double y = randomSubList.get(i).getPrice();
-//
-//            sumX += x;
-//            sumY += y;
-//            sumXY += x * y;
-//            sumX2 += x * x;
-//        }
-//        double slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
-//        double intercept = (sumY - slope * sumX) / n;
-//
-//        List<CryptoPriceHistory> predictedPrices = new ArrayList<>();
-//        for (int i = 1; i <= 5; i++) {
-//            predictedPrices.add(new CryptoPriceHistory(priceHistory.get(n - 1).getTimestamp().plusDays(i), slope * (n + i) + intercept));
-//        }
-//
-//        return predictedPrices;
-
         int numberOfPoints = 10;
         System.out.println("Predicting prices using linear regression");
 
@@ -159,21 +114,6 @@ public class PredictionService {
      *         price and the error margin expressed as a percentage.
      */
     public static List<CryptoPriceHistory> calculateErrorMargins(List<CryptoPriceHistory> actualPrices, List<CryptoPriceHistory> predictedPrices) {
-//        System.out.println("clacule error margins");
-//        Collections.shuffle(actualPrices);
-//        Collections.shuffle(predictedPrices);
-//
-//        List<CryptoPriceHistory> errorMargins = new ArrayList<>();
-//        for (int i = 0; i < Math.min(actualPrices.size(), 5); i++) {
-//            double actualPrice = actualPrices.get(i).getPrice();
-//            double predictedPrice = predictedPrices.get(i).getPrice();
-//
-//            double margin = Math.abs((predictedPrice - actualPrice) / actualPrice) * 100;
-//            errorMargins.add(new CryptoPriceHistory(actualPrices.get(i).getTimestamp(), margin));
-//        }
-//
-//        return errorMargins;
-
         int numberOfPoints = 10;
         System.out.println("Calculating error margins");
 

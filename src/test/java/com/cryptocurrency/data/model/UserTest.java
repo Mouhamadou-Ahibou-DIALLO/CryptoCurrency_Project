@@ -67,5 +67,27 @@ public class UserTest {
         assertEquals("email1", user.getEmail(), "The email of the user should be 'email1'");
         assertEquals("tokenHash1", user.getTokenHash(), "The token hash of the user should be 'tokenHash1'");
         assertEquals("passwordHash1", user.getPasswordHash(), "The password hash of the user should be 'passwordHash1'");
+
+        User user1 = new User();
+        user1.setStatut("normal");
+
+        assertEquals("normal", user1.getStatut(), "The statut of the user should be 'normal'");
+    }
+
+    /**
+     * Tests the toString method of the User class.
+     * Ensures that the string representation of the User object
+     * matches the expected format.
+     */
+    @Test
+    public void testToString() {
+        String expected = "User{" +
+                "id=" + user.getId() +
+                ", username='" + user.getUsername() + '\'' +
+                ", email='" + user.getEmail() + '\'' +
+                ", tokenHash='" + user.getTokenHash() + '\'' +
+                ", passwordHash='" + user.getPasswordHash() + '\'' +
+                '}';
+        assertEquals(expected, user.toString());
     }
 }

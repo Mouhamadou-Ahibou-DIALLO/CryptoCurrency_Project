@@ -13,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
     /**
      * The password encoder used to encode tokens.
      */
-<span class="nc" id="L16">    private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();</span>
+<span class="fc" id="L16">    private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();</span>
 
     /**
      * Encodes a token for use in authentication.
@@ -22,7 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
      * @return the encoded token
      */
     public static String encode(String token) {
-<span class="nc" id="L25">        return passwordEncoder.encode(token);</span>
+<span class="fc" id="L25">        return passwordEncoder.encode(token);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

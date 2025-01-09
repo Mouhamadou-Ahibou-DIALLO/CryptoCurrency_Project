@@ -52,7 +52,6 @@ public class CryptoCurrencyController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<CryptoCurrency> getCryptoCurrencyById(@PathVariable Long id) {
-        System.out.println("just id: " + id);
         CryptoCurrency cryptocurrency = cryptoCurrencyService.getCryptoCurrencyById(id);
         return ResponseEntity.ok(cryptocurrency);
     }

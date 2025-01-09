@@ -32,12 +32,10 @@ public class PredictionController {
         List<CryptoPriceHistory> predictedPrices = PredictionService.predictNextPricesUsingLinearRegression(cryptoPriceHistoryList);
 
         if (cryptoPriceHistoryList.isEmpty()) {
-            System.out.println("Data exists but list is empty for key: ");
             return ResponseEntity.notFound().build();
         }
 
         List<CryptoPriceHistory> filteredHistory = getCryptoPriceHistory(name, predictedPrices, start, end);
-
         return ResponseEntity.ok(filteredHistory);
     }
 
@@ -55,8 +53,11 @@ public class PredictionController {
         List<CryptoPriceHistory> cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);
         List<CryptoPriceHistory> predictedPrices = PredictionService.calculateMovingAverages(cryptoPriceHistoryList);
 
-        List<CryptoPriceHistory> filteredHistory = getCryptoPriceHistory(name, predictedPrices, start, end);
+        if (cryptoPriceHistoryList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
 
+        List<CryptoPriceHistory> filteredHistory = getCryptoPriceHistory(name, predictedPrices, start, end);
         return ResponseEntity.ok(filteredHistory);
     }
 
@@ -78,12 +79,10 @@ public class PredictionController {
         List<CryptoPriceHistory> margingError = PredictionService.calculateErrorMargins(cryptoPriceHistoryList, predictedPrices);
 
         if (cryptoPriceHistoryList.isEmpty()) {
-            System.out.println("Data exists but list is empty for key: ");
             return ResponseEntity.notFound().build();
         }
 
         List<CryptoPriceHistory> filteredHistory = getCryptoPriceHistory(name, margingError, start, end);
-
         return ResponseEntity.ok(filteredHistory);
     }
 
@@ -101,8 +100,6 @@ public class PredictionController {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         LocalDateTime startDate = LocalDateTime.parse(start, formatter);
         LocalDateTime endDate = LocalDateTime.parse(end, formatter);
-
-        System.out.println("Key name: graphe prédictions");
 
         return cryptoPriceHistoryList.stream()
                 .filter(entry -> !entry.getTimestamp().isBefore(startDate) && !entry.getTimestamp().isAfter(endDate))

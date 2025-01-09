@@ -133,19 +133,19 @@ public class DataCollectionService {
      * @param cryptoCurrencyList a list of CryptoCurrency objects
      */
     public void addCryptoForPriceHistory(List&lt;CryptoCurrency&gt; cryptoCurrencyList) {
-<span class="nc" id="L136">        System.out.println(&quot;start adding cryptoCurrency for price history dans DataCollectionService&quot;);</span>
-<span class="nc bnc" id="L137" title="All 2 branches missed.">        for (CryptoCurrency crypto : cryptoCurrencyList) {</span>
-<span class="nc" id="L138">            String name = crypto.getName();</span>
-<span class="nc" id="L139">            LocalDateTime timestamp = LocalDateTime.now();</span>
-<span class="nc" id="L140">            Double price = crypto.getPrice();</span>
+<span class="fc" id="L136">        System.out.println(&quot;start adding cryptoCurrency for price history dans DataCollectionService&quot;);</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        for (CryptoCurrency crypto : cryptoCurrencyList) {</span>
+<span class="fc" id="L138">            String name = crypto.getName();</span>
+<span class="fc" id="L139">            LocalDateTime timestamp = LocalDateTime.now();</span>
+<span class="fc" id="L140">            Double price = crypto.getPrice();</span>
 
-<span class="nc" id="L142">            cryptoPriceHistoryMap.putIfAbsent(name, new ArrayList&lt;&gt;());</span>
-<span class="nc" id="L143">            CryptoPriceHistory cryptoPriceHistory = new CryptoPriceHistory(timestamp, price);</span>
-<span class="nc" id="L144">            cryptoPriceHistoryMap.get(name).add(cryptoPriceHistory);</span>
-<span class="nc" id="L145">            System.out.println(&quot;Ajout dans la boucle is OKay for price history dans DataCollectionService&quot;);</span>
-<span class="nc" id="L146">        }</span>
-<span class="nc" id="L147">        System.out.println(&quot;Collect for price history is done ...&quot;);</span>
-<span class="nc" id="L148">    }</span>
+<span class="fc" id="L142">            cryptoPriceHistoryMap.putIfAbsent(name, new ArrayList&lt;&gt;());</span>
+<span class="fc" id="L143">            CryptoPriceHistory cryptoPriceHistory = new CryptoPriceHistory(timestamp, price);</span>
+<span class="fc" id="L144">            cryptoPriceHistoryMap.get(name).add(cryptoPriceHistory);</span>
+<span class="fc" id="L145">            System.out.println(&quot;Ajout dans la boucle is OKay for price history dans DataCollectionService&quot;);</span>
+<span class="fc" id="L146">        }</span>
+<span class="fc" id="L147">        System.out.println(&quot;Collect for price history is done ...&quot;);</span>
+<span class="fc" id="L148">    }</span>
 
 
     /**
@@ -154,41 +154,41 @@ public class DataCollectionService {
      */
     @Scheduled(fixedRate = 6000000)
     public void collectMarketData() {
-<span class="nc" id="L157">        logger.info(&quot;Starting data collection ......&quot;);</span>
+<span class="fc" id="L157">        logger.info(&quot;Starting data collection ......&quot;);</span>
 
-<span class="nc" id="L159">        String apiUrl = &quot;https://api.coincap.io/v2/assets&quot;;</span>
+<span class="fc" id="L159">        String apiUrl = &quot;https://api.coincap.io/v2/assets&quot;;</span>
 
         try {
-<span class="nc" id="L162">            OkHttpClient client = new OkHttpClient();</span>
-<span class="nc" id="L163">            Request request = new Request.Builder()</span>
-<span class="nc" id="L164">                    .url(apiUrl)</span>
-<span class="nc" id="L165">                    .header(&quot;Authorization&quot;, bearerToken)</span>
-<span class="nc" id="L166">                    .build();</span>
+<span class="fc" id="L162">            OkHttpClient client = new OkHttpClient();</span>
+<span class="fc" id="L163">            Request request = new Request.Builder()</span>
+<span class="fc" id="L164">                    .url(apiUrl)</span>
+<span class="fc" id="L165">                    .header(&quot;Authorization&quot;, bearerToken)</span>
+<span class="fc" id="L166">                    .build();</span>
 
-<span class="nc" id="L168">            Response response = client.newCall(request).execute();</span>
+<span class="fc" id="L168">            Response response = client.newCall(request).execute();</span>
 
-<span class="nc bnc" id="L170" title="All 2 branches missed.">            if (response.isSuccessful()) {</span>
-<span class="nc bnc" id="L171" title="All 2 branches missed.">                assert response.body() != null;</span>
-<span class="nc" id="L172">                String responseBody = response.body().string();</span>
-                //List&lt;CryptoCurrency&gt; cryptoCurrencyList = parseMarketData(responseBody);
+<span class="pc bpc" id="L170" title="1 of 2 branches missed.">            if (response.isSuccessful()) {</span>
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">                assert response.body() != null;</span>
+<span class="fc" id="L172">                String responseBody = response.body().string();</span>
+<span class="fc" id="L173">                List&lt;CryptoCurrency&gt; cryptoCurrencyList = parseMarketData(responseBody);</span>
 
-                //enforceTableLimitBeforeInsert();
+<span class="fc" id="L175">                enforceTableLimitBeforeInsert();</span>
 
-                //cryptoCurrencyRepository.saveAll(cryptoCurrencyList);
+<span class="fc" id="L177">                cryptoCurrencyRepository.saveAll(cryptoCurrencyList);</span>
 
-<span class="nc" id="L179">                System.out.println(&quot;Ajout des historiques de prix ...&quot;);</span>
-                //addCryptoForPriceHistory(cryptoCurrencyList);
-<span class="nc" id="L181">                System.out.println(&quot;Ajout terminé.&quot;);</span>
+<span class="fc" id="L179">                System.out.println(&quot;Ajout des historiques de prix ...&quot;);</span>
+<span class="fc" id="L180">                addCryptoForPriceHistory(cryptoCurrencyList);</span>
+<span class="fc" id="L181">                System.out.println(&quot;Ajout terminé.&quot;);</span>
 
-<span class="nc" id="L183">                logger.info(&quot;20 new lines inserée dans la table CryptoCurrency ...........&quot;);</span>
+<span class="fc" id="L183">                logger.info(&quot;20 new lines inserée dans la table CryptoCurrency ...........&quot;);</span>
             }
 
 <span class="nc" id="L186">        } catch (Exception e) {</span>
 <span class="nc" id="L187">            logger.error(&quot;An error occurred during data collection: &quot;, e);</span>
-<span class="nc" id="L188">        }</span>
+<span class="fc" id="L188">        }</span>
 
-<span class="nc" id="L190">        logger.info(&quot;Fin de la collection de donnée&quot;);</span>
-<span class="nc" id="L191">    }</span>
+<span class="fc" id="L190">        logger.info(&quot;Fin de la collection de donnée&quot;);</span>
+<span class="fc" id="L191">    }</span>
 
     /**
      * Parses the market data from the CoinCap API response.
@@ -197,49 +197,49 @@ public class DataCollectionService {
      * @return A list of CryptoCurrency objects parsed from the API response.
      */
     private List&lt;CryptoCurrency&gt; parseMarketData(String jsonResponse) {
-<span class="nc" id="L200">        List&lt;CryptoCurrency&gt; cryptoCurrencyList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L200">        List&lt;CryptoCurrency&gt; cryptoCurrencyList = new ArrayList&lt;&gt;();</span>
         try {
-<span class="nc" id="L202">            ObjectMapper objectMapper = new ObjectMapper();</span>
-<span class="nc" id="L203">            JsonNode rootNode = objectMapper.readTree(jsonResponse);</span>
-<span class="nc" id="L204">            JsonNode dataNode = rootNode.path(&quot;data&quot;);</span>
+<span class="fc" id="L202">            ObjectMapper objectMapper = new ObjectMapper();</span>
+<span class="fc" id="L203">            JsonNode rootNode = objectMapper.readTree(jsonResponse);</span>
+<span class="fc" id="L204">            JsonNode dataNode = rootNode.path(&quot;data&quot;);</span>
 
-<span class="nc" id="L206">            int count = 0;</span>
-<span class="nc bnc" id="L207" title="All 2 branches missed.">            if (dataNode.isArray()) {</span>
-<span class="nc bnc" id="L208" title="All 2 branches missed.">                for (JsonNode node : dataNode) {</span>
-<span class="nc bnc" id="L209" title="All 2 branches missed.">                    if (count &gt;= LIMIT_LINE) break;</span>
+<span class="fc" id="L206">            int count = 0;</span>
+<span class="pc bpc" id="L207" title="1 of 2 branches missed.">            if (dataNode.isArray()) {</span>
+<span class="pc bpc" id="L208" title="1 of 2 branches missed.">                for (JsonNode node : dataNode) {</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">                    if (count &gt;= LIMIT_LINE) break;</span>
 
-<span class="nc" id="L211">                    String name = node.path(&quot;name&quot;).asText();</span>
-<span class="nc" id="L212">                    String symbol = node.path(&quot;symbol&quot;).asText();</span>
-<span class="nc" id="L213">                    int rank = node.path(&quot;rank&quot;).asInt();</span>
-<span class="nc" id="L214">                    double supply = node.path(&quot;supply&quot;).asDouble();</span>
-<span class="nc" id="L215">                    double maxSupply = node.path(&quot;maxSupply&quot;).asDouble();</span>
-<span class="nc" id="L216">                    double market = node.path(&quot;marketCapUsd&quot;).asDouble();</span>
-<span class="nc" id="L217">                    double volume = node.path(&quot;volumeUsd24Hr&quot;).asDouble();</span>
-<span class="nc" id="L218">                    double price = node.path(&quot;priceUsd&quot;).asDouble();</span>
-<span class="nc" id="L219">                    double change = node.path(&quot;changePercent24Hr&quot;).asDouble();</span>
-<span class="nc" id="L220">                    double vwap = node.path(&quot;vwap24Hr&quot;).asDouble();;</span>
+<span class="fc" id="L211">                    String name = node.path(&quot;name&quot;).asText();</span>
+<span class="fc" id="L212">                    String symbol = node.path(&quot;symbol&quot;).asText();</span>
+<span class="fc" id="L213">                    int rank = node.path(&quot;rank&quot;).asInt();</span>
+<span class="fc" id="L214">                    double supply = node.path(&quot;supply&quot;).asDouble();</span>
+<span class="fc" id="L215">                    double maxSupply = node.path(&quot;maxSupply&quot;).asDouble();</span>
+<span class="fc" id="L216">                    double market = node.path(&quot;marketCapUsd&quot;).asDouble();</span>
+<span class="fc" id="L217">                    double volume = node.path(&quot;volumeUsd24Hr&quot;).asDouble();</span>
+<span class="fc" id="L218">                    double price = node.path(&quot;priceUsd&quot;).asDouble();</span>
+<span class="fc" id="L219">                    double change = node.path(&quot;changePercent24Hr&quot;).asDouble();</span>
+<span class="fc" id="L220">                    double vwap = node.path(&quot;vwap24Hr&quot;).asDouble();;</span>
 
-<span class="nc" id="L222">                    CryptoCurrency cryptocurrency = new CryptoCurrency();</span>
-<span class="nc" id="L223">                    cryptocurrency.setName(name);</span>
-<span class="nc" id="L224">                    cryptocurrency.setSymbol(symbol);</span>
-<span class="nc" id="L225">                    cryptocurrency.setRank(rank);</span>
-<span class="nc" id="L226">                    cryptocurrency.setSupply(supply);</span>
-<span class="nc" id="L227">                    cryptocurrency.setMaxSupply(maxSupply);</span>
-<span class="nc" id="L228">                    cryptocurrency.setMarket(market);</span>
-<span class="nc" id="L229">                    cryptocurrency.setVolume(volume);</span>
-<span class="nc" id="L230">                    cryptocurrency.setPrice(price);</span>
-<span class="nc" id="L231">                    cryptocurrency.setChange(change);</span>
-<span class="nc" id="L232">                    cryptocurrency.setVwap(vwap);</span>
-<span class="nc" id="L233">                    cryptocurrency.setTimestamp(LocalDateTime.now());</span>
+<span class="fc" id="L222">                    CryptoCurrency cryptocurrency = new CryptoCurrency();</span>
+<span class="fc" id="L223">                    cryptocurrency.setName(name);</span>
+<span class="fc" id="L224">                    cryptocurrency.setSymbol(symbol);</span>
+<span class="fc" id="L225">                    cryptocurrency.setRank(rank);</span>
+<span class="fc" id="L226">                    cryptocurrency.setSupply(supply);</span>
+<span class="fc" id="L227">                    cryptocurrency.setMaxSupply(maxSupply);</span>
+<span class="fc" id="L228">                    cryptocurrency.setMarket(market);</span>
+<span class="fc" id="L229">                    cryptocurrency.setVolume(volume);</span>
+<span class="fc" id="L230">                    cryptocurrency.setPrice(price);</span>
+<span class="fc" id="L231">                    cryptocurrency.setChange(change);</span>
+<span class="fc" id="L232">                    cryptocurrency.setVwap(vwap);</span>
+<span class="fc" id="L233">                    cryptocurrency.setTimestamp(LocalDateTime.now());</span>
 
-<span class="nc" id="L235">                    cryptoCurrencyList.add(cryptocurrency);</span>
-<span class="nc" id="L236">                    count++;</span>
-<span class="nc" id="L237">                }</span>
+<span class="fc" id="L235">                    cryptoCurrencyList.add(cryptocurrency);</span>
+<span class="fc" id="L236">                    count++;</span>
+<span class="fc" id="L237">                }</span>
             }
 <span class="nc" id="L239">        } catch (Exception e) {</span>
 <span class="nc" id="L240">            logger.error(&quot;Erreur lors du parsing des données: &quot;, e);</span>
-<span class="nc" id="L241">        }</span>
-<span class="nc" id="L242">        return cryptoCurrencyList;</span>
+<span class="fc" id="L241">        }</span>
+<span class="fc" id="L242">        return cryptoCurrencyList;</span>
     }
 
     /**
@@ -247,14 +247,14 @@ public class DataCollectionService {
      * Deletes the oldest rows if the total exceeds the limit BEFORE inserting new data.
      */
     private void enforceTableLimitBeforeInsert() {
-<span class="nc" id="L250">        logger.info(&quot;supprimer les anciennes 20 lignes&quot;);</span>
-<span class="nc" id="L251">        List&lt;CryptoCurrency&gt; cryptoCurrencyList = cryptoCurrencyRepository.findAll();</span>
-<span class="nc bnc" id="L252" title="All 2 branches missed.">        if (cryptoCurrencyList.size() == LIMIT_LINE) {</span>
+<span class="fc" id="L250">        logger.info(&quot;supprimer les anciennes 20 lignes&quot;);</span>
+<span class="fc" id="L251">        List&lt;CryptoCurrency&gt; cryptoCurrencyList = cryptoCurrencyRepository.findAll();</span>
+<span class="pc bpc" id="L252" title="1 of 2 branches missed.">        if (cryptoCurrencyList.size() == LIMIT_LINE) {</span>
 <span class="nc" id="L253">            System.out.println(cryptoCurrencyList.size() + &quot; taille&quot;);</span>
 <span class="nc" id="L254">            logger.info(&quot;{} taille &quot;, cryptoCurrencyList.size());</span>
 <span class="nc" id="L255">            cryptoCurrencyRepository.deleteAll();</span>
         }
-<span class="nc" id="L257">    }</span>
+<span class="fc" id="L257">    }</span>
 
     /**
      * Returns a map of all the CryptoPriceHistory objects in the database.

@@ -1,33 +1,99 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AlertUpdateService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">CryptoCurrency_Project</a> &gt; <a href="index.source.html" class="el_package">com.cryptocurrency.data.service</a> &gt; <span class="el_source">AlertUpdateService.java</span></div><h1>AlertUpdateService.java</h1><pre class="source lang-java linenums">package com.cryptocurrency.data.service;
 
-<span class="nc" id="L3">public class AlertUpdateService {</span>
+/**
+ * This class represents an AlertUpdateService object.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
+public class AlertUpdateService {
 
+    /**
+     * The name of the alert.
+     */
     private Double priceThreshold;
+
+    /**
+     * The price threshold for the alert.
+     */
     private Double variationThreshold;
+
+    /**
+     * The name of the alert.
+     */
     private String name;
 
+    /**
+     * Default constructor for the AlertUpdateService class.
+     */
+<span class="fc" id="L27">    public AlertUpdateService() {}</span>
+
+    /**
+     * Constructor for the AlertUpdateService class.
+     * @param priceThreshold The price threshold for the alert.
+     * @param variationThreshold The variation threshold for the alert.
+     * @param name The name of the alert.
+     */
+<span class="nc" id="L35">    public AlertUpdateService(Double priceThreshold, Double variationThreshold, String name) {</span>
+<span class="nc" id="L36">        this.priceThreshold = priceThreshold;</span>
+<span class="nc" id="L37">        this.variationThreshold = variationThreshold;</span>
+<span class="nc" id="L38">        this.name = name;</span>
+<span class="nc" id="L39">    }</span>
+
+    /**
+     * Returns the name of the alert.
+     *
+     * @return The name of the alert.
+     */
     public String getName() {
-<span class="nc" id="L10">        return name;</span>
+<span class="fc" id="L47">        return name;</span>
     }
 
+    /**
+     * Sets the name of the alert.
+     *
+     * @param name The name to set for the alert.
+     */
     public void setName(String name) {
-<span class="nc" id="L14">        this.name = name;</span>
-<span class="nc" id="L15">    }</span>
+<span class="fc" id="L56">        this.name = name;</span>
+<span class="fc" id="L57">    }</span>
 
+    /**
+     * Returns the price threshold associated with the AlertUpdateService.
+     * The price threshold is the price above or below which the alert will be triggered.
+     * @return The price threshold associated with the AlertUpdateService.
+     */
     public Double getPriceThreshold() {
-<span class="nc" id="L18">        return priceThreshold;</span>
+<span class="fc" id="L65">        return priceThreshold;</span>
     }
 
+    /**
+     * Sets the price threshold for the alert.
+     * The price threshold is the value above or below which the alert will be triggered.
+     *
+     * @param priceThreshold The price threshold to set for the alert.
+     */
     public void setPriceThreshold(Double priceThreshold) {
-<span class="nc" id="L22">        this.priceThreshold = priceThreshold;</span>
-<span class="nc" id="L23">    }</span>
+<span class="fc" id="L75">        this.priceThreshold = priceThreshold;</span>
+<span class="fc" id="L76">    }</span>
 
+    /**
+     * Returns the variation threshold associated with the AlertUpdateService.
+     * The variation threshold is the amount of variation of the price above
+     * or below which the alert will be triggered.
+     * @return The variation threshold associated with the AlertUpdateService.
+     */
     public Double getVariationThreshold() {
-<span class="nc" id="L26">        return variationThreshold;</span>
+<span class="fc" id="L85">        return variationThreshold;</span>
     }
 
+    /**
+     * Sets the variation threshold for the alert.
+     * The variation threshold is the amount of variation of the price above
+     * or below which the alert will be triggered.
+     *
+     * @param variationThreshold The variation threshold to set for the alert.
+     */
     public void setVariationThreshold(Double variationThreshold) {
-<span class="nc" id="L30">        this.variationThreshold = variationThreshold;</span>
-<span class="nc" id="L31">    }</span>
+<span class="fc" id="L96">        this.variationThreshold = variationThreshold;</span>
+<span class="fc" id="L97">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

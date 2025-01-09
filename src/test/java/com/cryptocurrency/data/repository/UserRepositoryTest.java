@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
@@ -212,5 +213,41 @@ public class UserRepositoryTest {
         User result = userRepository.findByUsernameAndPasswordHash(username, passwordHash);
 
         assertEquals(user1, result, "The returned User object should be the same as the one provided");
+    }
+
+    /**
+     * Tests the findByEmailAndPasswordHash method of the UserRepository class.
+     * Ensures that a User object is returned when a valid email and password hash are provided.
+     * Verifies that findByEmailAndPasswordHash is called once.
+     */
+    @Test
+    public void testFindByEmailAndPasswordHash() {
+        String email = "email1";
+        String passwordHash = "passwordHash1";
+
+        when(userRepository.findByEmailAndPasswordHash(email, passwordHash)).thenReturn(java.util.Optional.of(user1));
+        User result = userRepository.findByEmailAndPasswordHash(email, passwordHash).orElse(null);
+
+        assertEquals(user1, result, "The returned User object should be the same as the one provided");
+
+        verify(userRepository, times(1)).findByEmailAndPasswordHash(email, passwordHash);
+    }
+
+    /**
+     * Tests the findByEmailAndTokenHash method of the UserRepository class.
+     * Ensures that a User object is returned when a valid email and token hash are provided.
+     * Verifies that findByEmailAndTokenHash is called once.
+     */
+    @Test
+    public void testFindByEmailAndTokenHash() {
+        String email = "email1";
+        String tokenHash = "tokenHash1";
+
+        when(userRepository.findByEmailAndTokenHash(email, tokenHash)).thenReturn(java.util.Optional.of(user1));
+        User result = userRepository.findByEmailAndTokenHash(email, tokenHash).orElse(null);
+
+        assertEquals(user1, result, "The returned User object should be the same as the one provided");
+
+        verify(userRepository, times(1)).findByEmailAndTokenHash(email, tokenHash);
     }
 }

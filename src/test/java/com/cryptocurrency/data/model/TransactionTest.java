@@ -51,6 +51,8 @@ public class TransactionTest {
         transaction.setAmountInvested(200.0);
         transaction.setPriceAtTransaction(20.0);
         transaction.setQuantity(2.0);
+        transaction.setTransactionDate(LocalDateTime.now());
+        System.out.println(transaction.getTransactionDate());
 
         assertEquals(2L, transaction.getId());
         assertEquals(2L, transaction.getUser().getId());

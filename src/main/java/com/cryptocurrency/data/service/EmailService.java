@@ -36,7 +36,7 @@ public class EmailService {
     /**
      * Send an email notification to the user associated with the alert.
      * @param alert The alert object containing the user and price threshold.
-     * @param currentPrice The current price of the cryptocurrency.
+     * @param currentPrice The current price or variation of the cryptocurrency.
      */
     public void sendNotification(Alerts alert, double currentPrice) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -48,7 +48,7 @@ public class EmailService {
                 + " a atteint ou dépassé le seuil que vous avez défini !\n\n"
                 + "Prix actuel : " + currentPrice + " $\n"
                 + "Seuil défini : " + alert.getPriceThreshold() + " $\n\n"
-                + "Cordialement,\nVotre application Crypto");
+                + "Cordialement,\nVotre application La Cryptomonnaie de l'avenir");
 
         mailSender.send(message);
         System.out.println("le message a ete envoyé: " + message);

@@ -170,14 +170,14 @@ public class DataCollectionService {
             if (response.isSuccessful()) {
                 assert response.body() != null;
                 String responseBody = response.body().string();
-                //List<CryptoCurrency> cryptoCurrencyList = parseMarketData(responseBody);
+                List<CryptoCurrency> cryptoCurrencyList = parseMarketData(responseBody);
 
-                //enforceTableLimitBeforeInsert();
+                enforceTableLimitBeforeInsert();
 
-                //cryptoCurrencyRepository.saveAll(cryptoCurrencyList);
+                cryptoCurrencyRepository.saveAll(cryptoCurrencyList);
 
                 System.out.println("Ajout des historiques de prix ...");
-                //addCryptoForPriceHistory(cryptoCurrencyList);
+                addCryptoForPriceHistory(cryptoCurrencyList);
                 System.out.println("Ajout terminé.");
 
                 logger.info("20 new lines inserée dans la table CryptoCurrency ...........");

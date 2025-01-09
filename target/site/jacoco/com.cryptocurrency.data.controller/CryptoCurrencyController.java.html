@@ -52,9 +52,8 @@ import java.util.stream.Collectors;
      */
     @GetMapping(&quot;/{id}&quot;)
     public ResponseEntity&lt;CryptoCurrency&gt; getCryptoCurrencyById(@PathVariable Long id) {
-<span class="fc" id="L55">        System.out.println(&quot;just id: &quot; + id);</span>
-<span class="fc" id="L56">        CryptoCurrency cryptocurrency = cryptoCurrencyService.getCryptoCurrencyById(id);</span>
-<span class="fc" id="L57">        return ResponseEntity.ok(cryptocurrency);</span>
+<span class="fc" id="L55">        CryptoCurrency cryptocurrency = cryptoCurrencyService.getCryptoCurrencyById(id);</span>
+<span class="fc" id="L56">        return ResponseEntity.ok(cryptocurrency);</span>
     }
 
     /**
@@ -69,28 +68,28 @@ import java.util.stream.Collectors;
     @GetMapping(&quot;/search&quot;)
     public ResponseEntity&lt;?&gt; searchCrypto(@RequestParam(value = &quot;query&quot;) String query) {
         try {
-<span class="nc" id="L72">            CryptoCurrency crypto = null;</span>
+<span class="fc" id="L71">            CryptoCurrency crypto = null;</span>
 
-<span class="nc bnc" id="L74" title="All 2 branches missed.">            if (query.matches(&quot;\\d+&quot;)) {</span>
-<span class="nc" id="L75">                int rank = Integer.parseInt(query);</span>
-<span class="nc" id="L76">                crypto = cryptoCurrencyService.getCryptoCurrencyByMarketCapRank(rank);</span>
-<span class="nc" id="L77">            }</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">            if (query.matches(&quot;\\d+&quot;)) {</span>
+<span class="nc" id="L74">                int rank = Integer.parseInt(query);</span>
+<span class="nc" id="L75">                crypto = cryptoCurrencyService.getCryptoCurrencyByMarketCapRank(rank);</span>
+<span class="nc" id="L76">            }</span>
             else {
-<span class="nc" id="L79">                crypto = cryptoCurrencyService.getCryptoCurrencyBySymbol(query.toUpperCase());</span>
-<span class="nc bnc" id="L80" title="All 2 branches missed.">                if (crypto == null) {</span>
-<span class="nc" id="L81">                    crypto = cryptoCurrencyService.getCryptoCurrencyByName(query);</span>
+<span class="fc" id="L78">                crypto = cryptoCurrencyService.getCryptoCurrencyBySymbol(query.toUpperCase());</span>
+<span class="pc bpc" id="L79" title="1 of 2 branches missed.">                if (crypto == null) {</span>
+<span class="fc" id="L80">                    crypto = cryptoCurrencyService.getCryptoCurrencyByName(query);</span>
                 }
             }
 
-<span class="nc bnc" id="L85" title="All 2 branches missed.">            if (crypto == null) {</span>
-<span class="nc" id="L86">                return ResponseEntity.status(HttpStatus.NOT_FOUND)</span>
-<span class="nc" id="L87">                        .body(Collections.singletonMap(&quot;error&quot;, &quot;Aucune cryptomonnaie trouvée pour la requête : &quot; + query));</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            if (crypto == null) {</span>
+<span class="fc" id="L85">                return ResponseEntity.status(HttpStatus.NOT_FOUND)</span>
+<span class="fc" id="L86">                        .body(Collections.singletonMap(&quot;error&quot;, &quot;Aucune cryptomonnaie trouvée pour la requête : &quot; + query));</span>
             }
-<span class="nc" id="L89">            return ResponseEntity.ok(crypto);</span>
+<span class="fc" id="L88">            return ResponseEntity.ok(crypto);</span>
 
-<span class="nc" id="L91">        } catch (Exception e) {</span>
-<span class="nc" id="L92">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
-<span class="nc" id="L93">                    .body(Collections.singletonMap(&quot;error&quot;, &quot;Une erreur s'est produite lors de la recherche : &quot; + e.getMessage()));</span>
+<span class="nc" id="L90">        } catch (Exception e) {</span>
+<span class="nc" id="L91">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="nc" id="L92">                    .body(Collections.singletonMap(&quot;error&quot;, &quot;Une erreur s'est produite lors de la recherche : &quot; + e.getMessage()));</span>
         }
     }
 
@@ -110,21 +109,21 @@ import java.util.stream.Collectors;
             @RequestParam String start,
             @RequestParam String end
     ) {
-<span class="nc" id="L113">        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;</span>
-<span class="nc" id="L114">        LocalDateTime startDate = LocalDateTime.parse(start, formatter);</span>
-<span class="nc" id="L115">        LocalDateTime endDate = LocalDateTime.parse(end, formatter);</span>
+<span class="fc" id="L112">        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;</span>
+<span class="fc" id="L113">        LocalDateTime startDate = LocalDateTime.parse(start, formatter);</span>
+<span class="fc" id="L114">        LocalDateTime endDate = LocalDateTime.parse(end, formatter);</span>
 
-<span class="nc" id="L117">        List&lt;CryptoPriceHistory&gt; priceHistory = DataCollectionService.getCryptoPriceHistoryMap().get(name);</span>
+<span class="fc" id="L116">        List&lt;CryptoPriceHistory&gt; priceHistory = DataCollectionService.getCryptoPriceHistoryMap().get(name);</span>
 
-<span class="nc bnc" id="L119" title="All 4 branches missed.">        if (priceHistory == null || priceHistory.isEmpty()) {</span>
-<span class="nc" id="L120">            return ResponseEntity.notFound().build();</span>
+<span class="pc bpc" id="L118" title="2 of 4 branches missed.">        if (priceHistory == null || priceHistory.isEmpty()) {</span>
+<span class="nc" id="L119">            return ResponseEntity.notFound().build();</span>
         }
 
-<span class="nc" id="L123">        List&lt;CryptoPriceHistory&gt; filteredHistory = priceHistory.stream()</span>
-<span class="nc bnc" id="L124" title="All 4 branches missed.">                .filter(entry -&gt; !entry.getTimestamp().isBefore(startDate) &amp;&amp; !entry.getTimestamp().isAfter(endDate))</span>
-<span class="nc" id="L125">                .collect(Collectors.toList());</span>
+<span class="fc" id="L122">        List&lt;CryptoPriceHistory&gt; filteredHistory = priceHistory.stream()</span>
+<span class="fc bfc" id="L123" title="All 4 branches covered.">                .filter(entry -&gt; !entry.getTimestamp().isBefore(startDate) &amp;&amp; !entry.getTimestamp().isAfter(endDate))</span>
+<span class="fc" id="L124">                .collect(Collectors.toList());</span>
 
-<span class="nc" id="L127">        return ResponseEntity.ok(filteredHistory);</span>
+<span class="fc" id="L126">        return ResponseEntity.ok(filteredHistory);</span>
     }
 }
 

@@ -28,17 +28,15 @@ import java.util.stream.Collectors;
      */
     @GetMapping(&quot;/linear-regression&quot;)
     public ResponseEntity&lt;List&lt;CryptoPriceHistory&gt;&gt; getLinearRegression(@RequestParam String name, @RequestParam String start, @RequestParam String end) {
-<span class="nc" id="L31">        List&lt;CryptoPriceHistory&gt; cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);</span>
-<span class="nc" id="L32">        List&lt;CryptoPriceHistory&gt; predictedPrices = PredictionService.predictNextPricesUsingLinearRegression(cryptoPriceHistoryList);</span>
+<span class="fc" id="L31">        List&lt;CryptoPriceHistory&gt; cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);</span>
+<span class="fc" id="L32">        List&lt;CryptoPriceHistory&gt; predictedPrices = PredictionService.predictNextPricesUsingLinearRegression(cryptoPriceHistoryList);</span>
 
-<span class="nc bnc" id="L34" title="All 2 branches missed.">        if (cryptoPriceHistoryList.isEmpty()) {</span>
-<span class="nc" id="L35">            System.out.println(&quot;Data exists but list is empty for key: &quot;);</span>
-<span class="nc" id="L36">            return ResponseEntity.notFound().build();</span>
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        if (cryptoPriceHistoryList.isEmpty()) {</span>
+<span class="nc" id="L35">            return ResponseEntity.notFound().build();</span>
         }
 
-<span class="nc" id="L39">        List&lt;CryptoPriceHistory&gt; filteredHistory = getCryptoPriceHistory(name, predictedPrices, start, end);</span>
-
-<span class="nc" id="L41">        return ResponseEntity.ok(filteredHistory);</span>
+<span class="fc" id="L38">        List&lt;CryptoPriceHistory&gt; filteredHistory = getCryptoPriceHistory(name, predictedPrices, start, end);</span>
+<span class="fc" id="L39">        return ResponseEntity.ok(filteredHistory);</span>
     }
 
     /**
@@ -52,17 +50,15 @@ import java.util.stream.Collectors;
      */
     @GetMapping(&quot;/moving-average&quot;)
     public ResponseEntity&lt;List&lt;CryptoPriceHistory&gt;&gt; getMovingAverage(@RequestParam String name, @RequestParam String start, @RequestParam String end) {
-<span class="nc" id="L55">        List&lt;CryptoPriceHistory&gt; cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);</span>
-<span class="nc" id="L56">        List&lt;CryptoPriceHistory&gt; predictedPrices = PredictionService.calculateMovingAverages(cryptoPriceHistoryList);</span>
+<span class="fc" id="L53">        List&lt;CryptoPriceHistory&gt; cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);</span>
+<span class="fc" id="L54">        List&lt;CryptoPriceHistory&gt; predictedPrices = PredictionService.calculateMovingAverages(cryptoPriceHistoryList);</span>
 
-<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (cryptoPriceHistoryList == null) {</span>
-<span class="nc" id="L59">            System.out.println(&quot;No data found for key: &quot;);</span>
-<span class="nc" id="L60">            return ResponseEntity.notFound().build();</span>
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        if (cryptoPriceHistoryList.isEmpty()) {</span>
+<span class="nc" id="L57">            return ResponseEntity.notFound().build();</span>
         }
 
-<span class="nc" id="L63">        List&lt;CryptoPriceHistory&gt; filteredHistory = getCryptoPriceHistory(name, predictedPrices, start, end);</span>
-
-<span class="nc" id="L65">        return ResponseEntity.ok(filteredHistory);</span>
+<span class="fc" id="L60">        List&lt;CryptoPriceHistory&gt; filteredHistory = getCryptoPriceHistory(name, predictedPrices, start, end);</span>
+<span class="fc" id="L61">        return ResponseEntity.ok(filteredHistory);</span>
     }
 
     /**
@@ -78,18 +74,16 @@ import java.util.stream.Collectors;
      */
     @GetMapping(&quot;/marging-error&quot;)
     public ResponseEntity&lt;List&lt;CryptoPriceHistory&gt;&gt; getMargingError(@RequestParam String name, @RequestParam String start, @RequestParam String end) {
-<span class="nc" id="L81">        List&lt;CryptoPriceHistory&gt; cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);</span>
-<span class="nc" id="L82">        List&lt;CryptoPriceHistory&gt; predictedPrices = PredictionService.predictNextPricesUsingLinearRegression(cryptoPriceHistoryList);</span>
-<span class="nc" id="L83">        List&lt;CryptoPriceHistory&gt; margingError = PredictionService.calculateErrorMargins(cryptoPriceHistoryList, predictedPrices);</span>
+<span class="fc" id="L77">        List&lt;CryptoPriceHistory&gt; cryptoPriceHistoryList = DataCollectionService.getCryptoPriceHistoryMap().get(name);</span>
+<span class="fc" id="L78">        List&lt;CryptoPriceHistory&gt; predictedPrices = PredictionService.predictNextPricesUsingLinearRegression(cryptoPriceHistoryList);</span>
+<span class="fc" id="L79">        List&lt;CryptoPriceHistory&gt; margingError = PredictionService.calculateErrorMargins(cryptoPriceHistoryList, predictedPrices);</span>
 
-<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (cryptoPriceHistoryList.isEmpty()) {</span>
-<span class="nc" id="L86">            System.out.println(&quot;Data exists but list is empty for key: &quot;);</span>
-<span class="nc" id="L87">            return ResponseEntity.notFound().build();</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (cryptoPriceHistoryList.isEmpty()) {</span>
+<span class="nc" id="L82">            return ResponseEntity.notFound().build();</span>
         }
 
-<span class="nc" id="L90">        List&lt;CryptoPriceHistory&gt; filteredHistory = getCryptoPriceHistory(name, margingError, start, end);</span>
-
-<span class="nc" id="L92">        return ResponseEntity.ok(filteredHistory);</span>
+<span class="fc" id="L85">        List&lt;CryptoPriceHistory&gt; filteredHistory = getCryptoPriceHistory(name, margingError, start, end);</span>
+<span class="fc" id="L86">        return ResponseEntity.ok(filteredHistory);</span>
     }
 
     /**
@@ -103,16 +97,13 @@ import java.util.stream.Collectors;
      * @return A list of CryptoPriceHistory entries within the specified date range.
      */
     private List&lt;CryptoPriceHistory&gt; getCryptoPriceHistory(String name, List&lt;CryptoPriceHistory&gt; cryptoPriceHistoryList, String start, String end) {
-<span class="nc" id="L106">        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;</span>
-<span class="nc" id="L107">        LocalDateTime startDate = LocalDateTime.parse(start, formatter);</span>
-<span class="nc" id="L108">        LocalDateTime endDate = LocalDateTime.parse(end, formatter);</span>
+<span class="fc" id="L100">        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;</span>
+<span class="fc" id="L101">        LocalDateTime startDate = LocalDateTime.parse(start, formatter);</span>
+<span class="fc" id="L102">        LocalDateTime endDate = LocalDateTime.parse(end, formatter);</span>
 
-<span class="nc" id="L110">        System.out.println(&quot;Key name: graphe prédictions&quot;);</span>
-        //System.out.println(&quot;CryptoPriceHistoryList: &quot; + DataCollectionService.getCryptoPriceHistoryMap().get(name) + &quot; graphe prédictions&quot;);
-
-<span class="nc" id="L113">        return cryptoPriceHistoryList.stream()</span>
-<span class="nc bnc" id="L114" title="All 4 branches missed.">                .filter(entry -&gt; !entry.getTimestamp().isBefore(startDate) &amp;&amp; !entry.getTimestamp().isAfter(endDate))</span>
-<span class="nc" id="L115">                .collect(Collectors.toList());</span>
+<span class="fc" id="L104">        return cryptoPriceHistoryList.stream()</span>
+<span class="pc bpc" id="L105" title="2 of 4 branches missed.">                .filter(entry -&gt; !entry.getTimestamp().isBefore(startDate) &amp;&amp; !entry.getTimestamp().isAfter(endDate))</span>
+<span class="fc" id="L106">                .collect(Collectors.toList());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

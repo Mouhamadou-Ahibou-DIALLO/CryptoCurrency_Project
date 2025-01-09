@@ -12,72 +12,110 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
+/**
+ * The TransactionController class is a Spring REST controller for managing transactions.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
 @RestController
 @RequestMapping(&quot;/api/portfolio&quot;)
 @CrossOrigin(origins = &quot;http://localhost:3000&quot;)
-<span class="fc" id="L19">public class TransactionController {</span>
+<span class="fc" id="L24">public class TransactionController {</span>
 
+    /**
+     * The transactionService field is a Spring service for managing transactions.
+     */
     @Autowired
     private TransactionService transactionService;
 
+    /**
+     * Creates a new transaction for a user with a specified cryptocurrency and investment amount.
+     *
+     * @param transaction A TransactionRequestService object containing userId, cryptoId, and amountInvested.
+     * @return A ResponseEntity containing the created Transaction object or an error message if userId or cryptoId is null.
+     */
     @PostMapping(&quot;/create&quot;)
     public ResponseEntity&lt;?&gt; createTransaction(@RequestBody TransactionRequestService transaction) {
-<span class="nc" id="L26">        Long userId = transaction.getUserId();</span>
-<span class="nc bnc" id="L27" title="All 2 branches missed.">        if (userId == null) {</span>
-<span class="nc" id="L28">            return ResponseEntity.badRequest().body(&quot;L'utilisateur ne peut pas être null.&quot;);</span>
+<span class="fc" id="L40">        Long userId = transaction.getUserId();</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (userId == null) {</span>
+<span class="fc" id="L42">            return ResponseEntity.badRequest().body(&quot;L'utilisateur ne peut pas être null.&quot;);</span>
         }
 
-<span class="nc" id="L31">        Long cryptoId = transaction.getCryptoId();</span>
-<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (cryptoId == null) {</span>
-<span class="nc" id="L33">            return ResponseEntity.badRequest().body(&quot;La crypto-monnaie ne peut pas être null.&quot;);</span>
+<span class="fc" id="L45">        Long cryptoId = transaction.getCryptoId();</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (cryptoId == null) {</span>
+<span class="nc" id="L47">            return ResponseEntity.badRequest().body(&quot;La crypto-monnaie ne peut pas être null.&quot;);</span>
         }
+<span class="fc" id="L49">        double amountInvested = transaction.getAmountInvested();</span>
 
-<span class="nc" id="L36">        double amountInvested = transaction.getAmountInvested();</span>
-
-<span class="nc" id="L38">        Transaction newTransaction = transactionService.createTransaction(userId, cryptoId, amountInvested);</span>
-<span class="nc" id="L39">        System.out.println(&quot;created transaction is done&quot;);</span>
-<span class="nc" id="L40">        return ResponseEntity.ok(newTransaction);</span>
+<span class="fc" id="L51">        Transaction newTransaction = transactionService.createTransaction(userId, cryptoId, amountInvested);</span>
+<span class="fc" id="L52">        System.out.println(&quot;created transaction is done&quot;);</span>
+<span class="fc" id="L53">        return ResponseEntity.ok(newTransaction);</span>
     }
 
+    /**
+     * Updates a transaction with a specified ID with a new investment amount.
+     *
+     * @param transactionId The ID of the transaction to be updated.
+     * @param transaction A TransactionUpdateService object containing the new investment amount.
+     * @return A ResponseEntity containing the updated Transaction object or an error message if transactionId is null.
+     */
     @PutMapping(&quot;/update/{transactionId}&quot;)
     public ResponseEntity&lt;?&gt; updateTransaction(@PathVariable Long transactionId, @RequestBody TransactionUpdateService transaction) {
-<span class="nc bnc" id="L45" title="All 2 branches missed.">        if (transactionId == null) {</span>
-<span class="nc" id="L46">            return ResponseEntity.badRequest().body(&quot;L'id de la transaction ne peut pas être null.&quot;);</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (transactionId == null) {</span>
+<span class="nc" id="L66">            return ResponseEntity.badRequest().body(&quot;L'id de la transaction ne peut pas être null.&quot;);</span>
         }
+<span class="fc" id="L68">        double amountInvested = transaction.getAmountInvested();</span>
 
-<span class="nc" id="L49">        double amountInvested = transaction.getAmountInvested();</span>
-
-<span class="nc" id="L51">        Transaction updatedTransaction = transactionService.updateTransaction(transactionId, amountInvested);</span>
-<span class="nc" id="L52">        System.out.println(&quot;updated transaction is done&quot;);</span>
-<span class="nc" id="L53">        return ResponseEntity.ok(updatedTransaction);</span>
+<span class="fc" id="L70">        Transaction updatedTransaction = transactionService.updateTransaction(transactionId, amountInvested);</span>
+<span class="fc" id="L71">        System.out.println(&quot;updated transaction is done&quot;);</span>
+<span class="fc" id="L72">        return ResponseEntity.ok(updatedTransaction);</span>
     }
 
+    /**
+     * Deletes a transaction with the given ID.
+     *
+     * @param transactionId The ID of the transaction to be deleted.
+     * @return A ResponseEntity containing an error message if transactionId is null or a success message if the transaction is deleted.
+     */
     @DeleteMapping(&quot;/delete/{transactionId}&quot;)
     public ResponseEntity&lt;?&gt; deleteTransaction(@PathVariable Long transactionId) {
-<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (transactionId == null) {</span>
-<span class="nc" id="L59">            return ResponseEntity.badRequest().body(&quot;L'id de la transaction ne peut pas être null.&quot;);</span>
+<span class="pc bpc" id="L83" title="1 of 2 branches missed.">        if (transactionId == null) {</span>
+<span class="nc" id="L84">            return ResponseEntity.badRequest().body(&quot;L'id de la transaction ne peut pas être null.&quot;);</span>
         }
 
-<span class="nc" id="L62">        transactionService.deleteTransaction(transactionId);</span>
-<span class="nc" id="L63">        System.out.println(&quot;deleted transaction is done&quot;);</span>
-<span class="nc" id="L64">        return ResponseEntity.ok(&quot;Transaction supprimée avec succès.&quot;);</span>
+<span class="fc" id="L87">        transactionService.deleteTransaction(transactionId);</span>
+<span class="fc" id="L88">        System.out.println(&quot;deleted transaction is done&quot;);</span>
+<span class="fc" id="L89">        return ResponseEntity.ok(&quot;Transaction supprimée avec succès.&quot;);</span>
     }
 
+    /**
+     * Retrieves a list of all transactions associated with a given user.
+     *
+     * @param userId The ID of the user whose transactions are to be retrieved.
+     * @return A ResponseEntity containing a list of Transaction objects associated with the user, or an error message if userId is null.
+     */
     @GetMapping(&quot;/{userId}&quot;)
     public ResponseEntity&lt;?&gt; getAllTransactions(@PathVariable Long userId) {
-<span class="nc bnc" id="L69" title="All 2 branches missed.">        if (userId == null) {</span>
-<span class="nc" id="L70">            return ResponseEntity.badRequest().body(&quot;L'id de l'utilisateur ne peut pas être null.&quot;);</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">        if (userId == null) {</span>
+<span class="nc" id="L101">            return ResponseEntity.badRequest().body(&quot;L'id de l'utilisateur ne peut pas être null.&quot;);</span>
         }
 
-<span class="nc" id="L73">        List&lt;Transaction&gt; transactions = transactionService.getTransactions(userId);</span>
-<span class="nc" id="L74">        return ResponseEntity.ok(transactions);</span>
+<span class="fc" id="L104">        List&lt;Transaction&gt; transactions = transactionService.getTransactions(userId);</span>
+<span class="fc" id="L105">        return ResponseEntity.ok(transactions);</span>
     }
 
+/**
+ * Retrieves the performance of a user's portfolio.
+ *
+ * @param userId The ID of the user whose portfolio performance is to be retrieved.
+ * @return A ResponseEntity containing a PorfolioPerformance object representing the user's portfolio performance.
+ *         If the performance is null, an empty PorfolioPerformance object is returned.
+ */
     @GetMapping(&quot;/performance/{userId}&quot;)
     public ResponseEntity&lt;PorfolioPerformance&gt; getPortfolioPerformance(@PathVariable Long userId) {
-<span class="nc" id="L79">        PorfolioPerformance performance = transactionService.getPorfolioPerformance(userId);</span>
-<span class="nc" id="L80">        return ResponseEntity.ok(performance);</span>
+<span class="fc" id="L117">        PorfolioPerformance performance = transactionService.getPorfolioPerformance(userId);</span>
+<span class="fc" id="L118">        return ResponseEntity.ok(Objects.requireNonNullElseGet(performance, PorfolioPerformance::new));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

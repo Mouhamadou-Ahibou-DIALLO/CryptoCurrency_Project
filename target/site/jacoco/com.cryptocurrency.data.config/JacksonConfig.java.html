@@ -7,16 +7,27 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * The JacksonConfig class is a Spring configuration class for configuring Jackson.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
 @Configuration
-<span class="fc" id="L11">public class JacksonConfig {</span>
+<span class="fc" id="L15">public class JacksonConfig {</span>
 
+        /**
+         * This method creates a new instance of an ObjectMapper and configures it
+         * to serialize and deserialize the dates in ISO format, and to not
+         * fail when a bean has no properties.
+         *
+         * @return ObjectMapper
+         */
         @Bean
         public ObjectMapper objectMapper() {
-<span class="fc" id="L15">            ObjectMapper mapper = new ObjectMapper();</span>
-<span class="fc" id="L16">            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);</span>
-<span class="fc" id="L17">            mapper.registerModule(new JavaTimeModule());</span>
-<span class="fc" id="L18">            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);</span>
-<span class="fc" id="L19">            return mapper;</span>
+<span class="fc" id="L26">            ObjectMapper mapper = new ObjectMapper();</span>
+<span class="fc" id="L27">            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);</span>
+<span class="fc" id="L28">            mapper.registerModule(new JavaTimeModule());</span>
+<span class="fc" id="L29">            mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);</span>
+<span class="fc" id="L30">            return mapper;</span>
         }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

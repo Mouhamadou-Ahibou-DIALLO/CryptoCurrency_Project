@@ -47,22 +47,19 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         if (userService.emailExists(user.getEmail())) {
-            System.out.println("cet email existe déja.");
             return ResponseEntity.status(HttpStatus.CONFLICT).body("cet email existe déja.");
         }
         if (userService.userNameExists(user.getUsername())) {
-            System.out.println("ce nom d'utilisateur existe déja.");
             return ResponseEntity.status(HttpStatus.CONFLICT).body("ce nom d'utilisateur existe déja.");
         }
 
         try {
             User createdUser = userService.createUser(user);
-            System.out.println("user created: ");
-
             if (createdUser == null) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la création de l'utilisateur.");
             }
 
+            System.out.println("done user created");
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                     "message", "User created successfully.",
                     "id", createdUser.getId(),
@@ -85,17 +82,12 @@ public class UserController {
      */
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user) {
-    	System.out.println("start updating user in controller: ");
         try {
             User updatedUser = userService.updateUser(id, user);
-            System.out.println("user updated in controller: ");
-
             if (updatedUser == null) {
-            	System.out.println("updatingUser in controller is null: ");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors du update de l'utilisateur.");
             }
-            
-            System.out.println("done updating user in controller: ");
+            System.out.println("done updating user in controller");
 
             return ResponseEntity.status(HttpStatus.OK).body(Map.of(
                     "message", "User updated successfully.",

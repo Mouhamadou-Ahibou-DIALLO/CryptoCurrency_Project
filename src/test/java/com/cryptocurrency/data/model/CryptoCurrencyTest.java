@@ -82,6 +82,7 @@ public class CryptoCurrencyTest {
         cryptoCurrency.setName("Ethereum");
         cryptoCurrency.setSymbol("ETH");
         cryptoCurrency.setRank(2);
+        cryptoCurrency.setTimestamp(LocalDateTime.now());
 
         assertEquals(2L, cryptoCurrency.getId(), "The ID should be updated to 2L");
         assertEquals("Ethereum", cryptoCurrency.getName(), "The name should be updated to 'Ethereum'");

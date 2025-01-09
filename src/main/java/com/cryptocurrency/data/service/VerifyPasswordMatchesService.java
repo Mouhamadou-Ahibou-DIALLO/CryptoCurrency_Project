@@ -22,8 +22,6 @@ public class VerifyPasswordMatchesService {
         }
 
         String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
-        System.out.println("Password received: " + password);
-        System.out.println("Password matches pattern: " + password.matches(passwordPattern));
         return password.matches(passwordPattern);
     }
 }

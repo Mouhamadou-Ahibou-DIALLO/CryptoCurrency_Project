@@ -174,4 +174,14 @@ public class AlertsRepositoryTest {
         assertEquals(4L, result.get(1).getId());
         verify(alertsRepository, times(1)).findByVariationThreshold(1.0);
     }
+
+    /**
+     * Test the deleteByUser() method of the AlertsRepository class.
+     * This test verifies that the deleteByUser() method is called once with the correct user.
+     */
+    @Test
+    public void deleteByUser() {
+        alertsRepository.deleteByUser(user);
+        verify(alertsRepository, times(1)).deleteByUser(user);
+    }
 }

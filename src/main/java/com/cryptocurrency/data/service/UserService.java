@@ -134,23 +134,18 @@ public class UserService {
 
         String encodedPassword = EncodedPassword.encode(user.getPasswordHash());
         user.setPasswordHash(encodedPassword);
-        System.out.println("getPasswordHash: ");
 
         String token = GenerateToken.generateToken();
-        System.out.println("token: ");
         String encodedToken = EncodedToken.encode(token);
         user.setTokenHash(encodedToken);
-        System.out.println("tokenHash: ");
-
         user.setStatut("normal");
 
-        System.out.println("user created: ");
         User savedUser = this.save(user);
-
         if (savedUser == null) {
             throw new IllegalArgumentException("L'utilisateur n'a pas pu être sauvegardé.");
         }
 
+        System.out.println("user created");
         return savedUser;
     }
 
@@ -186,26 +181,19 @@ public class UserService {
     public User updateUser(Long id, User userDetails) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        System.out.println("user first step for update: ");
 
         boolean verifyPassword = VerifyPasswordMatchesService.isValidPassword(userDetails.getPasswordHash());
         if (!verifyPassword) {
             throw new IllegalArgumentException("Le mot de passe doit comporter au moins 8 caractères et comprendre des lettres, des majuscules, des chiffres et des caractères spéciaux.");
         }
-        
-        System.out.println("password user for update: ");
 
         user.setUsername(userDetails.getUsername());
-        System.out.println("username updating user: ");
         user.setEmail(userDetails.getEmail());
-        System.out.println("email updating user: ");
 
         String encodedPassword = EncodedPassword.encode(userDetails.getPasswordHash());
-        //String newToken = EncodedToken.encode(userDetails.getTokenHash());
         user.setPasswordHash(encodedPassword);
-        //user.setTokenHash(newToken);
-        System.out.println("done updating user: ");
 
+        System.out.println("done updating user");
         return this.save(user);
     }
 
@@ -223,7 +211,7 @@ public class UserService {
         String token = GenerateToken.generateToken();
         String newToken = EncodedToken.encode(token);
         user.setTokenHash(newToken);
-        System.out.println("done updating user: ");
+        System.out.println("done updating token user");
         return this.save(user);
     }
 
@@ -246,13 +234,10 @@ public class UserService {
      * @return the token hash of the user
      */
     public String authenticateUser(String email, String password) {
-        System.out.println("email: " + email);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Invalid email"));
 
         if (user != null) {
-            System.out.println("user: ");
-            System.out.println("password: ");
             String encodedPassword = user.getPasswordHash();
             boolean isRightPassword = EncodedPassword.isRightPassword(password, encodedPassword);
 
@@ -263,17 +248,14 @@ public class UserService {
                     return user.getTokenHash();
                 }
                 else {
-                    System.out.println("Login failed");
                     throw new RuntimeException("Login failed");
                 }
             }
             else {
-                System.out.println("Mot de pass incorrect");
                 throw new RuntimeException("Mot de pass incorrect");
             }
         }
 
-        System.out.println("not found user");
         throw new RuntimeException("not found user");
     }
 
@@ -302,29 +284,17 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         if (user != null) {
-            System.out.println("user: ");
             String encodedToken = user.getTokenHash();
-            System.out.println("token: ");
-            System.out.println("encodedToken: ");
 
             if (Objects.equals(token, encodedToken)) {
                 Optional<User> userValid = this.findByEmailAndTokenHash(email, encodedToken);
-                if (userValid.isPresent()) {
-                    System.out.println("Token is valid");
-                    return true;
-                }
-                else {
-                    System.out.println("Token is not valid");
-                    return false;
-                }
+                return userValid.isPresent();
             }
             else {
-                System.out.println("Token is not valid");
                 return false;
             }
         }
 
-        System.out.println("User not found");
         return false;
     }
 
@@ -338,21 +308,38 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        System.out.println("logout user done: ");
         user.setEmail(null);
         user.setTokenHash(null);
+        System.out.println("logout user done");
     }
 
+    /**
+     * Updates the status of a user to premium.
+     *
+     * @param userId the ID of the user whose status is to be updated
+     * @return true if the status was updated, false otherwise
+     */
     public boolean updateUserStatusToPremium(Long userId) {
-        String statut = "premium";
-        return updateUserStatut(userId, statut);
+        return updateUserStatut(userId, "premium");
     }
 
+    /**
+     * Updates the status of a user to free.
+     *
+     * @param userId the ID of the user whose status is to be updated
+     * @return true if the status was updated, false otherwise
+     */
     public boolean updateUserStatusToFree(Long userId) {
-        String statut = "normal";
-        return updateUserStatut(userId, statut);
+        return updateUserStatut(userId, "normal");
     }
 
+    /**
+     * Updates the status of a user if it differs from the current status.
+     *
+     * @param id the ID of the user whose status is to be updated
+     * @param statut the new status to set for the user
+     * @return true if the status was updated, false otherwise
+     */
     private boolean updateUserStatut(Long id, String statut) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {

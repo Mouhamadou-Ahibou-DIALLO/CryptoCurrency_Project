@@ -3,52 +3,155 @@
 import com.cryptocurrency.data.model.CryptoCurrency;
 import com.cryptocurrency.data.model.User;
 
-<span class="nc" id="L6">public class AlertCreatedService {</span>
+/**
+ * This class represents an AlertCreatedService object.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
+public class AlertCreatedService {
 
+    /**
+     * The user is a User object that represents the user associated with the alert.
+     */
     private User user;
+
+    /**
+     * The cryptoCurrency is a CryptoCurrency object that represents the cryptocurrency associated with the alert.
+     */
     private CryptoCurrency cryptoCurrency;
+
+    /**
+     * The priceThreshold is a double that represents the price threshold for the alert.
+     */
     private Double priceThreshold;
+
+    /**
+     * The variationThreshold is a double that represents the variation threshold for the alert.
+     */
     private Double variationThreshold;
+
+    /**
+     * The name is a String that represents the name of the alert.
+     */
     private String name;
 
+    /**
+     * Default constructor for the AlertCreatedService class.
+     */
+<span class="fc" id="L40">    public AlertCreatedService() {}</span>
+
+    /**
+     * Constructor for the AlertCreatedService class.
+     *
+     * @param user The User object associated with the alert.
+     * @param cryptoCurrency The CryptoCurrency object associated with the alert.
+     * @param priceThreshold The price threshold for the alert.
+     * @param variationThreshold The variation threshold for the alert.
+     * @param name The name of the alert.
+     */
+<span class="nc" id="L51">    public AlertCreatedService(User user, CryptoCurrency cryptoCurrency, Double priceThreshold, Double variationThreshold, String name) {</span>
+<span class="nc" id="L52">        this.user = user;</span>
+<span class="nc" id="L53">        this.cryptoCurrency = cryptoCurrency;</span>
+<span class="nc" id="L54">        this.priceThreshold = priceThreshold;</span>
+<span class="nc" id="L55">        this.variationThreshold = variationThreshold;</span>
+<span class="nc" id="L56">        this.name = name;</span>
+<span class="nc" id="L57">    }</span>
+
+    /**
+     * Returns the name of the AlertCreatedService.
+     *
+     * @return The name of the AlertCreatedService.
+     */
     public String getName() {
-<span class="nc" id="L15">        return name;</span>
+<span class="fc" id="L65">        return name;</span>
     }
 
+    /**
+     * Sets the name of the AlertCreatedService.
+     *
+     * @param name The name of the AlertCreatedService.
+     */
     public void setName(String name) {
-<span class="nc" id="L19">        this.name = name;</span>
-<span class="nc" id="L20">    }</span>
+<span class="fc" id="L74">        this.name = name;</span>
+<span class="fc" id="L75">    }</span>
 
+    /**
+     * Returns the User object associated with the AlertCreatedService.
+     * The User object contains the information about the user who created the alert.
+     * @return The User object associated with the AlertCreatedService.
+     */
     public User getUser() {
-<span class="nc" id="L23">        return user;</span>
+<span class="fc" id="L83">        return user;</span>
     }
 
+    /**
+     * Sets the User object associated with the AlertCreatedService.
+     * The User object contains information about the user who created the alert.
+     *
+     * @param user The User object to associate with the AlertCreatedService.
+     */
     public void setUser(User user) {
-<span class="nc" id="L27">        this.user = user;</span>
-<span class="nc" id="L28">    }</span>
+<span class="fc" id="L93">        this.user = user;</span>
+<span class="fc" id="L94">    }</span>
 
+    /**
+     * Returns the CryptoCurrency object associated with the AlertCreatedService.
+     * The CryptoCurrency object contains the information about the crypto currency
+     * in which the alert was created.
+     * @return The CryptoCurrency object associated with the AlertCreatedService.
+     */
     public CryptoCurrency getCryptoCurrency() {
-<span class="nc" id="L31">        return cryptoCurrency;</span>
+<span class="fc" id="L103">        return cryptoCurrency;</span>
     }
 
+    /**
+     * Sets the CryptoCurrency object associated with the AlertCreatedService.
+     * The CryptoCurrency object contains the information about the crypto currency
+     * for which the alert was created.
+     *
+     * @param cryptoCurrency The CryptoCurrency object to set in the AlertCreatedService.
+     */
     public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
-<span class="nc" id="L35">        this.cryptoCurrency = cryptoCurrency;</span>
-<span class="nc" id="L36">    }</span>
+<span class="fc" id="L114">        this.cryptoCurrency = cryptoCurrency;</span>
+<span class="fc" id="L115">    }</span>
 
+    /**
+     * Returns the price threshold associated with the AlertCreatedService.
+     * The price threshold is the price above or below which the alert will be triggered.
+     * @return The price threshold associated with the AlertCreatedService.
+     */
     public Double getPriceThreshold() {
-<span class="nc" id="L39">        return priceThreshold;</span>
+<span class="fc" id="L123">        return priceThreshold;</span>
     }
 
+    /**
+     * Sets the price threshold associated with the AlertCreatedService.
+     * The price threshold is the price above or below which the alert will be triggered.
+     *
+     * @param priceThreshold The price threshold associated with the AlertCreatedService.
+     */
     public void setPriceThreshold(Double priceThreshold) {
-<span class="nc" id="L43">        this.priceThreshold = priceThreshold;</span>
-<span class="nc" id="L44">    }</span>
+<span class="fc" id="L133">        this.priceThreshold = priceThreshold;</span>
+<span class="fc" id="L134">    }</span>
 
+    /**
+     * Returns the variation threshold associated with the AlertCreatedService.
+     * The variation threshold is the amount of variation of the price above
+     * or below which the alert will be triggered.
+     * @return The variation threshold associated with the AlertCreatedService.
+     */
     public Double getVariationThreshold() {
-<span class="nc" id="L47">        return variationThreshold;</span>
+<span class="fc" id="L143">        return variationThreshold;</span>
     }
 
+    /**
+     * Sets the variation threshold associated with the AlertCreatedService.
+     * The variation threshold is the amount of variation of the price above
+     * or below which the alert will be triggered.
+     *
+     * @param variationThreshold The variation threshold associated with the AlertCreatedService.
+     */
     public void setVariationThreshold(Double variationThreshold) {
-<span class="nc" id="L51">        this.variationThreshold = variationThreshold;</span>
-<span class="nc" id="L52">    }</span>
+<span class="fc" id="L154">        this.variationThreshold = variationThreshold;</span>
+<span class="fc" id="L155">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

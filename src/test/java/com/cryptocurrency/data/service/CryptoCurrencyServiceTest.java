@@ -141,6 +141,10 @@ public class CryptoCurrencyServiceTest {
         verify(cryptoCurrencyRepository, times(1)).findByRank(marketCapRank);
     }
 
+    /**
+     * Tests the findByPrice method of the CryptoCurrencyService class.
+     * Ensures that the correct list of CryptoCurrency objects is returned when a valid price is provided.
+     */
     @Test
     public void testFindByPrice() {
         Double price = 1000.0;
