@@ -75,8 +75,8 @@ public class AlertsService {
      */
     public List<Alerts> findByUser(User user) {
         User user1 = userRepository.findById(user.getId()).orElse(null);
-//        return alertsRepository.findByUser(user1);
-        return alertsRepository.findByUser(user);
+        return alertsRepository.findByUser(user1);
+        //return alertsRepository.findByUser(user);
     }
 
     /**

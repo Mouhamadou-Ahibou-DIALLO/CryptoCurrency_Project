@@ -13,6 +13,11 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class CryptoCurrencyProjectApplication {
 
     /**
+     * Default constructor for the CryptoCurrencyProjectApplication class.
+     */
+    public CryptoCurrencyProjectApplication() {}
+
+    /**
      * The main method serves as the entry point for the Spring Boot application.
      *
      * @param args command line arguments

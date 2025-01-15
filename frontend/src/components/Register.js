@@ -87,7 +87,7 @@ function Register() {
 
     const closePopup = () => {
         setShowPopup(false);
-        window.location.href = `/Dasboard/${id}`;
+        window.location.href = "/Login";
     };
 
     return (

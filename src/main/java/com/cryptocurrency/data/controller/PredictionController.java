@@ -12,10 +12,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The PredictionController class is a Spring REST controller for making predictions about the future price of cryptocurrencies.
+ * Author: Mouhamadou Ahibou DIALLO
+ */
 @RestController
 @RequestMapping("/api/predictions")
 @CrossOrigin(origins = "http://localhost:3000")
 public class PredictionController {
+
+    /**
+     * Default constructor for the PredictionController class.
+     */
+    public PredictionController() {}
 
     /**
      * Returns a list of price history entries for the given cryptocurrency name,

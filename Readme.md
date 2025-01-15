@@ -29,21 +29,25 @@ Le projet intègre :
 - **Prévisions** :
     - Algorithmes : moyennes mobiles, régressions linéaires.
     - Visualisation des marges d'erreur.
+- **Portefeuille virtuel** :
+    - Ajout, mise à jour et suppression de transactions.
+    - Calcul de gains et perte.
+    - graphe interactif des transactions.
 
 ---
 
 ## **Technologies Utilisées**
 
 ### **Backend**
-- **Framework** : Spring Boot (support HTTPS).
+- **Framework** : Spring Boot
 - **Langage** : Java.
 - **Base de données** : SQLite3.
 
 ### **Frontend**
-- **Framework** : Thymeleaf.
+- **Framework** : React js.
 
 ### **Tests**
-- Tests unitaires/intégration : JUnit, Mockito.
+- Tests unitaires/intégration : JUnit, Mockito, gitHub actions.
 - Tests de performance : k6.
 - Tests de sécurité : OWASP ZAP.
 
@@ -76,9 +80,16 @@ Compilez et lancez :
 Démarrez le backend Spring Boot :
 - **mvn spring-boot:run**
 - **lancer le frontend**
+Dans une autre terminal :
 - **cd frontend**
 - **npm install**
 - **npm start**
+
+Pour accéder à l'application par navigateur web:
+- **http://localhost:3000/**
+
+### **Pour lancer les tests**
+- **mvn test**
 
 ### **Test de performance**
 - **1) Installer k6
@@ -96,15 +107,15 @@ Commencez par installer k6 :
 - **3) Exécuter les tests**
 - **k6 run test.js**
 
-- **4) Analyser les résultats**
-- **k6 report**
-
-- **5) Générer un rapport détaillé**
+- **4) Générer un rapport détaillé**
 - **k6 run --out json=result.json test.js**
+Et les résultats seront rapportés dans le fichier result.json
      
 ### **Dockerisation et déploiement**
 Construisez les images Docker :
-- **docker-compose up --build**
+- Pour le backend: **docker build -t my-backend**
+- Pour le frontend: d'abord **cd frontend**,et après faire: **docker build -t my-frontend**
+- Lancer les services avec Docker Compose: **docker-compose up --build**
 
 ### **Déployer sur Kubernetes**
 kubectl apply -f k8s/
@@ -142,27 +153,27 @@ CryptoCurrency_Project/
 - **Étudiant à l'Université d’Avignon au CERI**
 - **Email : mouhamadou-ahibou.diallo@alumni.univ-avignon.fr**
 
-# Rapports et Badges
-#                  Bagdes                STATUT
-# Build CI/CD
 
+- **Qualité code
 [![Quality Gate Status](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=alert_status&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
 
+- **Taux de Couvertures
 [![Coverage](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=coverage&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
 
+- **Nombres de lignes dupliqués
 [![Duplicated Lines (%)](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=duplicated_lines_density&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
 
+- **Sécurité Hotspots
 [![Security Hotspots](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=security_hotspots&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
 
+- **Reliability Rating
 [![Reliability Rating](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=software_quality_reliability_rating&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
 
+- **Security Issues
 [![Security Issues](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=software_quality_security_issues&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
 
+- **Maintainability Issues
 [![Maintainability Issues](http://192.168.57.101:9000/api/project_badges/measure?project=MyProject-Crypto&metric=software_quality_maintainability_issues&token=sqb_f3eeb70cb07402e822e3c9eb3036d143f6a71371)](http://192.168.57.101:9000/dashboard?id=MyProject-Crypto)
-
-# Couverture de Tests
-
-
 
 
 # Liens Utiles

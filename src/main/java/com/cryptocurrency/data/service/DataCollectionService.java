@@ -152,7 +152,7 @@ public class DataCollectionService {
      * This method is scheduled to run every 60 seconds and collects market data from the CoinCap API.
      * The collected data is then saved to the database.
      */
-    @Scheduled(fixedRate = 6000000)
+    @Scheduled(fixedRate = 60000)
     public void collectMarketData() {
         logger.info("Starting data collection ......");
 
@@ -250,7 +250,6 @@ public class DataCollectionService {
         logger.info("supprimer les anciennes 20 lignes");
         List<CryptoCurrency> cryptoCurrencyList = cryptoCurrencyRepository.findAll();
         if (cryptoCurrencyList.size() == LIMIT_LINE) {
-            System.out.println(cryptoCurrencyList.size() + " taille");
             logger.info("{} taille ", cryptoCurrencyList.size());
             cryptoCurrencyRepository.deleteAll();
         }

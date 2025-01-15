@@ -11,21 +11,21 @@ import java.time.LocalDateTime;
 @Table(name = "transactions")
 public class Transaction {
 
-    /*
+    /**
      * The id is a Long that represents the unique identifier for the Transaction object.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /*
+    /**
      * The user is a User object that represents the user involved in the transaction.
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    /*
+    /**
      * The cryptoCurrency is a CryptoCurrency object that represents the cryptocurrency
      * involved in the transaction.
      */
@@ -33,28 +33,32 @@ public class Transaction {
     @JoinColumn(name = "crypto_id", nullable = false)
     private CryptoCurrency cryptoCurrency;
 
+    /**
+     * The amountInvested is a double that represents the amount invested in the transaction.
+     * The amount invested is the total value of the transaction.
+     */
     private double amountInvested;
 
-    /*
+    /**
      * The price at transaction is a double that represents the price of the cryptocurrency
      * at the time of the transaction.
      */
     private double priceAtTransaction;
 
-    /*
+    /**
      * The quantity is a double that represents the amount of the cryptocurrency
      * that was involved in the transaction.
      */
     private double quantity;
 
-    /*
+    /**
      * The transaction date is a LocalDateTime object that represents the date and time
      * when the Transaction object was created.
      */
     private LocalDateTime transactionDate;
 
 
-    /*
+    /**
      * The constructor is used to create a Transaction object.
      * @param id The ID of the Transaction object.
      * @param user The User object associated with the Transaction object.
@@ -74,8 +78,8 @@ public class Transaction {
         this.transactionDate = transactionDate;
     }
 
-    /*
-     * The default constructor is used to create an empty Transaction object.
+    /**
+     * The default constructor for the Transaction class.
      */
     public Transaction() {}
 

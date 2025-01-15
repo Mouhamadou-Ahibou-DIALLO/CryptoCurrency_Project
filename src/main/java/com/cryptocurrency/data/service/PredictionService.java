@@ -14,6 +14,11 @@ import java.util.List;
 public class PredictionService {
 
     /**
+     * Default constructor for the PredictionService class.
+     */
+    public PredictionService() {}
+
+    /**
      * Calculates the moving averages of the given cryptocurrency over the given period.
      * This method retrieves the historical price data for the specified cryptocurrency
      * and applies a moving average model to calculate the moving averages.

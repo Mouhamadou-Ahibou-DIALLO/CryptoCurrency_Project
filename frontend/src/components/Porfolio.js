@@ -31,6 +31,13 @@ const Porfolio = () => {
     const credentials = btoa(`${username}:${password}`);
 
     useEffect(() => {
+
+        const authToken = localStorage.getItem("authToken");
+        if (!authToken) {
+            alert("Vous devez vous connecter pour accéder au Dashboard.");
+            navigate("/Login");
+        }
+
         const fetchData = async () => {
             try {
                 const userResponse = await fetch(`/api/users/${id}`);
@@ -202,6 +209,11 @@ const Porfolio = () => {
         ],
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("authToken");
+        window.location.href = "/Login";
+    };
+
 
     return (
         <div className="portfolio-page">
@@ -213,7 +225,7 @@ const Porfolio = () => {
                     </button>
                     <button className="alertes" onClick={() => handleNavigate(`/Dashboard/${id}`)}>Page des Alertes
                     </button>
-                    <button className="deconnect" onClick={() => handleNavigate('/Login')}>Déconnexion</button>
+                    <button className="deconnect" onClick={handleLogout}>Déconnexion</button>
                 </div>
             </header>
 

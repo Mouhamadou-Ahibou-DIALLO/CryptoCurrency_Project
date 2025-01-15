@@ -34,6 +34,11 @@ public class CryptoCurrencyController {
     private CryptoCurrencyService cryptoCurrencyService;
 
     /**
+     * Default constructor for the CryptoCurrencyController class.
+     */
+    public  CryptoCurrencyController() {}
+
+    /**
      * Returns a list of all the cryptocurrencies in the database.
      *
      * @return A list of all the cryptocurrencies in the database.
@@ -42,6 +47,18 @@ public class CryptoCurrencyController {
     public ResponseEntity<List<CryptoCurrency>> getAllCryptocurrencies() {
         List<CryptoCurrency> cryptocurrencies = cryptoCurrencyService.getAllCryptoCurrency();
         return ResponseEntity.ok(cryptocurrencies);
+    }
+
+    /**
+     * Returns a CryptoCurrency object by its name.
+     *
+     * @param name the name to search for
+     * @return a CryptoCurrency object
+     */
+    @GetMapping("/find/{name}")
+    public ResponseEntity<CryptoCurrency> getCryptoCurrencyByName(@PathVariable String name) {
+        CryptoCurrency cryptocurrency = cryptoCurrencyService.getCryptoCurrencyByName(name);
+        return ResponseEntity.ok(cryptocurrency);
     }
 
     /**

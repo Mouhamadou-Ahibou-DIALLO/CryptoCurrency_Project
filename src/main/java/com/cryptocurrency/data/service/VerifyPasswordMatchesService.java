@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 public class VerifyPasswordMatchesService {
 
     /**
+     * Default constructor for the VerifyPasswordMatchesService class.
+     */
+    public VerifyPasswordMatchesService() {}
+
+    /**
      * Checks if the given password matches the expected pattern.
      * A valid password must contain at least 8 characters, and must contain at least one lowercase letter, one uppercase letter, one number, and one special character.
      *

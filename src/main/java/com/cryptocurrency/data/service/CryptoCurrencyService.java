@@ -23,6 +23,11 @@ public class CryptoCurrencyService {
     private CryptoCurrencyRepository cryptoCurrencyRepository;
 
     /**
+     * Default constructor for the CryptoCurrencyService class.
+     */
+    public CryptoCurrencyService() {}
+
+    /**
      * Returns a CryptoCurrency object by its market cap rank.
      *
      * @param marketCapRank the market cap rank to search for

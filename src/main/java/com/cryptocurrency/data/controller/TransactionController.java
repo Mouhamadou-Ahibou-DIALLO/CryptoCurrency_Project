@@ -30,6 +30,11 @@ public class TransactionController {
     private TransactionService transactionService;
 
     /**
+     * Default constructor for the TransactionController class.
+     */
+    public TransactionController() {}
+
+    /**
      * Creates a new transaction for a user with a specified cryptocurrency and investment amount.
      *
      * @param transaction A TransactionRequestService object containing userId, cryptoId, and amountInvested.

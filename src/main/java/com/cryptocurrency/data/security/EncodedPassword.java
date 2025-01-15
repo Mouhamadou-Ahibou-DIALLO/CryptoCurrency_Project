@@ -15,6 +15,11 @@ public class EncodedPassword {
     private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     /**
+     * Default constructor for the EncodedPassword class.
+     */
+    public EncodedPassword() {}
+
+    /**
      * Encodes a password using the BCryptPasswordEncoder.
      *
      * @param password the password to encode

@@ -1,0 +1,9 @@
+com.cryptocurrency.data
+com.cryptocurrency.data.config
+com.cryptocurrency.data.controller
+com.cryptocurrency.data.model
+com.cryptocurrency.data.repository
+com.cryptocurrency.data.scheduler
+com.cryptocurrency.data.security
+com.cryptocurrency.data.service
+com.cryptocurrency.data.utils

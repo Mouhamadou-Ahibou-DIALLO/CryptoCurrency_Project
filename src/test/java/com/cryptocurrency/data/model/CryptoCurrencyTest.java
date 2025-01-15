@@ -82,8 +82,10 @@ public class CryptoCurrencyTest {
         cryptoCurrency.setName("Ethereum");
         cryptoCurrency.setSymbol("ETH");
         cryptoCurrency.setRank(2);
-        cryptoCurrency.setTimestamp(LocalDateTime.now());
+        String date = "2022-01-01T00:00:00";
+        cryptoCurrency.setTimestamp(LocalDateTime.parse(date));
 
+        assertEquals(2022, cryptoCurrency.getTimestamp().getYear(), "The year should be 2022");
         assertEquals(2L, cryptoCurrency.getId(), "The ID should be updated to 2L");
         assertEquals("Ethereum", cryptoCurrency.getName(), "The name should be updated to 'Ethereum'");
         assertEquals("ETH", cryptoCurrency.getSymbol(), "The symbol should be updated to 'ETH'");

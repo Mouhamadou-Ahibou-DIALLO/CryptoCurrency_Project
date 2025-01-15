@@ -14,6 +14,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JacksonConfig {
 
+    /**
+     * Default constructor for the JacksonConfig class.
+     */
+    public JacksonConfig() {}
+
         /**
          * This method creates a new instance of an ObjectMapper and configures it
          * to serialize and deserialize the dates in ISO format, and to not

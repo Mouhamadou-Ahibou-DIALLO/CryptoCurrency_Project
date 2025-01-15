@@ -55,6 +55,13 @@ public class EmailService {
         System.out.println("Notification envoyée à " + alert.getUser().getEmail());
     }
 
+    /**
+     * Sends an email with the specified details.
+     *
+     * @param email The recipient's email address.
+     * @param subject The subject of the email.
+     * @param text The body text of the email.
+     */
     public void sendEmail(String email, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);

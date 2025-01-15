@@ -22,6 +22,11 @@ public class TransactionRequestService {
     private double amountInvested;
 
     /**
+     * Default constructor for the TransactionRequestService class.
+     */
+    public TransactionRequestService() {}
+
+    /**
      * Returns the ID of the user associated with this transaction request.
      *
      * @return The user ID as a Long.

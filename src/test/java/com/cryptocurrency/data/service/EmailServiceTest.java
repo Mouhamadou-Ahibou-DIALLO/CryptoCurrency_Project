@@ -52,7 +52,7 @@ class EmailServiceTest {
      */
     @Test
     public void sendNotification_ShouldSendEmailWithCorrectDetails() {
-       /* User user = new User();
+       User user = new User();
         user.setEmail("test@example.com");
         user.setUsername("JohnDoe");
 
@@ -77,8 +77,8 @@ class EmailServiceTest {
                         + "Le prix de la cryptomonnaie Bitcoin a atteint ou dépassé le seuil que vous avez défini !\n\n"
                         + "Prix actuel : 35000.0 $\n"
                         + "Seuil défini : 30000.0 $\n\n"
-                        + "Cordialement,\nVotre application Crypto",
-                sentMessage.getText());*/
+                        + "Cordialement,\nVotre application La Cryptomonnaie de l'avenir",
+                sentMessage.getText());
     }
 
     /**

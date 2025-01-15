@@ -15,6 +15,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class CorsConfig {
 
     /**
+     * default constructor for the CorsConfig class
+     */
+    public CorsConfig() {}
+
+    /**
      * Configures CORS (Cross-Origin Resource Sharing) settings for the application.
      *
      * @return a WebMvcConfigurer that provides CORS mapping configurations

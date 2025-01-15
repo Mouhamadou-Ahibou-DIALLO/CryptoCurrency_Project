@@ -51,8 +51,12 @@ public class TransactionTest {
         transaction.setAmountInvested(200.0);
         transaction.setPriceAtTransaction(20.0);
         transaction.setQuantity(2.0);
-        transaction.setTransactionDate(LocalDateTime.now());
-        System.out.println(transaction.getTransactionDate());
+
+        String date = "2023-01-01T00:00:00";
+        transaction.setTransactionDate(LocalDateTime.parse(date));
+
+        assertEquals("2023-01-01T00:00", transaction.getTransactionDate().toString());
+        assertEquals(2023, transaction.getTransactionDate().getYear(), "The year should be 2023");
 
         assertEquals(2L, transaction.getId());
         assertEquals(2L, transaction.getUser().getId());

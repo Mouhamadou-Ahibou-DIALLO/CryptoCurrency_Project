@@ -6,7 +6,7 @@ import "./ChartConfig";
 import {Chart} from "chart.js";
 
 const CryptoDetails = () => {
-    const { id } = useParams();
+    const { name } = useParams();
     const [crypto, setCrypto] = useState(null);
     const [loading, setLoading] = useState(true);
     const [priceHistory, setPriceHistory] = useState([]);
@@ -19,7 +19,8 @@ const CryptoDetails = () => {
         const password = "Avignon2024@?";
         const credentials = btoa(`${username}:${password}`);
 
-        fetch(`/api/cryptocurrencies/${id}`, {
+        console.log(name);
+        fetch(`/api/cryptocurrencies/find/${name}`, {
             headers: {
                 Authorization: `Basic ${credentials}`,
             },
@@ -52,7 +53,7 @@ const CryptoDetails = () => {
                 setError(error.message);
             })
             .finally(() => setLoading(false));
-    }, [id, startDate, endDate]);
+    }, [name, startDate, endDate]);
 
     const fetchPriceHistory = () => {
         const username = "momo";

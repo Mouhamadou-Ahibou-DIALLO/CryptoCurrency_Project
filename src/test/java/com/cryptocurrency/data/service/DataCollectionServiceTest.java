@@ -3,21 +3,17 @@ package com.cryptocurrency.data.service;
 import com.cryptocurrency.data.model.CryptoCurrency;
 import com.cryptocurrency.data.model.CryptoPriceHistory;
 import com.cryptocurrency.data.repository.CryptoCurrencyRepository;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,21 +41,6 @@ public class DataCollectionServiceTest {
      */
     @InjectMocks
     private DataCollectionService dataCollectionService;
-
-    @BeforeAll
-    public static void setUp() throws IOException {
-        String jsonContent = """
-        {
-            "Bitcoin": [
-                {"date": "2025-01-01", "price": 40000.0},
-                {"date": "2025-01-02", "price": 41000.0}
-            ]
-        }
-        """;
-
-        Path path = Paths.get("src/main/resources/crypto_price_history.json");
-        Files.writeString(path, jsonContent);
-    }
 
     /**
      * Tests the collectMarketData() method of the DataCollectionService class.

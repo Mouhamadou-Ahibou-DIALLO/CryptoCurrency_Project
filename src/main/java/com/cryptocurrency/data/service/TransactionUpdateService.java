@@ -12,6 +12,11 @@ public class TransactionUpdateService {
     private double amountInvested;
 
     /**
+     * Default Constructor for the TransactionUpdateService class.
+     */
+    public TransactionUpdateService() {}
+
+    /**
      * Returns the amount invested in the transaction.
      * The amount invested is the total value of the transaction.
      * @return The amount invested in the transaction.

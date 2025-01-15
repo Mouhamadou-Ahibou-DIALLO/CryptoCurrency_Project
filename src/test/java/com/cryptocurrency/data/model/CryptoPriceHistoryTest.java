@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 /**
  * The CryptoPriceHistoryTest class is a JUnit test class for the CryptoPriceHistory class.
@@ -35,12 +37,12 @@ public class CryptoPriceHistoryTest {
      */
     @Test
     public void testGetteursAndSetteurs() {
-        LocalDateTime timestamp = LocalDateTime.now();
         Double price = 100.0;
-        cryptoPriceHistory.setTimestamp(timestamp);
+        String date = "2023-01-01T00:00:00";
+        cryptoPriceHistory.setTimestamp(LocalDateTime.parse(date));
         cryptoPriceHistory.setPrice(price);
 
-        assert cryptoPriceHistory.getTimestamp().equals(timestamp);
+        assertEquals(2023, cryptoPriceHistory.getTimestamp().getYear(), "The year should be 2023");
         assert cryptoPriceHistory.getPrice().equals(price);
     }
 

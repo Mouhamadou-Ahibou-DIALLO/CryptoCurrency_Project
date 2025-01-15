@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import '../static/css/pageAlerts.css';
-import {useParams} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 import axios from "axios";
 
 const PageAlerts = () => {
@@ -29,7 +29,16 @@ const PageAlerts = () => {
     const password = "Avignon2024@?";
     const credentials = btoa(`${username}:${password}`);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
+
+        const authToken = localStorage.getItem("authToken");
+        if (!authToken) {
+            alert("Vous devez vous connecter pour accéder au Dashboard.");
+            navigate("/Login");
+        }
+
         const fetchData = async () => {
             try {
                 const userResponse = await fetch(`/api/users/${id}`);
@@ -71,7 +80,7 @@ const PageAlerts = () => {
         }, 60000);
 
         fetchData();
-    }, [id]);
+    }, [id, navigate]);
 
     const getCrypto = async (idCrypto) => {
         const username = "momo";
@@ -202,6 +211,7 @@ const PageAlerts = () => {
     };
 
     const handleLogout = () => {
+        localStorage.removeItem("authToken");
         window.location.href = "/Login";
     };
 

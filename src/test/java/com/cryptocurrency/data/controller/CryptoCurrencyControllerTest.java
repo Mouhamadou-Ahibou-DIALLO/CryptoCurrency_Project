@@ -113,6 +113,20 @@ public class CryptoCurrencyControllerTest {
     }
 
     /**
+     * Tests the getCryptoCurrencyByName method of the CryptoCurrencyController class.
+     * Ensures that the method returns a CryptoCurrency object by its name.
+     */
+    @Test
+    public void testGetCryptoByName() {
+        CryptoCurrency mockCrypto = new CryptoCurrency(1L, "Bitcoin", "BTC", 1);
+        when(cryptoCurrencyService.getCryptoCurrencyByName("Bitcoin")).thenReturn(mockCrypto);
+        ResponseEntity<?> response = cryptoCurrencyController.getCryptoCurrencyByName("Bitcoin");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
+    /**
      * Tests the getPriceHistory method of the CryptoCurrencyController class.
      * Ensures that the method returns a list of CryptoPriceHistory objects within the given date range.
      * The list should contain all the price history entries for the given cryptocurrency name,

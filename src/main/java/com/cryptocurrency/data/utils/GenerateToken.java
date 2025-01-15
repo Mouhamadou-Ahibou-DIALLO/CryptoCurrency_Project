@@ -10,6 +10,11 @@ package com.cryptocurrency.data.utils;
 public class GenerateToken {
 
     /**
+     * Default constructor for the GenerateToken class.
+     */
+    public GenerateToken() {}
+
+    /**
      * Generates a random token. The token is a random 32-character hexadecimal
      * string, which is suitable for use as a token in a web application.
      *

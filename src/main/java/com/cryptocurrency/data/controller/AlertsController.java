@@ -31,8 +31,16 @@ public class AlertsController {
     @Autowired
     private AlertsService alertsService;
 
+    /**
+     * The userRepository field is a Spring repository for managing users.
+     */
     @Autowired
     private UserRepository userRepository;
+
+    /**
+     * Default constructor for the AlertsController class.
+     */
+    public AlertsController() {}
 
     /**
      * Gets all alerts for a given user.

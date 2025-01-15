@@ -184,16 +184,10 @@ public class TransactionService {
         List<CryptoPerformance> cryptoPerformances = new ArrayList<>();
 
         for (Transaction transaction : transactions) {
-            double priceAtTransaction = transaction.getPriceAtTransaction();
             double amountInvested = transaction.getAmountInvested();
-            double quantity = amountInvested / priceAtTransaction;
+            double quantity = transaction.getQuantity();
 
-            CryptoCurrency cryptoCurrency = transaction.getCryptoCurrency();
-            if (cryptoCurrency == null) {
-                throw new IllegalArgumentException("La crypto-monnaie n'existe pas.");
-            }
-
-            double currentPrice =cryptoCurrency.getPrice();
+            double currentPrice = transaction.getCryptoCurrency().getPrice();
             double currentValue = quantity * currentPrice;
             double gainOrLoss = currentValue - amountInvested;
 
@@ -209,7 +203,7 @@ public class TransactionService {
         }
 
         double totalGainOrLoss = totalCurrentValue - totalInvested;
-        System.out.println("know portfolio performance: " + totalGainOrLoss);
+        System.out.println("know portfolio performance");
 
         return new PorfolioPerformance(totalInvested, totalCurrentValue, totalGainOrLoss, cryptoPerformances);
     }

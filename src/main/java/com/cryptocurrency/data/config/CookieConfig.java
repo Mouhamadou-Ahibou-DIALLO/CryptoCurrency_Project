@@ -14,6 +14,11 @@ import org.springframework.session.web.http.CookieSerializer;
 public class CookieConfig {
 
     /**
+     * Default constructor for the CookieConfig class.
+     */
+    public CookieConfig() {}
+
+    /**
      * Configures and returns a CookieSerializer bean for session cookies.
      *
      * The DefaultCookieSerializer is used with the following settings:

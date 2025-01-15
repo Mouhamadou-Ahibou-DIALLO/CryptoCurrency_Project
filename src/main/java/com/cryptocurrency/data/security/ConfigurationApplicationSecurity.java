@@ -29,6 +29,11 @@ import static org.springframework.http.HttpMethod.*;
 public class ConfigurationApplicationSecurity {
 
     /**
+     * Default constructor for the ConfigurationApplicationSecurity class.
+     */
+    public ConfigurationApplicationSecurity() {}
+
+    /**
      * This method creates a security filter chain with the following configuration:
      * <ul>
      *     <li>Disable CSRF protection</li>

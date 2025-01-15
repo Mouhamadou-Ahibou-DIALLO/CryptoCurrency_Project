@@ -3,7 +3,7 @@ import { Line } from "react-chartjs-2";
 import "./ChartConfig";
 import {useParams} from "react-router-dom";
 import "../static/css/dashboard.css";
-import {Chart} from "chart.js";
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
     const {id} = useParams()
@@ -40,7 +40,15 @@ const Dashboard = () => {
     const password = "Avignon2024@?";
     const credentials = btoa(`${username}:${password}`);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
+
+        const authToken = localStorage.getItem("authToken");
+        if (!authToken) {
+            alert("Vous devez vous connecter pour accéder au Dashboard.");
+            navigate("/Login");
+        }
 
         const fetchId = async () => {
             try {
@@ -77,7 +85,7 @@ const Dashboard = () => {
             }
         };
         fetchCryptos();
-    }, []);
+    }, [navigate]);
 
     useEffect(() => {
         if (selectedCrypto?.name && startDate && endDate) {
@@ -209,28 +217,6 @@ const Dashboard = () => {
         },
     };
 
-    // const myChart = new Chart(document.getElementById('myChart'), {
-    //     type: 'line',
-    //     data: chartData,
-    //     options: chartOptions,
-    // });
-    //
-    // const updateChartData = (newPriceHistory, newMovingAveragePrediction, newLinearRegressionPrediction, marginError) => {
-    //     myChart.data.labels = newPriceHistory.map((entry) => new Date(entry.timestamp).toLocaleString());
-    //     myChart.data.datasets[0].data = newPriceHistory.map((entry) => entry.price);
-    //     myChart.data.datasets[1].data = newMovingAveragePrediction || [];
-    //     myChart.data.datasets[2].data = newLinearRegressionPrediction || [];
-    //     myChart.data.datasets[3].data = marginError || [];
-    //
-    //     myChart.update(undefined);
-    // };
-    //
-    // const fetchNewData = () => {
-    //     updateChartData(priceHistory, movingAveragePrediction, linearRegressionPrediction, marginError);
-    // };
-    //
-    // setInterval(fetchNewData, 30000);
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setUserData({
@@ -299,6 +285,7 @@ const Dashboard = () => {
 
 
     const handleLogout = () => {
+        localStorage.removeItem("authToken");
         window.location.href = "/Login";
     };
 

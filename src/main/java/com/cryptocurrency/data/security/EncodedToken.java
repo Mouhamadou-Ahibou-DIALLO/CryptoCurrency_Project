@@ -16,6 +16,11 @@ public class EncodedToken {
     private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     /**
+     * Default constructor for the EncodedToken class.
+     */
+    public EncodedToken() {}
+
+    /**
      * Encodes a token for use in authentication.
      *
      * @param token the token to encode

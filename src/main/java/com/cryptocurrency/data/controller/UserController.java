@@ -39,6 +39,11 @@ public class UserController {
     private EmailService emailService;
 
     /**
+     * Default constructor for the UserController class.
+     */
+    public UserController() {}
+
+    /**
      * Creates a new user with the given details.
      *
      * @param user The user object containing the details.
@@ -270,6 +275,13 @@ public class UserController {
         return ResponseEntity.ok(Map.of("message", "Mot de passe réinitialisé avec succès."));
     }
 
+    /**
+     * Upgrades a user to a premium plan.
+     *
+     * @param request a map containing the user's ID
+     * @return a ResponseEntity containing a success message if the user is upgraded successfully,
+     *         or a bad request status with an error message if the token is invalid or expired
+     */
     @PostMapping("/upgrade-to-premium")
     public ResponseEntity<Map<String, String>> upgradeToPremium(@RequestBody Map<String, Long> request) {
         Long userId = request.get("userId");
@@ -284,6 +296,13 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Downgrades a user to a free plan.
+     *
+     * @param request a map containing the user's ID
+     * @return a ResponseEntity containing a success message if the user is downgraded successfully,
+     *         or a bad request status with an error message if the token is invalid or expired
+     */
     @PostMapping("/downgrade-to-standard")
     public ResponseEntity<Map<String, String>> downgradeToStandard(@RequestBody Map<String, Long> request) {
         Long userId = request.get("userId");

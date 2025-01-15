@@ -37,7 +37,7 @@ const CryptoList = () => {
         };
 
         fetchCryptos();
-        const interval = setInterval(fetchCryptos, 60000);
+        const interval = setInterval(fetchCryptos, 59000);
 
         return () => clearInterval(interval);
     }, []);
@@ -136,7 +136,7 @@ const CryptoList = () => {
                     <tr key={crypto.id} className={`crypto-row ${animationState ? crypto.priceChange : ''}`}>
                         <td>{crypto.rank}</td>
                         <td>
-                            <Link to={`/cryptocurrencies/${crypto.id}`}>{crypto.name}</Link>
+                            <Link to={`/cryptocurrencies/${crypto.name}`}>{crypto.name}</Link>
                         </td>
                         <td>{crypto.symbol}</td>
                         <td>{crypto.price.toFixed(2)}</td>
